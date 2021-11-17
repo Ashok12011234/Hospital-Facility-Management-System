@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "1234";
+$password = "";
 $database="hfms";
 
 // Create connection
@@ -76,17 +76,18 @@ CREATE TABLE HospitalCylinderDetail (
   HospitalHospitalId int(10) NOT NULL, 
   PRIMARY KEY (HospitalCylinderRecordId, HospitalId));
 
-CREATE TABLE NewRequest (
-  RequestID varchar(20) NOT NULL, 
-  UserName varchar(50) NOT NULL UNIQUE, 
-  Email varchar(20) NOT NULL, 
-  Name varchar(255) NOT NULL, 
-  AccountType varchar(10) NOT NULL, 
-  BankName varchar(20) NOT NULL, 
-  AccountNumber varchar(20) NOT NULL, 
-  ExecutiveExecutiveId int(11) NOT NULL, 
-  status varchar(10) NOT NULL, 
-  PRIMARY KEY (RequestID));
+CREATE TABLE NewAccount (
+  NewAccountID int(10) NOT NULL AUTO_INCREMENT, 
+  UserName varchar(16) NOT NULL UNIQUE,
+  Password varchar(12) NOT NULL, 
+  Email varchar(50) NOT NULL, 
+  AccountType enum('HOSPITAL','PROVIDER') NOT NULL, 
+  BankName enum('BOC','PEOPLE','HNB','COMMERCIAL','NSB'), 
+  AccountNumber varchar(20), 
+  BankEvidence varchar(255),
+  InstituteEvidence varchar(255) NOT NULL, 
+  Status enum('NEW','PENDING','APPROVED','REJECTED') NOT NULL DEFAULT 'NEW', 
+  PRIMARY KEY (NewAccountID));
 
 CREATE TABLE Provider (
   ProviderId int(10) NOT NULL AUTO_INCREMENT, 
@@ -138,8 +139,8 @@ CREATE TABLE VaccineDetail (
 
 ";
     
-$connection->multi_query($createTb) ;
+if($connection->multi_query($createTb)) {
+  echo "DONE";
+}
    
-
-
 ?>

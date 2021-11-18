@@ -30,7 +30,6 @@ if ($connection->connect_error) {
 $createTb = "CREATE TABLE BloodDetail (
   BloodRecordId int(10) NOT NULL, 
   HospitalId int(10) NOT NULL, 
-  HospitalHospitalId int(10) NOT NULL, 
   AplusAvailability char(3), 
   AminusAvailability char(3), 
   BplusAvailability char(3), 
@@ -62,8 +61,7 @@ CREATE TABLE Hospital (
 CREATE TABLE HospitalBedDetail (
   HospitalBedRecordId int(10) NOT NULL, 
   HospitalId int(10) NOT NULL, 
-  NormalAvailability char(3), 
-  HospitalHospitalId int(10) NOT NULL, 
+  NormalAvailability char(3),  
   ICUAvailability char(3), 
   PRIMARY KEY (HospitalBedRecordId, HospitalId));
 
@@ -73,7 +71,6 @@ CREATE TABLE HospitalCylinderDetail (
   SmallAvailability char(3), 
   MediumAvailability char(3), 
   LargeAvailability char(3), 
-  HospitalHospitalId int(10) NOT NULL, 
   PRIMARY KEY (HospitalCylinderRecordId, HospitalId));
 
 CREATE TABLE NewAccount (
@@ -104,9 +101,8 @@ CREATE TABLE Provider (
 CREATE TABLE ProviderBedDetail (
   ProviderBedRecordId int(10) NOT NULL, 
   ProviderId int(10) NOT NULL, 
-  NormalAvailability char(3), 
-  ICUBedNo int(10), 
-  ICUAvailability int(10) NOT NULL, 
+  NormalAvailability char(3),  
+  ICUAvailability char(3), 
   PRIMARY KEY (ProviderBedRecordId, ProviderId));
 
 CREATE TABLE ProviderCylinderDetail (
@@ -115,7 +111,6 @@ CREATE TABLE ProviderCylinderDetail (
   SmallAvailability char(3), 
   MediumAvailability char(3), 
   LargeAvailability char(3), 
-  ProviderProviderId int(10) NOT NULL, 
   PRIMARY KEY (ProviderCylinderRecordId, ProviderId));
 
 CREATE TABLE Request (
@@ -129,7 +124,6 @@ CREATE TABLE Request (
 CREATE TABLE VaccineDetail (
   VaccineRecordId int(10) NOT NULL, 
   HospitalId int(10) NOT NULL, 
-  HospitalHospitalId int(10) NOT NULL, 
   OxfordAvailability char(3), 
   PfizerAvailability char(3), 
   ModernalAvailability char(3), 

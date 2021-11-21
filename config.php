@@ -61,7 +61,9 @@ CREATE TABLE Hospital (
 CREATE TABLE HospitalBedDetail (
   HospitalBedRecordId int(10) NOT NULL, 
   HospitalId int(10) NOT NULL, 
+
   NormalAvailability char(3), 
+
   ICUAvailability char(3), 
   PRIMARY KEY (HospitalBedRecordId, HospitalId));
 
@@ -71,7 +73,10 @@ CREATE TABLE HospitalCylinderDetail (
   SmallAvailability char(3), 
   MediumAvailability char(3), 
   LargeAvailability char(3), 
+
  PRIMARY KEY (HospitalCylinderRecordId, HospitalId));
+
+
 
 CREATE TABLE NewAccount (
   NewAccountID int(10) NOT NULL AUTO_INCREMENT, 
@@ -101,8 +106,10 @@ CREATE TABLE Provider (
 CREATE TABLE ProviderBedDetail (
   ProviderBedRecordId int(10) NOT NULL, 
   ProviderId int(10) NOT NULL, 
+
   NormalAvailability char(3), 
   ICUAvailability char(3) , 
+
   PRIMARY KEY (ProviderBedRecordId, ProviderId));
 
 CREATE TABLE ProviderCylinderDetail (

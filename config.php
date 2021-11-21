@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "1234";
 $database="hfms";
 
 // Create connection
@@ -61,7 +61,9 @@ CREATE TABLE Hospital (
 CREATE TABLE HospitalBedDetail (
   HospitalBedRecordId int(10) NOT NULL, 
   HospitalId int(10) NOT NULL, 
-  NormalAvailability char(3),  
+
+  NormalAvailability char(3), 
+
   ICUAvailability char(3), 
   PRIMARY KEY (HospitalBedRecordId, HospitalId));
 
@@ -71,7 +73,10 @@ CREATE TABLE HospitalCylinderDetail (
   SmallAvailability char(3), 
   MediumAvailability char(3), 
   LargeAvailability char(3), 
-  PRIMARY KEY (HospitalCylinderRecordId, HospitalId));
+
+ PRIMARY KEY (HospitalCylinderRecordId, HospitalId));
+
+
 
 CREATE TABLE NewAccount (
   NewAccountID int(10) NOT NULL AUTO_INCREMENT, 
@@ -101,8 +106,10 @@ CREATE TABLE Provider (
 CREATE TABLE ProviderBedDetail (
   ProviderBedRecordId int(10) NOT NULL, 
   ProviderId int(10) NOT NULL, 
-  NormalAvailability char(3),  
-  ICUAvailability char(3), 
+
+  NormalAvailability char(3), 
+  ICUAvailability char(3) , 
+
   PRIMARY KEY (ProviderBedRecordId, ProviderId));
 
 CREATE TABLE ProviderCylinderDetail (
@@ -113,13 +120,25 @@ CREATE TABLE ProviderCylinderDetail (
   LargeAvailability char(3), 
   PRIMARY KEY (ProviderCylinderRecordId, ProviderId));
 
-CREATE TABLE Request (
-  RequestId int(10) NOT NULL AUTO_INCREMENT, 
-  ProviderId int(10) NOT NULL, 
-  HospitalId int(10) NOT NULL, 
-  Status varchar(10) NOT NULL, 
-  Equipment varchar(20) NOT NULL, 
-  Quantity varchar(20) NOT NULL, PRIMARY KEY (RequestId));
+  CREATE TABLE HHrequest (
+  RequestId int NOT NULL AUTO_INCREMENT,
+  ProviderId int NOT NULL,
+  HospitalI` int NOT NULL,
+  Status varchar(10) NOT NULL,
+  Equipment varchar(20) NOT NULL,
+  Quantity varchar(20) NOT NULL,
+  PRIMARY KEY (RequestId)
+) ;
+
+CREATE TABLE HPrequest (
+  RequestId int NOT NULL AUTO_INCREMENT,
+  ProviderId int NOT NULL,
+  HospitalId int NOT NULL,
+  Status varchar(10) NOT NULL,
+  Equipment varchar(20) NOT NULL,
+  Quantity varchar(20) NOT NULL,
+  PRIMARY KEY (RequestId)
+) ;
 
 CREATE TABLE VaccineDetail (
   VaccineRecordId int(10) NOT NULL, 

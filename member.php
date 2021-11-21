@@ -171,6 +171,7 @@ class Bed extends Equipment{
             return false;
         }
 
+
        
 
 }
@@ -336,4 +337,6 @@ class Ceylinder extends Equipment{
 
 
 
+
 ?>
+

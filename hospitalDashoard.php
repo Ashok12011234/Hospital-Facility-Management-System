@@ -1,7 +1,9 @@
 <?php
+
 include("member.php");
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,6 +11,7 @@ include("member.php");
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
@@ -98,18 +101,23 @@ function prev(elem,user_type) {
 }
 </script>
 
+
 <body>
 
     <!--Navbar Start-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-success" style="background-color: #e3f2fd;">
         <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light"> -->
+
         <a class="navbar-brand ms-3" href="#"
             style="font-size: x-large;  font-size: 1.5em; font-family: Monospace; font-weight: bold;">Life Share</a>
+
         <!-- <a class="navbar-brand" href="#">Navbar</a> -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto me-2" style="font-size: large;">
                 <li class="nav-item ms-2">
-                    <a class="nav-link" href="./hospitalDashoard.html">Home</a>
+
+                    <a class="nav-link" href="./hospitalDashoard.php">Home</a>
+
                 </li>
                 <li class="nav-item ms-2">
                     <a class="nav-link" href="#">Hospitals</a>
@@ -121,7 +129,9 @@ function prev(elem,user_type) {
                     <a class="nav-link" href="#">Stared</a>
                 </li>
                 <li class="nav-item ms-2">
-                    <a class="nav-link" href="./requestDashboard.html">Requests</a>
+
+                    <a class="nav-link" href="./requestDashboard.php">Requests</a>
+
                 </li>
             </ul>
         </div>
@@ -154,17 +164,21 @@ function prev(elem,user_type) {
         <!--Navbar Signout panel-->
         <div class="dropdown" style="user-select: none;">
             <div id="hospitalDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+
                 <img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size: 40px; border-radius: 30px;"
                     class="ms-2">
+
                 <span class="user-name me-4 ms-1" id="hospitalDropdownButton">Name</span>
             </div>
             <div class="dropdown-menu mt-3" aria-labelledby="hospitalDropdownButton" id="hospitalDropdownPanel">
                 <a href="#" style="text-decoration: none; color: black;">
+
                     <h2>Hospital 1<img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon"
                             style="inline-size:55px; border-radius: 30px; float: right;" class="ms-2"></h2>
                 </a>
                 <p class="ms-2" style="font-size: 15px; margin-bottom:-5px; "><i
                         class="fas fa-map-marker-alt"></i>&nbsp;
+
                     No1,
                     Hospital
                     Road,
@@ -172,8 +186,12 @@ function prev(elem,user_type) {
                 <p class="m-2" style="font-size: 15px;"><i class="fas fa-phone"></i> &nbsp;0212211001</p>
                 <hr>
                 <ul style="list-style: none;">
-                    <li style="margin-bottom: 10px;"><a href="./profilePage.html" id="hospitalSignoutPannel">
-                            Profile</a></li>
+
+                    <li style="margin-bottom: 10px;"><a href="./editProfile.php" id="hospitalSignoutPannel">
+                            Edit Profile</a></li>
+                    <li style="margin-bottom: 10px;"><a href="./updateResources.php" id="hospitalSignoutPannel">
+                            Update Resources</a></li>
+
                     <li style="margin-bottom: 10px;"><a href="#" id="hospitalSignoutPannel">
                             Help</a></li>
                     <li><a href="#" id="hospitalSignoutPannel">
@@ -182,9 +200,11 @@ function prev(elem,user_type) {
             </div>
         </div>
         </div>
+
         <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
             aria-label="Toggle navigation">
+
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -200,8 +220,10 @@ function prev(elem,user_type) {
         </div>
         <div class="col-md-4">
             <div class="input-group">
+
                 <input type=" text" class="form-control" placeholder="Search for Hospital or Provider"
                     aria-label="Recipient's username" aria-describedby="basic-addon2">
+
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
                 </div>
@@ -213,6 +235,7 @@ function prev(elem,user_type) {
     <!--Content-->
     <div class="container mt-5 mb-4">
         <div class="row">
+
 
             <!-- Hospital-->
             <?php
@@ -975,6 +998,7 @@ function prev(elem,user_type) {
 
             
 
+
     <!--Footer-->
     <!-- Footer -->
     <footer class="text-center text-lg-start bg-light text-muted">
@@ -994,8 +1018,10 @@ function prev(elem,user_type) {
                 <a href="https://twitter.com/hpbsrilanka" target="_blank" class="me-4 text-reset">
                     <i class="fab fa-twitter"></i>
                 </a>
+
                 <a href="https://www.youtube.com/channel/UC6XsnLgVVzNkjTCpRVJ6u3w" target="_blank"
                     class="me-4 text-reset">
+
                     <i class="fab fa-youtube"></i>
                 </a>
                 <a href="https://www.instagram.com/hpbsrilanka" target="_blank" class="me-4 text-reset">
@@ -1021,8 +1047,10 @@ function prev(elem,user_type) {
 
                         <p>
 
+
                             <a class="link-success" href="mailto: healthpromo@sltnet.lk"><i
                                     class="fas fa-envelope me-3"></i> healthpromo@sltnet.lk</a>
+
                         </p>
                         <p><a class="link-success" href="tel:+94 11 2696 606"><i class="fas fa-phone me-3"></i> +94 11
                                 2696 606</a></p>
@@ -1056,6 +1084,7 @@ function prev(elem,user_type) {
                             Links
                         </h6>
                         <p>
+
                             <a class="link-success" href="https://hpb.health.gov.lk/en" target="_blank"
                                 class="text-reset">Ministry Home</a>
                         </p>
@@ -1067,6 +1096,7 @@ function prev(elem,user_type) {
                         <p>
                             <a class="link-success" href="https://hpb.health.gov.lk/en/technical-units" target="_blank"
                                 class="text-reset">Technical Units</a>
+
                         </p>
 
                     </div>
@@ -1091,6 +1121,7 @@ function prev(elem,user_type) {
                                     class="link-success" href="tel:+940113071073">+94 011 307 1073</a></li>
 
 
+
                         </ul>
                         </p>
 
@@ -1113,6 +1144,7 @@ function prev(elem,user_type) {
     </footer>
     <!-- Footer -->
 
+
     <!--request toggle model-->
   
    
@@ -1123,7 +1155,9 @@ function prev(elem,user_type) {
 
 
 
+
 </body>
+
 
 
 

@@ -1,13 +1,14 @@
-body {
-    background: rgb(133, 167, 126)
-}
-
 .form-control:focus {
-    box-shadow: none;
-    border-color: #BA68C8
+  box-shadow: none;
+  border-color: #ba68c8;
 }
 
 .labels {
-    font-size: 12px;
-    margin-top: 4px;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.body-content {
+  background-color: rgb(133, 167, 126);
+  padding: 20px;
 }

@@ -1,16 +1,18 @@
 <?php
-include("connection/config.php");
-include("connection/common.php");
+include("config.php");
+include("common.php");
 include("member.php");
 
 $hospitalID = 1;
-$sql = "SELECT * FROM `hospital` WHERE `HospitalId`=$hospitalID;";
+$sql = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
 $result = $connection->query($sql);
 $row = $result->fetch_assoc();
-$current = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
+$current = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
 
 if (isset($_POST['updateProfile'])) {
-    $hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);
+    //$hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);
+    $hospitalName = trim($_POST['hospitalName'],"\n\r\t\v\0");
+
     $email = mysqli_real_escape_string($GLOBALS['connection'], $_POST['email']);
     $phoneNo = mysqli_real_escape_string($GLOBALS['connection'], $_POST['phoneNo']);
     $accountNumber = mysqli_real_escape_string($GLOBALS['connection'], $_POST['accountNumber']);

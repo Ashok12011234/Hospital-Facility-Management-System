@@ -1,6 +1,6 @@
 <?php
 
-include("connection/config.php");
+include("config.php");
 
 abstract class Member
 {

@@ -1,13 +1,13 @@
 <?php
 include("member.php");
-include('connection/common.php');
+include('common.php');
 
 $hospitalID = 1;
 $sql = "SELECT * FROM `hospital` WHERE `HospitalId`=$hospitalID;";
 //$sql = "SELECT * FROM `hospital` WHERE 1";
 $result = $connection->query($sql);
 $row = $result->fetch_assoc();
-$Hospital = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'], $connection);
+$Hospital = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'], $connection);
 
 
 

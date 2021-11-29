@@ -54,6 +54,8 @@ CREATE TABLE Hospital (
   Name varchar(255), 
   TelephoneNo varchar(25), 
   Address varchar(255), 
+  Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultDp.png' ,
+  Website varchar(100),
   BankName varchar(20) NOT NULL, 
   AccountNumber varchar(20) NOT NULL, 
   PRIMARY KEY (HospitalId));
@@ -99,6 +101,8 @@ CREATE TABLE Provider (
   Name varchar(255), 
   TelephoneNo varchar(25), 
   Address varchar(255), 
+  Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultDp.png',
+  Website varchar(100),
   BankName varchar(20) NOT NULL, 
   AccountNumber varchar(20) NOT NULL, 
   PRIMARY KEY (ProviderId));
@@ -123,7 +127,7 @@ CREATE TABLE ProviderCylinderDetail (
   CREATE TABLE HHrequest (
   RequestId int NOT NULL AUTO_INCREMENT,
   ProviderId int NOT NULL,
-  HospitalI` int NOT NULL,
+  HospitalId int NOT NULL,
   Status varchar(10) NOT NULL,
   Equipment varchar(20) NOT NULL,
   Quantity varchar(20) NOT NULL,

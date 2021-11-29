@@ -241,9 +241,13 @@ function prev(elem,user_type) {
             <?php
             $_SESSION['is_selected']=false;
             $sql = "SELECT HospitalId,Name, TelephoneNo, Address FROM Hospital";
+            $sql = "SELECT * FROM Hospital";
+
             $rows = $connection->query($sql);
             foreach($rows as $row){
-                $current=new Hospital($row["HospitalId"],$row["Name"],$row['Address'],$row["TelephoneNo"],$connection);
+               // $current=new Hospital($row["HospitalId"],$row["Name"],$row['Address'],$row["TelephoneNo"],$connection);
+                $current = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
+
                 ?>
                   
 

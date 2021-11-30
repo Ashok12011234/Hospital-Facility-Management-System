@@ -11,7 +11,8 @@ $Hospital = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $ro
 
 
 
-if (isset($_POST['final-submit'])) {
+
+if ((isset($_POST['updateResources']))) {
     if ($_POST['password-confirm'] == $Hospital->get_password()) {
         $Hospital->set_bed();
         $Hospital->set_vaccine();
@@ -272,14 +273,35 @@ if (isset($_POST['final-submit'])) {
                             </div>
                         </div>
                     </div>
-                    <div class="text-center"><button class="btn btn-primary float-clear mb-3" type="button" name="updateResources" id="updateResources">Update</button></div>
-                    <div id="confirm-password-div" class="input-group  w-50 mx-auto mb-3">
-                        <input type="password" class="form-control" name="password-confirm" placeholder="Passsword" aria-describedby="basic-addon1">
-                        <input type="submit" class="btn btn-success" name="final-submit">
-                    </div><br>
-                </form>
+                    <div class="modal fade" id="confirmPasswordModal" aria-hidden="true" aria-labelledby="confirmPasswordModal" tabindex=" -1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalToggleLabel">Enter your password</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="Username" class="col-form-label">Username:</label>
+                                        <input type="text" class="form-control" id="Username" value="<?php echo $Hospital->get_username(); ?>" disabled>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password-confirm" class="col-form-label">Password:</label>
+                                        <input type="password" class="form-control" id="password-confirm" name="password-confirm">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <input class="btn btn-primary float-clear mb-3" type="submit" name="updateResources" id="updateResources">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" name="confirmPasswordbutton" id="confirmPasswordbutton" data-bs-toggle="modal" data-bs-target="#confirmPasswordModal">Confirm</button>
             </div>
+
+            </form>
         </div>
+    </div>
     </div>
     </div>
 
@@ -298,11 +320,15 @@ if (isset($_POST['final-submit'])) {
     </script>
     <script>
         $(document).ready(function() {
-            $("#confirm-password-div").hide();
-            $('#updateResources').on('click', function(e) {
-                $("#confirm-password-div").show();
-                $('#updateResources').hide();
+            $('#confirmPasswordbutton').on('click', function(e) {
+                e.preventDefault();
+                $('#confirmPasswordModal').modal('show');
             })
+            $("#resources-form").on('submit', function(e) {
+                //e.preventDefault();
+                location.reload();
+                //$('#confirmPasswordModal').modal('show');
+            });
         });
     </script>
 

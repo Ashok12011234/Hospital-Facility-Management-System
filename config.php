@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "1234";
 $database="hfms";
 
 // Create connection
@@ -30,7 +30,6 @@ if ($connection->connect_error) {
 $createTb = "CREATE TABLE BloodDetail (
   BloodRecordId int(10) NOT NULL, 
   HospitalId int(10) NOT NULL, 
-  HospitalHospitalId int(10) NOT NULL, 
   AplusAvailability char(3), 
   AminusAvailability char(3), 
   BplusAvailability char(3), 
@@ -62,8 +61,9 @@ CREATE TABLE Hospital (
 CREATE TABLE HospitalBedDetail (
   HospitalBedRecordId int(10) NOT NULL, 
   HospitalId int(10) NOT NULL, 
+
   NormalAvailability char(3), 
-  HospitalHospitalId int(10) NOT NULL, 
+
   ICUAvailability char(3), 
   PRIMARY KEY (HospitalBedRecordId, HospitalId));
 
@@ -73,8 +73,10 @@ CREATE TABLE HospitalCylinderDetail (
   SmallAvailability char(3), 
   MediumAvailability char(3), 
   LargeAvailability char(3), 
-  HospitalHospitalId int(10) NOT NULL, 
-  PRIMARY KEY (HospitalCylinderRecordId, HospitalId));
+
+ PRIMARY KEY (HospitalCylinderRecordId, HospitalId));
+
+
 
 CREATE TABLE NewAccount (
   NewAccountID int(10) NOT NULL AUTO_INCREMENT, 
@@ -104,9 +106,10 @@ CREATE TABLE Provider (
 CREATE TABLE ProviderBedDetail (
   ProviderBedRecordId int(10) NOT NULL, 
   ProviderId int(10) NOT NULL, 
+
   NormalAvailability char(3), 
-  ICUBedNo int(10), 
-  ICUAvailability int(10) NOT NULL, 
+  ICUAvailability char(3) , 
+
   PRIMARY KEY (ProviderBedRecordId, ProviderId));
 
 CREATE TABLE ProviderCylinderDetail (
@@ -115,21 +118,31 @@ CREATE TABLE ProviderCylinderDetail (
   SmallAvailability char(3), 
   MediumAvailability char(3), 
   LargeAvailability char(3), 
-  ProviderProviderId int(10) NOT NULL, 
   PRIMARY KEY (ProviderCylinderRecordId, ProviderId));
 
-CREATE TABLE Request (
-  RequestId int(10) NOT NULL AUTO_INCREMENT, 
-  ProviderId int(10) NOT NULL, 
-  HospitalId int(10) NOT NULL, 
-  Status varchar(10) NOT NULL, 
-  Equipment varchar(20) NOT NULL, 
-  Quantity varchar(20) NOT NULL, PRIMARY KEY (RequestId));
+  CREATE TABLE HHrequest (
+  RequestId int NOT NULL AUTO_INCREMENT,
+  ProviderId int NOT NULL,
+  HospitalI` int NOT NULL,
+  Status varchar(10) NOT NULL,
+  Equipment varchar(20) NOT NULL,
+  Quantity varchar(20) NOT NULL,
+  PRIMARY KEY (RequestId)
+) ;
+
+CREATE TABLE HPrequest (
+  RequestId int NOT NULL AUTO_INCREMENT,
+  ProviderId int NOT NULL,
+  HospitalId int NOT NULL,
+  Status varchar(10) NOT NULL,
+  Equipment varchar(20) NOT NULL,
+  Quantity varchar(20) NOT NULL,
+  PRIMARY KEY (RequestId)
+) ;
 
 CREATE TABLE VaccineDetail (
   VaccineRecordId int(10) NOT NULL, 
   HospitalId int(10) NOT NULL, 
-  HospitalHospitalId int(10) NOT NULL, 
   OxfordAvailability char(3), 
   PfizerAvailability char(3), 
   ModernalAvailability char(3), 

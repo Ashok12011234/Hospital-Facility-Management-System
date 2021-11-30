@@ -1,4 +1,5 @@
 <?php
+
 include("connection/config.php");
 
 abstract class Member

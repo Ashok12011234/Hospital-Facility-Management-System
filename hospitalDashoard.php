@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (array_key_exists("logout",$_GET)) {
+    session_unset();
+    header("Location: login.php");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -91,7 +99,7 @@
                             Profile</a></li>
                     <li style="margin-bottom: 10px;"><a href="#" id="hospitalSignoutPannel">
                             Help</a></li>
-                    <li><a href="#" id="hospitalSignoutPannel">
+                    <li><a href="hospitalDashoard.php?logout=" id="hospitalSignoutPannel">
                             Logout</a></li>
                 </ul>
             </div>

@@ -138,9 +138,5 @@ CREATE TABLE VaccineDetail (
   PRIMARY KEY (VaccineRecordId, HospitalId));
 
 ";
-    
-if($connection->multi_query($createTb)) {
-  echo "DONE";
-}
-   
+ 
 ?>

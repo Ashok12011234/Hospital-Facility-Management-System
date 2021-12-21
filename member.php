@@ -124,6 +124,8 @@ abstract class Member
     $this->connection->query($sql);
     $this->accountNo = $accountNo;
   }
+
+  
 }
 
 class Hospital extends Member
@@ -271,6 +273,116 @@ class Hospital extends Member
       $this->connection->query($sql);
     }
   }
+
+  public function filter($para){
+
+    switch($para){
+    
+      case '1':
+        $out=true;
+        break;
+      case '11':
+        $this->get_bed();
+        $out= $this->bedAval->providable();
+        break;
+      case '12':
+        $this->get_ceylinder();
+        $out= $this->ceylinderAval->providable();
+        break;
+      case '13':
+        $this->get_blood();
+        $out= $this->bloodAval->providable();
+        break;
+      case '14':
+        $this->get_vaccine();
+        $out= $this->vaccineAval->providable();
+        break;
+     
+      case '111':
+        $this->get_bed();
+        $out= $this->bedAval->check_normal();
+        break;
+      case '112':
+        $this->get_bed();
+        $out= $this->bedAval->check_icu();
+        break;
+      case '121':
+        $this->get_ceylinder();
+        $out= $this->ceylinderAval->check_small();
+        break;
+      case '122':
+        $this->get_ceylinder();
+        $out= $this->ceylinderAval->check_large();
+        break;
+      case '123':
+        $this->get_ceylinder();
+        $out= $this->ceylinderAval->check_medium();
+        break;
+      case '131':
+        $this->get_blood();
+        $out= $this->bloodAval->check_aplus();
+        break;
+      case '132':
+        $this->get_blood();
+        $out= $this->bloodAval->check_aminus();
+        break;
+      case '133':
+        $this->get_blood();
+        $out= $this->bloodAval->check_bplus();
+        break;
+      case '134':
+        $this->get_blood();
+        $out= $this->bloodAval->check_bminus();
+        break;
+      case '135':
+        $this->get_blood();
+        $out= $this->bloodAval->check_oplus();
+        break;
+      case '136':
+        $this->get_blood();
+        $out= $this->bloodAval->check_ominus();
+        break;
+      case '137':
+        $this->get_blood();
+        $out= $this->bloodAval->check_abplus();
+        break;
+      case '138':
+        $this->get_blood();
+        $out= $this->bloodAval->check_abminus();
+        break;
+      case '141':
+        $this->get_vaccine();
+        $out= $this->vaccineAval->check_oxford();
+        break;
+      case '142':
+        $this->get_vaccine();
+        $out= $this->vaccineAval->check_pfizer();
+        break;
+      case '143':
+        $this->get_vaccine();
+        $out= $this->vaccineAval->check_moderna();
+        break;
+      case '144':
+        $this->get_vaccine();
+        $out= $this->vaccineAval->check_sinopharm();
+        break;
+      case '145':
+        $this->get_vaccine();
+        $out= $this->vaccineAval->check_sputnik();
+        break;
+
+    
+      default:
+        $out=false;
+    
+    
+    
+      }
+
+      return $out;
+  }
+
+
 }
 
 class Provider extends Member
@@ -309,6 +421,62 @@ class Provider extends Member
     }
     return $this->ceylinderAval;
   }
+
+  public function filter($para){
+
+    switch($para){
+    
+      case '2':
+        $out=true;
+        break;
+      case '21':
+        $this->get_bed();
+        $out= $this->bedAval->providable();
+        break;
+      case '22':
+        $this->get_ceylinder();
+        $out= $this->ceylinderAval->providable();
+        break;
+      case '21':
+        $this->get_bed();
+        $out= $this->bedAval->providable();
+        break;
+      case '22':
+        $this->get_ceylinder();
+        $out= $this->ceylinderAval->providable();
+        break;
+      case '211':
+        $this->get_bed();
+        $out= $this->bedAval->check_normal();
+        break;
+      case '212':
+        $this->get_bed();
+        $out= $this->bedAval->check_icu();
+        break;
+      case '221':
+        $this->get_ceylinder();
+        $out= $this->ceylinderAval->check_small();
+        break;
+      case '222':
+        $this->get_ceylinder();
+        $out= $this->ceylinderAval->check_medium();
+        break;
+      case '223':
+        $this->get_ceylinder();
+        $out= $this->ceylinderAval->check_large();
+        break;
+
+      default:
+        $out=false;
+    
+    
+    
+      }
+
+      return $out;
+  }
+
+
 }
 
 abstract class Equipment
@@ -341,6 +509,11 @@ class Bed extends Equipment
     }
     return false;
   }
+
+  public function providable(){
+    return $this->check_normal() || $this->check_icu();
+  }
+
 }
 
 class Vaccine extends Equipment
@@ -399,6 +572,12 @@ class Vaccine extends Equipment
     }
     return false;
   }
+
+  public function providable(){
+    return $this->check_sputnik() || $this->check_sinopharm() || $this->check_sputnik() || $this->check_moderna() || $this->check_pfizer() || $this->check_oxford();
+  }
+
+
 }
 
 
@@ -482,6 +661,12 @@ class Blood extends Equipment
     }
     return false;
   }
+
+  public function providable(){
+    return $this->check_aplus() || $this->check_aminus() ||$this->check_bplus() || $this->check_bminus() ||$this->check_oplus() || $this->check_ominus() ||$this->check_abplus() || $this->check_abminus()  ;
+  }
+
+
 }
 
 class Ceylinder extends Equipment
@@ -516,5 +701,9 @@ class Ceylinder extends Equipment
       return true;
     }
     return false;
+  }
+
+  public function providable(){
+    return $this->check_small() || $this->check_medium() || $this->check_large();
   }
 }

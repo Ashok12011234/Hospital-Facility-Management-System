@@ -301,7 +301,7 @@ function displayDev(String $devId): void
             <div style="text-align: center;">
                 <a class="forgot" href="./login.php" style="display: inline;">Log in</a>
                 <span style="color: #198754;"> | </span>
-                <a class="forgot" href="./hospitalDashoard.html" style="display: inline;">Visit as a guest</a>
+                <a class="forgot" href="./hospitalDashoard.php" style="display: inline;">Visit as a guest</a>
             </div>
             <?php
             if ($error != "") {

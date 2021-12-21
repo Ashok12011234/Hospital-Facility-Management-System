@@ -1,6 +1,14 @@
 <?php
 
 session_start();
+ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboard", $_SESSION) ){
+    
+ }
+ else{
+$_SESSION["hosdashboard"]="1";
+$_SESSION["prodashboard"]="2";
+$_SESSION["options"]="";
+}
 if (array_key_exists("logout",$_GET)) {
     session_unset();
     header("Location: login.php");
@@ -110,6 +118,118 @@ function prev(elem,user_type) {
     categoryModal.show(); 
       
 }
+
+function filterByType(){
+    var e = document.getElementById("filtertype");
+    
+
+    $.ajax({
+        url:'filter.php',
+        type:'POST',
+        data:{filterType:e.value},
+        success:function(result){
+
+    
+            window.location.reload();
+            }
+    });
+  
+}
+
+function next1(){
+    var e = document.getElementById("filtertype");
+
+    var typeModal = new bootstrap.Modal(document.getElementById("filtermodali"+e.value), {
+                keyboard: false
+            });
+
+            typeModal.show();
+
+}
+
+function filterByEquipment(){
+    var e1 = document.getElementById("filtertype");
+    var e2 = document.getElementById("filtereqiptype"+e1.value);
+
+    
+
+    $.ajax({
+        url:'filter.php',
+        type:'POST',
+        data:{filterType:e1.value+e2.value},
+        success:function(result){
+            window.location.reload();
+            }
+    });
+   
+}
+
+function filterBySpecific(){
+    var e1 = document.getElementById("filtertype");
+    var e2 = document.getElementById("filtereqiptype"+e1.value);
+    var e3 = document.getElementById("filterspecifictype"+e2.value);
+
+
+    
+
+    $.ajax({
+        url:'filter.php',
+        type:'POST',
+        data:{filterType:e1.value+e2.value+e3.value},
+        success:function(result){
+            window.location.reload();
+            }
+    });
+   
+}
+
+function loadFilterOptions(){
+    var e1 = document.getElementById("filtertype");
+    var e2 = document.getElementById("filtereqiptype"+e1.value);
+
+    
+    var typeModal = new bootstrap.Modal(document.getElementById("filtermodalii"+e2.value), {
+                keyboard: false
+            });
+
+            typeModal.show();
+   
+}
+
+function refresh(){
+    $.ajax({
+        url:'refresh.php',
+        type:'POST',
+        data:{},
+        success:function(result){
+            window.location.reload();
+            }
+    });
+}
+
+function donate(){
+
+    $.ajax({
+        url:'donate.php',
+        type:'POST',
+        data:{},
+        success:function(result){
+            if(result.data=='0'){
+                var typeModal = new bootstrap.Modal(document.getElementById("donationresult"+result), {
+                keyboard: false
+            });
+            }
+            else{
+                var typeModal = new bootstrap.Modal(document.getElementById("donationresult"+result), {
+                keyboard: false
+            });
+            }
+            typeModal.show();
+        }
+    });
+
+}
+
 </script>
 
 
@@ -145,12 +265,25 @@ function prev(elem,user_type) {
                     <a class="nav-link" href="#">Stared</a>
                 </li>
                 <li class="nav-item ms-2">
-
-
-                    <a class="nav-link" href="./requestDashboard.php">Requests</a>
-
-
+                    <a class="nav-link" href="./requestDashboard.html">Requests</a>
                 </li>
+                <li class="nav-item ms-2">
+                    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#filtermodal">
+                        Filter
+                    </button>
+                </li>
+                <li class="nav-item ms-2">
+                    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#donationmodal">
+                        Donate
+                    </button>
+                </li>
+                <li class="nav-item ms-2">
+                    <button type="button" class="btn btn-outline-info" onclick="refresh()">
+                        Refresh
+                    </button>
+                </li>
+               
+                
             </ul>
         </div>
 
@@ -266,14 +399,17 @@ function prev(elem,user_type) {
             <!-- Hospital-->
             <?php
             $_SESSION['is_selected']=false;
-            $sql = "SELECT HospitalId,Name, TelephoneNo, Address FROM Hospital";
+            //$sql = "SELECT HospitalId,Name, TelephoneNo, Address FROM Hospital";
             $sql = "SELECT * FROM Hospital";
-
-            $rows = $connection->query($sql);
+             //$sql=$_SESSION["hosdashboard"];
+               
+             if($sql!="" && $connection->query($sql)){
+                $rows = $connection->query($sql);
+             
             foreach($rows as $row){
                // $current=new Hospital($row["HospitalId"],$row["Name"],$row['Address'],$row["TelephoneNo"],$connection);
                 $current = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
-
+                if($current->filter($_SESSION["hosdashboard"])){
                 ?>
                   
 
@@ -496,7 +632,7 @@ function prev(elem,user_type) {
                
                     <option
                     <?php
-                        if($current->get_bed()->check_normal() || $current->get_bed()->check_icu() ){
+                        if($current->get_bed()->providable()){
                             
                         }
                         else{echo "disabled";}
@@ -504,7 +640,7 @@ function prev(elem,user_type) {
                     value="1"
                     >BED</option>
                     <option <?php
-                        if($current->get_ceylinder()->check_small() || $current->get_ceylinder()->check_medium() || $current->get_ceylinder()->check_large() ){
+                        if($current->get_ceylinder()->providable() ){
                             
                         }
                         else{echo "disabled";}
@@ -512,7 +648,7 @@ function prev(elem,user_type) {
                     value="2"
                     >  Oxygen cylinder</option>
                     <option <?php
-                        if($current->get_vaccine()->check_oxford() || $current->get_vaccine()->check_pfizer() || $current->get_vaccine()->check_moderna() || $current->get_vaccine()->check_sinopharm() || $current->get_vaccine()->check_sputnik() ){
+                        if($current->get_vaccine()->providable() ){
                             
                         }
                         else{echo "disabled";}
@@ -521,7 +657,7 @@ function prev(elem,user_type) {
                     >Vaccine</option>
 
                     <option <?php
-                        if($current->get_blood()->check_aplus() || $current->get_blood()->check_aminus() || $current->get_blood()->check_bplus() || $current->get_blood()->check_bminus() || $current->get_blood()->check_oplus()|| $current->get_blood()->check_ominus() || $current->get_blood()->check_abplus() || $current->get_blood()->check_abminus() ){
+                        if($current->get_blood()->providable() ){
                             
                         }
                         else{echo "disabled";}
@@ -803,15 +939,20 @@ function prev(elem,user_type) {
         </div>
       </div>
 
-              <?php }
+              <?php }}}
             ?>
 
             <!-- Provider-->
             <?php
             $sql = "SELECT ProviderId,Name, TelephoneNo, Address FROM Provider";
-            $rows = $connection->query($sql);
+            //$sql=$_SESSION["prodashboard"];
+
+            if($sql!="" && $connection->query($sql)){
+                $rows = $connection->query($sql);
+             
             foreach($rows as $row){
                 $current=new Provider($row["ProviderId"],$row["Name"],$row['Address'],$row["TelephoneNo"],$connection);
+                if($current->filter($_SESSION["prodashboard"])){
                 ?>
                   
 
@@ -904,7 +1045,7 @@ function prev(elem,user_type) {
                
                     <option
                     <?php
-                        if($current->get_bed()->check_normal() || $current->get_bed()->check_icu() ){
+                        if($current->get_bed()->providable() ){
                             
                         }
                         else{echo "disabled";}
@@ -912,7 +1053,7 @@ function prev(elem,user_type) {
                     value="1"
                     >BED</option>
                     <option <?php
-                        if($current->get_ceylinder()->check_small() || $current->get_ceylinder()->check_medium() || $current->get_ceylinder()->check_large() ){
+                        if($current->get_ceylinder()->providable() ){
                             
                         }
                         else{echo "disabled";}
@@ -1026,7 +1167,7 @@ function prev(elem,user_type) {
         </div>
       </div>
 
-            <?php  }
+            <?php  }}}
             ?>
 
             
@@ -1182,9 +1323,310 @@ function prev(elem,user_type) {
     <!-- Footer -->
 
 
-    <!--request toggle model-->
-  
- 
+    <!--Donation model-->
+
+    <div class="modal fade" id="donationmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Donation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+      
+      <form class="form-horizontal">
+        
+          
+      <div class="mb-3 row">
+        <label for="email" class="col-sm-4 col-form-label">Email</label>
+        <div class="col-sm-8">
+            <input type="email" class="form-control" id="email">
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="cardholder" class="col-sm-4 col-form-label">Card Holder's Name</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="cardholder">
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="cardnum" class="col-sm-4 col-form-label">Card Number</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="cardnum">
+        </div>
+    </div>
+     
+        
+     
+          <!-- Expiry-->
+          <div class="mb-3 row">
+            <label class="col-sm-4 col-form-label" for="expiry">Card Expiry Date</label>
+            <div class="controls col-sm-8" id="expiry">
+            <div class="row">
+                <div class="col-sm-6">
+              <select class="span3 form-select form-select-sm" name="expiry_month" >
+                <option></option>
+                <option value="01">Jan </option>
+                <option value="02">Feb </option>
+                <option value="03">Mar </option>
+                <option value="04">Apr </option>
+                <option value="05">May </option>
+                <option value="06">June </option>
+                <option value="07">July </option>
+                <option value="08">Aug </option>
+                <option value="09">Sep </option>
+                <option value="10">Oct </option>1
+                <option value="11">Nov </option>
+                <option value="12">Dec </option>
+              </select>
+              </div>
+              <div class="col-sm-6">
+              <select class="span2 form-select form-select-sm" name="expiry_year">
+                <option></option>
+                
+                <option value="21">2021</option>
+                <option value="22">2022</option>
+                <option value="23">2023</option>
+                <option value="13">2024</option>
+                <option value="15">2025</option>
+                <option value="16">2026</option>
+                <option value="17">2027</option>
+                <option value="18">2028</option>
+                <option value="19">2029</option>
+                <option value="20">2030</option>
+              </select>
+              </div>
+              </div>
+            </div>
+          </div>
+        
+        <div class="mb-3 row">
+            <label for="cardholder" class="col-sm-4 col-form-label">Card CVV</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="cardholder">
+            </div>
+        </div>
+         
+     
+      </form>
+
+        </div>
+        <div class="modal-footer">
+            
+            <button type="button" class="btn btn-primary" onclick="donate()" data-bs-dismiss="modal">Donate</button>
+        </div>
+        </div>
+    </div>
+    </div>
+
+<!-- donation results Modal -->
+
+<div class="modal fade" id="donationresult0" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel">Success!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Your donation process is succeed please check your email.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+
+    </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="donationresult1" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Failed!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Your donation process is failed.Please retry again.
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-target="#donationmodal" data-bs-toggle="modal" data-bs-dismiss="modal">Retry</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Modal -->
+<div class="modal fade" id="filtermodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Filter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <select id="filtertype" class="form-select form-select-sm" aria-label=".form-select-sm example">
+            <option selected value="1">Hospital</option>
+            <option value="2">Provider</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterByType()"  >Ok</button>
+        <button type="button" class="btn btn-primary"  data-bs-toggle="modal" onclick="next1()" data-bs-dismiss="modal">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+ <!-- Filter Modal  i hos-->
+
+<div class="modal fade" id="filtermodali1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <select id="filtereqiptype1" class="form-select form-select-sm" aria-label=".form-select-sm example">
+            <option selected value="1">Bed</option>
+            <option value="2">Cylinder</option>
+            <option value="3">Blood</option>
+            <option value="4">Vaccine</option>
+            
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterByEquipment()" >Ok</button>
+        <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-dismiss="modal" onclick="loadFilterOptions()">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Modal  i prov-->
+
+<div class="modal fade" id="filtermodali2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <select id="filtereqiptype2" class="form-select form-select-sm" aria-label=".form-select-sm example">
+            <option selected value="1">Bed</option>
+            <option value="2">Cylinder</option>
+            
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterByEquipment()" >Ok</button>
+        <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-dismiss="modal" onclick="loadFilterOptions()">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Modal  ii bed-->
+
+<div class="modal fade" id="filtermodalii1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <select class="form-select form-select-sm" id="filterspecifictype1" aria-label=".form-select-sm example">
+       <option selected value="1">Normal</option><option value="2">ICU</option>
+            
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
+       
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Modal  ii ceylinder-->
+
+<div class="modal fade" id="filtermodalii2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <select class="form-select form-select-sm" id="filterspecifictype2" aria-label=".form-select-sm example">
+      <option selected value="1">Small</option><option value="2">Medium</option><option value="3">Large</option>
+            
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
+       
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Modal  ii blood-->
+
+<div class="modal fade" id="filtermodalii3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <select class="form-select form-select-sm" id="filterspecifictype3" aria-label=".form-select-sm example">
+    <option selected value="1">A+</option><option value="3">B+</option><option value="5">O+</option><option value="7">AB+</option><option value="2">A-</option><option value="3">B-</option><option value="6">O-</option><option value="8">AB-</option>
+            
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Modal  ii vaccine-->
+
+<div class="modal fade" id="filtermodalii4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <select class="form-select form-select-sm" id="filterspecifictype4" aria-label=".form-select-sm example">
+      <option selected value="1">Oxford Astrasenica</option><option value="2">Phizer</option><option value="3">Moderna</option><option value="4">Sinopharm</option><option value="4">Sputnik</option>
+            
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
+       
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 
 </body>
 

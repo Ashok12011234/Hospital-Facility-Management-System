@@ -21,6 +21,7 @@ abstract class Member
   public $connection;
 
   public abstract function request();
+  public abstract function filter($type);
 
   public function get_password()
   {

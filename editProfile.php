@@ -53,91 +53,10 @@ if (isset($_POST['updateProfile'])) {
 </head>
 
 <body>
-    <!--Navbar Start-->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success" style="background-color: #e3f2fd;">
-        <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light"> -->
-        <a class="navbar-brand ms-3" href="#" style="font-size: x-large;  font-size: 1.5em; font-family: Monospace; font-weight: bold;">Life Share</a>
-        <!-- <a class="navbar-brand" href="#">Navbar</a> -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto me-2" style="font-size: large;">
-                <li class="nav-item ms-2">
-                    <a class="nav-link" href="./hospitalDashoard.php">Home</a>
-                </li>
-                <li class="nav-item ms-2">
-                    <a class="nav-link" href="#">Hospitals</a>
-                </li>
-                <li class="nav-item ms-2">
-                    <a class="nav-link" href="#">Providers</a>
-                </li>
-                <li class="nav-item ms-2">
-                    <a class="nav-link" href="#">Stared</a>
-                </li>
-                <li class="nav-item ms-2">
-                    <a class="nav-link" href="#">Requests</a>
-                </li>
-            </ul>
-        </div>
-
-        <!--Navbar notification panel-->
-        <div class="dropdown me-4 ms-auto" style="user-select: none;">
-            <i class="fas fa-bell" id="hospitalNotificationBell" data-bs-toggle="dropdown" aria-expanded="false"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger badge-pill">
-                0
-            </span>
-
-            <div class="dropdown-menu mt-4" aria-labelledby="hospitalNotificationBell" id="hospitalNotificationsPanel">
-                <p class="fs-6">No notifications to show</p>
-                <div onclick="myhref('#');" style="cursor: pointer;">
-                    <p class="fw-light">Lorem ipsum dolor sit amet, coiai adipisicing.</p>
-                </div>
-                <hr style="margin-bottom: 0px;">
-                <div style="cursor: pointer;">
-                    <p class="fw-light">Lorem ipsum dolor sit amet, coiai adipisicing.</p>
-                </div>
-                <hr style="margin-bottom: 0px;">
-                <div style="cursor: pointer;">
-                    <p class="fw-light">Lorem ipsum dolor sit amet, coiai adipisicing.</p>
-                </div>
-
-
-            </div>
-        </div>
-
-        <!--Navbar Signout panel-->
-        <div class="dropdown" style="user-select: none;">
-            <div id="hospitalDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size: 40px; border-radius: 30px;" class="ms-2">
-                <span class="user-name me-4 ms-1" id="hospitalDropdownButton">Name</span>
-            </div>
-            <div class="dropdown-menu mt-3" aria-labelledby="hospitalDropdownButton" id="hospitalDropdownPanel">
-                <a href="#" style="text-decoration: none; color: black;">
-                    <h2>Hospital 1<img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size:55px; border-radius: 30px; float: right;" class="ms-2"></h2>
-                </a>
-                <p class="ms-2" style="font-size: 15px; margin-bottom:-5px; "><i class="fas fa-map-marker-alt"></i>&nbsp;
-                    No1,
-                    Hospital
-                    Road,
-                    Jaffna</p>
-                <p class="m-2" style="font-size: 15px;"><i class="fas fa-phone"></i> &nbsp;0212211001</p>
-                <hr>
-                <ul style="list-style: none;">
-                    <li style="margin-bottom: 10px;"><a href="./editProfile.php" id="hospitalSignoutPannel">
-                            Edit Profile</a></li>
-                    <li style="margin-bottom: 10px;"><a href="./updateResources.php" id="hospitalSignoutPannel">
-                            Update Resources</a></li>
-                    <li style="margin-bottom: 10px;"><a href="#" id="hospitalSignoutPannel">
-                            Help</a></li>
-                    <li><a href="#" id="hospitalSignoutPannel">
-                            Logout</a></li>
-                </ul>
-            </div>
-        </div>
-        </div>
-        <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </nav>
-    <!--Navbar end-->
+    
+<?php
+include("navbar.php");
+?>
     <!-- Body -->
     <div class="rounded bg-white m-4 p-3 body-contentx">
         <form action="" method="POST" enctype="multipart/form-data">

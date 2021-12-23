@@ -1,9 +1,36 @@
+<?php
+session_start();
 
+if (array_key_exists("logout",$_GET)) {
+  session_unset();
+  header("Location: login.php");
+}
 
- 
+include("member.php");
 
+switch ($_SESSION["type"]) {
+  case MemberType::GUEST:
+    # code...
+    break;
+  
+  case MemberType::HOSPITAL:
+    # you can use $SESSION["acID"] to create Hospital obj
+    # $user = Hospital::createHospital($_SESSION["acID"], $connection);
+    # for simplicity,
+    $user = Hospital::createHospital(1, $connection);
+    break;
 
+  case MemberType::PROVIDER:
+    # you can use $SESSION["acID"] to create Provider obj
+    # $user = Provider::createProvider($_SESSION["acID"], $connection);
+    break;
+  
+  default:
+    # code...
+    break;
+}
 
+?>
 
 <!--Navbar Start-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-success" style="background-color: #e3f2fd;">
@@ -82,22 +109,20 @@
                     class="ms-2">
 
 
-                <span class="user-name me-4 ms-1" id="hospitalDropdownButton">Name</span>
+                <span class="user-name me-4 ms-1" id="hospitalDropdownButton"><?php echo $user->get_username(); ?></span>
             </div>
             <div class="dropdown-menu mt-3" aria-labelledby="hospitalDropdownButton" id="hospitalDropdownPanel">
                 <a href="#" style="text-decoration: none; color: black;">
 
-                    <h2>Hospital 1<img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon"
+                    <h2><?php echo $user->get_name(); ?><img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon"
                             style="inline-size:55px; border-radius: 30px; float: right;" class="ms-2"></h2>
                 </a>
                 <p class="ms-2" style="font-size: 15px; margin-bottom:-5px; "><i
                         class="fas fa-map-marker-alt"></i>&nbsp;
 
-                    No1,
-                    Hospital
-                    Road,
-                    Jaffna</p>
-                <p class="m-2" style="font-size: 15px;"><i class="fas fa-phone"></i> &nbsp;0212211001</p>
+                      <?php echo $user->get_address(); ?>
+                </p>
+                <p class="m-2" style="font-size: 15px;"><i class="fas fa-phone"></i> &nbsp;<?php echo $user->get_phoneno(); ?></p>
                 <hr>
                 <ul style="list-style: none;">
 
@@ -109,7 +134,7 @@
 
                     <li style="margin-bottom: 10px;"><a href="#" id="hospitalSignoutPannel">
                             Help</a></li>
-                    <li><a href="#" id="hospitalSignoutPannel">
+                    <li><a href="./hospitalDashoard.php?logout=" id="hospitalSignoutPannel">
 
                             Logout</a></li>
                 </ul>

@@ -1,6 +1,5 @@
 <?php
-
-session_start();
+include("navbar.php");
  if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboard", $_SESSION) ){
     
  }
@@ -9,14 +8,6 @@ $_SESSION["hosdashboard"]="1";
 $_SESSION["prodashboard"]="2";
 $_SESSION["options"]="";
 }
-if (array_key_exists("logout",$_GET)) {
-    session_unset();
-    header("Location: login.php");
-}
-
-
-include("member.php");
-
 
 ?>
 
@@ -228,10 +219,6 @@ function refresh(){
 
 
 <body>
-
-<?php
-include("navbar.php");
-?>
 
     <!-- Headings and title-->
 

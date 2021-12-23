@@ -2,16 +2,18 @@
 require("config.php");
 require("classes/sysLvlCls/Password.php");
 require("classes/probDomCls/Mail.php");
+include("./member.php");
 session_start();
 $error = "";
 $success = "";
 if (array_key_exists("next", $_POST)) {
-    if ($result = $connection -> query("SELECT `password`,`NewAccountID`,`Email` FROM `NewAccount` WHERE username = '".$_POST["username"]."'")) {
+    if ($result = $connection -> query("SELECT `password`,`HospitalID`,`Email` FROM `Hospital` WHERE username = '".$_POST["username"]."'")) {
         if ($result -> num_rows == 1) {
             $row = $result->fetch_assoc();
             if (!array_key_exists("forgot", $_GET)) {
                 if($_POST["password"] == Password::decrypt($row["password"])) {
-                    $_SESSION["NewAccountID"]=$row["NewAccountID"];
+                    $_SESSION["acID"] = $row["HospitalID"];
+                    $_SESSION["type"] = MemberType::HOSPITAL;
                     header("Location: hospitalDashoard.php");
                 } 
                 else {

@@ -2,6 +2,13 @@
 
 include("config.php");
 
+class MemberType 
+{
+  const GUEST = 0;
+  const HOSPITAL = 1;
+  const PROVIDER = 2;
+}
+
 abstract class Member
 {
   public $name;
@@ -126,7 +133,7 @@ abstract class Member
     $this->accountNo = $accountNo;
   }
 
-  
+
 }
 
 class Hospital extends Member
@@ -383,6 +390,14 @@ class Hospital extends Member
       return $out;
   }
 
+  # want to use any design pattern (Factory or FactoryMethod or Builder)
+  public static function createHospital($id, $connection)
+  {
+    $sql = "SELECT * FROM `Hospital` WHERE HospitalId = $id";
+    $result = $connection -> query($sql);
+    $row = $result->fetch_assoc();
+    return new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
+  }
 
 }
 
@@ -477,6 +492,14 @@ class Provider extends Member
       return $out;
   }
 
+  # want to use any design pattern (Factory or FactoryMethod or Builder)
+  public static function createProvider($id, $connection)
+  {
+    $sql = "SELECT * FROM `Provider` WHERE ProviderId = $id";
+    $result = $connection -> query($sql);
+    $row = $result->fetch_assoc();
+    return new Provider($row["ProviderId"],$row["Name"],$row['Address'],$row["TelephoneNo"],$connection);
+  }
 
 }
 

@@ -244,7 +244,9 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
       <div class="input-group">
 
 
-        <input type="text" class="form-control" name="searchBox" id="searchBox" placeholder="Search for Hospital or Provider" aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <input type=" text" class="form-control" placeholder="Search for Hospital or Provider" aria-label="Recipient's username" aria-describedby="basic-addon2">
+
+
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
         </div>
@@ -261,25 +263,17 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
       <!-- Hospital-->
       <?php
       //$sql = "SELECT HospitalId,Name, TelephoneNo, Address FROM Hospital";
-      if (isset($_POST['SearchContent'])) {
-        //header("location: hgpadfp.com");
-        $content = $_POST['SearchContent'];
-        //$sql = "SELECT * FROM Hospital WHERE UserName LIKE  '%1234%' ";
-        $sql = "SELECT * FROM Hospital WHERE UserName LIKE '%$content%' OR Name LIKE '%$content%' OR Website LIKE '%$content%' OR Address LIKE '%$content%';";;
-      } else {
-        // print_r($_POST);
-        //header("location: hgpadfp.com");
-        $sql = "SELECT * FROM Hospital"; // WHERE UserName LIKE  '%1234%' ";
-      }
+      $arry = $currentHospital->get_staredHospital();
+      foreach ($arry as $indexStar) {
+        $sql = "SELECT * FROM Hospital WHERE `hospital`.`HospitalId` =  '$indexStar'";
 
+        if ($connection->query($sql)) {
+          $rows = $connection->query($sql);
+          $row = $result->fetch_row();
+          foreach ($rows as $row) {
+            // $current=new Hospital($row["HospitalId"],$row["Name"],$row['Address'],$row["TelephoneNo"],$connection);
+            $current = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
 
-      if ($connection->query($sql)) {
-        $rows = $connection->query($sql);
-
-        foreach ($rows as $row) {
-          // $current=new Hospital($row["HospitalId"],$row["Name"],$row['Address'],$row["TelephoneNo"],$connection);
-          $current = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
-          if ($current->filter($_SESSION["hosdashboard"])) {
       ?>
             <div class='col-md-6 col-xl-4 mb-4'>
               <div class='card'>
@@ -296,11 +290,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
                       ?>
                     </h3>
 
-                    <i class='<?php if (in_array($row["HospitalId"], $currentHospital->get_staredHospital())) {
-                                echo "fas";
-                              } else {
-                                echo "far";
-                              } ?> fa-star col fa-lg ms-4' name='hospitalStar' id=<?php echo $current->get_id() ?> onclick="starHospitalUser(this)"></i>
+                    <i class='fas fa-star col fa-lg ms-4' name='hospitalStar' id=<?php echo $current->get_id() ?> onclick="starHospitalUser(this)"></i>
                   </div>
                   <p class='ms-2' style='font-size: 13px; margin-bottom:-5px; '><i class='fas fa-map-marker-alt'></i>&nbsp;
                     <?php
@@ -792,26 +782,25 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
       <?php }
         }
       }
+
       ?>
 
       <!-- Provider-->
+
       <?php
-      if (isset($_POST['SearchContent'])) {
-        $content = $_POST['SearchContent'];
-        $sql = "SELECT * FROM Provider WHERE UserName LIKE '%$content%' OR Name LIKE '%$content%' OR Website LIKE '%$content%' OR Address LIKE '%$content%';";
-      } else {
-        $sql = "SELECT * FROM Provider";
-      }
+      //$sql = "SELECT HospitalId,Name, TelephoneNo, Address FROM Hospital";
+      $arry = $currentHospital->get_staredProvider();
+      foreach ($arry as $indexStar) {
+        $sql = "SELECT * FROM provider WHERE `provider`.`ProviderId` =  '$indexStar'";
 
-      // $sql = "SELECT * FROM Provider";
-      //$sql=$_SESSION["prodashboard"];
+        if ($connection->query($sql)) {
+          $rows = $connection->query($sql);
+          $row = $result->fetch_row();
 
-      if ($sql != "" && $connection->query($sql)) {
-        $rows = $connection->query($sql);
 
-        foreach ($rows as $row) {
-          $current = new Provider($row["ProviderId"], $row["Name"], $row['Address'], $row["TelephoneNo"], $connection);
-          if ($current->filter($_SESSION["prodashboard"])) {
+          foreach ($rows as $row) {
+            $current = new Provider($row["ProviderId"], $row["Name"], $row['Address'], $row["TelephoneNo"], $connection);
+
       ?>
 
 
@@ -828,11 +817,8 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
                                                   echo $current->get_name();
                                                   ?></h3>
-                    <i class='<?php if (in_array($row["ProviderId"], $currentHospital->get_staredProvider())) {
-                                echo "fas";
-                              } else {
-                                echo "far";
-                              } ?> fa-star col fa-lg ms-3 providerStar' name='providerStar' id=<?php echo $current->get_id() ?> onclick="starProviderUser(this)"></i>
+                    <i class='fas fa-star col fa-lg ms-3 providerStar' name='providerStar' id=<?php echo $current->get_id() ?> onclick="starProviderUser(this)"></i>
+
                   </div>
                   <p class='ms-2' style='font-size: 13px; margin-bottom:-5px; '><i class='fas fa-map-marker-alt'></i>&nbsp;
                     <?php echo $current->get_address(); ?></p>
@@ -1036,6 +1022,8 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
       <?php  }
         }
       }
+
+
       ?>
 
 
@@ -1366,7 +1354,6 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
         </div>
       </div>
 
-
       <?php
       if (isset($_POST['starHospitalId']) && ($_POST['star'] == "unStarHos")) {
         $currentHospital->add_staredHospital($_POST['starHospitalId']);
@@ -1462,31 +1449,6 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
     }
 
   }
-  $(document).ready(function() {
-    $('#searchBox').keyup(function() {
-      var SearchContent = $('#searchBox').val();
-      if (SearchContent != '') {
-        $.ajax({
-          url: "hospitalDashoard.php",
-          method: "POST",
-          data: {
-            SearchContent: SearchContent
-          },
-          success: function(data) {
-            var success = $($.parseHTML(data)).filter(".container");
-            //console.log(success); // div#success
-            //console.log(SearchContent);
-            //console.log(data);
-            //console.log(SearchContent);
-            //return SearchContent;
-            //alert(SearchContent);
-            //fetchUser();
-            $('.container').html(success);
-          }
-        });
-      }
-    });
-  });
 </script>
 
 </html>

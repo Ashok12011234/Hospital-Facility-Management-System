@@ -296,7 +296,9 @@ if ((isset($_POST['updateResources']))) {
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-primary" name="confirmPasswordbutton" id="confirmPasswordbutton" data-bs-toggle="modal" data-bs-target="#confirmPasswordModal">Confirm</button>
+
+                    <button class="btn btn-primary" style="margin-left: 45%; margin-top: -30px; margin-bottom: 30px;" name="confirmPasswordbutton" id="confirmPasswordbutton" data-bs-toggle="modal" data-bs-target="#confirmPasswordModal">Confirm</button>
+
             </div>
 
             </form>

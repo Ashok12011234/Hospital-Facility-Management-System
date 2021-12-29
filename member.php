@@ -3,7 +3,7 @@
 include("config.php");
 include("./classes/sysLvlCls/Password.php");
 
-class MemberType 
+class MemberType
 {
   const GUEST = 0;
   const HOSPITAL = 1;
@@ -25,6 +25,7 @@ abstract class Member
   public $bankName;
   public $website;
   public $password;
+  public $staredUser;
 
   public abstract function request();
   public abstract function filter($type);
@@ -127,8 +128,6 @@ abstract class Member
     QueryExecutor::query($sql);
     $this->accountNo = $accountNo;
   }
-
-
 }
 
 class Hospital extends Member
@@ -155,6 +154,7 @@ class Hospital extends Member
     $this->accountNo = $row['AccountNumber'];
     $this->bankName = $row['BankName'];
     $this->password = Password::decrypt($row['Password']);
+    $this->staredUser = "";
   }
 
   public static function getInstance($id): Hospital
@@ -294,113 +294,190 @@ class Hospital extends Member
       QueryExecutor::query($sql);
     }
   }
+  public function get_staredHospital()
+  {
+    $sql = "SELECT staredHospital FROM `Hospital` WHERE HospitalId = '1'";
+    $result = $this->connection->query($sql);
+    $row = $result->fetch_assoc();
+    // print_r($row);
+    $serialized = $row['staredHospital'];
+    $array = unserialize($serialized);
+    return $array;
+  }
+  public function add_staredHospital($userId)
+  {
+    $temp = $this->get_staredHospital();
+    // print_r($temp);
+    if (in_array($userId, $temp)) {
+    } else {
+      array_push($temp, $userId);
+      $data = serialize($temp);
+      $sql = "UPDATE `hospital` SET `staredHospital`= '$data' WHERE `hospital`.`HospitalId` =  '1'";
+      $this->connection->query($sql);
+    }
+  }
+  public function remove_staredHospital($userId)
+  {
+    $temp = $this->get_staredHospital();
+    $key = array_search($userId, $temp);
+    if (false !== $key) {
+      unset($temp[$key]);
+    }
+    //unset($temp[$userId]);
+    if (empty($temp)) {
+      $sql = "UPDATE `hospital` SET `staredHospital`= 'a:0:{}' WHERE `hospital`.`HospitalId` =  $this->id";
+    } else {
+      $data = serialize($temp);
+      $sql = "UPDATE `hospital` SET `staredHospital`= '$data' WHERE `hospital`.`HospitalId` =  $this->id";
+    }
+    $this->connection->query($sql);
+  }
+  public function get_staredProvider()
+  {
+    $sql = "SELECT staredProvider FROM `Hospital` WHERE HospitalId = '1'";
+    $result = $this->connection->query($sql);
+    $row = $result->fetch_assoc();
+    // print_r($row);
+    $serialized = $row['staredProvider'];
+    $array = unserialize($serialized);
+    // print_r($array);
+    //echo $array;
+    return $array;
+  }
+  public function add_staredProvider($userId)
+  {
+    $temp = $this->get_staredProvider();
+    // print_r($temp);
+    if (in_array($userId, $temp)) {
+    } else {
+      array_push($temp, $userId);
+      $data = serialize($temp);
+      $sql = "UPDATE `hospital` SET `staredProvider`= '$data' WHERE `hospital`.`HospitalId` =  '1'";
+      $this->connection->query($sql);
+    }
+  }
+  public function remove_staredProvider($userId)
+  {
+    $temp = $this->get_staredProvider();
+    $key = array_search($userId, $temp);
+    if (false !== $key) {
+      unset($temp[$key]);
+    }
+    //unset($temp[$userId]);
+    if (empty($temp)) {
+      $sql = "UPDATE `hospital` SET `staredProvider`= 'a:0:{}' WHERE `hospital`.`HospitalId` =  $this->id";
+    } else {
+      $data = serialize($temp);
+      $sql = "UPDATE `hospital` SET `staredProvider`= '$data' WHERE `hospital`.`HospitalId` =  $this->id";
+    }
+    $this->connection->query($sql);
+  }
 
-  public function filter($para){
 
-    switch($para){
-    
+  public function filter($para)
+  {
+
+    switch ($para) {
+
       case '1':
-        $out=true;
+        $out = true;
         break;
       case '11':
         $this->get_bed();
-        $out= $this->bedAval->providable();
+        $out = $this->bedAval->providable();
         break;
       case '12':
         $this->get_ceylinder();
-        $out= $this->ceylinderAval->providable();
+        $out = $this->ceylinderAval->providable();
         break;
       case '13':
         $this->get_blood();
-        $out= $this->bloodAval->providable();
+        $out = $this->bloodAval->providable();
         break;
       case '14':
         $this->get_vaccine();
-        $out= $this->vaccineAval->providable();
+        $out = $this->vaccineAval->providable();
         break;
-     
+
       case '111':
         $this->get_bed();
-        $out= $this->bedAval->check_normal();
+        $out = $this->bedAval->check_normal();
         break;
       case '112':
         $this->get_bed();
-        $out= $this->bedAval->check_icu();
+        $out = $this->bedAval->check_icu();
         break;
       case '121':
         $this->get_ceylinder();
-        $out= $this->ceylinderAval->check_small();
+        $out = $this->ceylinderAval->check_small();
         break;
       case '122':
         $this->get_ceylinder();
-        $out= $this->ceylinderAval->check_large();
+        $out = $this->ceylinderAval->check_large();
         break;
       case '123':
         $this->get_ceylinder();
-        $out= $this->ceylinderAval->check_medium();
+        $out = $this->ceylinderAval->check_medium();
         break;
       case '131':
         $this->get_blood();
-        $out= $this->bloodAval->check_aplus();
+        $out = $this->bloodAval->check_aplus();
         break;
       case '132':
         $this->get_blood();
-        $out= $this->bloodAval->check_aminus();
+        $out = $this->bloodAval->check_aminus();
         break;
       case '133':
         $this->get_blood();
-        $out= $this->bloodAval->check_bplus();
+        $out = $this->bloodAval->check_bplus();
         break;
       case '134':
         $this->get_blood();
-        $out= $this->bloodAval->check_bminus();
+        $out = $this->bloodAval->check_bminus();
         break;
       case '135':
         $this->get_blood();
-        $out= $this->bloodAval->check_oplus();
+        $out = $this->bloodAval->check_oplus();
         break;
       case '136':
         $this->get_blood();
-        $out= $this->bloodAval->check_ominus();
+        $out = $this->bloodAval->check_ominus();
         break;
       case '137':
         $this->get_blood();
-        $out= $this->bloodAval->check_abplus();
+        $out = $this->bloodAval->check_abplus();
         break;
       case '138':
         $this->get_blood();
-        $out= $this->bloodAval->check_abminus();
+        $out = $this->bloodAval->check_abminus();
         break;
       case '141':
         $this->get_vaccine();
-        $out= $this->vaccineAval->check_oxford();
+        $out = $this->vaccineAval->check_oxford();
         break;
       case '142':
         $this->get_vaccine();
-        $out= $this->vaccineAval->check_pfizer();
+        $out = $this->vaccineAval->check_pfizer();
         break;
       case '143':
         $this->get_vaccine();
-        $out= $this->vaccineAval->check_moderna();
+        $out = $this->vaccineAval->check_moderna();
         break;
       case '144':
         $this->get_vaccine();
-        $out= $this->vaccineAval->check_sinopharm();
+        $out = $this->vaccineAval->check_sinopharm();
         break;
       case '145':
         $this->get_vaccine();
-        $out= $this->vaccineAval->check_sputnik();
+        $out = $this->vaccineAval->check_sputnik();
         break;
 
-    
-      default:
-        $out=false;
-    
-    
-    
-      }
 
-      return $out;
+      default:
+        $out = false;
+    }
+
+    return $out;
   }
 }
 
@@ -418,6 +495,7 @@ class Provider extends Member
     $this->address = $row['Address'];
     $this->phoneNo = $row["TelephoneNo"];
     $this->id = $row["ProviderId"];
+    $this->staredUser = "";
   }
 
   public static function getInstance($id): Provider
@@ -448,6 +526,7 @@ class Provider extends Member
     return $this->bedAval;
   }
 
+
   public function get_ceylinder()
   {
     if (is_null($this->ceylinderAval)) {
@@ -459,58 +538,56 @@ class Provider extends Member
     return $this->ceylinderAval;
   }
 
-  public function filter($para){
+  public function filter($para)
+  {
 
-    switch($para){
-    
+    switch ($para) {
+
       case '2':
-        $out=true;
+        $out = true;
         break;
       case '21':
         $this->get_bed();
-        $out= $this->bedAval->providable();
+        $out = $this->bedAval->providable();
         break;
       case '22':
         $this->get_ceylinder();
-        $out= $this->ceylinderAval->providable();
+        $out = $this->ceylinderAval->providable();
         break;
       case '21':
         $this->get_bed();
-        $out= $this->bedAval->providable();
+        $out = $this->bedAval->providable();
         break;
       case '22':
         $this->get_ceylinder();
-        $out= $this->ceylinderAval->providable();
+        $out = $this->ceylinderAval->providable();
         break;
       case '211':
         $this->get_bed();
-        $out= $this->bedAval->check_normal();
+        $out = $this->bedAval->check_normal();
         break;
       case '212':
         $this->get_bed();
-        $out= $this->bedAval->check_icu();
+        $out = $this->bedAval->check_icu();
         break;
       case '221':
         $this->get_ceylinder();
-        $out= $this->ceylinderAval->check_small();
+        $out = $this->ceylinderAval->check_small();
         break;
       case '222':
         $this->get_ceylinder();
-        $out= $this->ceylinderAval->check_medium();
+        $out = $this->ceylinderAval->check_medium();
         break;
       case '223':
         $this->get_ceylinder();
-        $out= $this->ceylinderAval->check_large();
+        $out = $this->ceylinderAval->check_large();
         break;
 
       default:
-        $out=false;
-    
-    
-    
-      }
+        $out = false;
+    }
 
-      return $out;
+    return $out;
   }
 }
 
@@ -545,10 +622,10 @@ class Bed extends Equipment
     return false;
   }
 
-  public function providable(){
+  public function providable()
+  {
     return $this->check_normal() || $this->check_icu();
   }
-
 }
 
 class Vaccine extends Equipment
@@ -608,11 +685,10 @@ class Vaccine extends Equipment
     return false;
   }
 
-  public function providable(){
+  public function providable()
+  {
     return $this->check_sputnik() || $this->check_sinopharm() || $this->check_sputnik() || $this->check_moderna() || $this->check_pfizer() || $this->check_oxford();
   }
-
-
 }
 
 
@@ -697,11 +773,10 @@ class Blood extends Equipment
     return false;
   }
 
-  public function providable(){
-    return $this->check_aplus() || $this->check_aminus() ||$this->check_bplus() || $this->check_bminus() ||$this->check_oplus() || $this->check_ominus() ||$this->check_abplus() || $this->check_abminus()  ;
+  public function providable()
+  {
+    return $this->check_aplus() || $this->check_aminus() || $this->check_bplus() || $this->check_bminus() || $this->check_oplus() || $this->check_ominus() || $this->check_abplus() || $this->check_abminus();
   }
-
-
 }
 
 class Ceylinder extends Equipment
@@ -738,7 +813,8 @@ class Ceylinder extends Equipment
     return false;
   }
 
-  public function providable(){
+  public function providable()
+  {
     return $this->check_small() || $this->check_medium() || $this->check_large();
   }
 }

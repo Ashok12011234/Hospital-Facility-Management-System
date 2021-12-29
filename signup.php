@@ -1,6 +1,6 @@
 <?php
 require("classes/sysLvlCls/Signupper.php");
-require("config.php");
+
 session_start();
 if (!array_key_exists("signupper", $_SESSION)) {
     $signupper = new Signupper();

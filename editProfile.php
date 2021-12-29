@@ -1,7 +1,8 @@
 <?php
-include("config.php");
+#include("config.php");
 include("common.php");
-include("member.php");
+#include("member.php");
+include("navbar.php");
 
 $hospitalID = 1;
 $sql = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
@@ -54,9 +55,9 @@ if (isset($_POST['updateProfile'])) {
 
 <body>
     
-<?php
+<!--?php
 include("navbar.php");
-?>
+?-->
     <!-- Body -->
     <div class="rounded bg-white m-4 p-3 body-contentx">
         <form action="" method="POST" enctype="multipart/form-data">

@@ -1,7 +1,5 @@
 <?php
-require("config.php");
-require("classes/sysLvlCls/Password.php");
-require("classes/probDomCls/Mail.php");
+include("classes/probDomCls/Mail.php");
 include("./member.php");
 session_start();
 $error = "";

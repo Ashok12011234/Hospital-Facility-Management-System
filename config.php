@@ -1,30 +1,9 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "hfms";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password);
-
-// Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
+include "./connection.php";
 
 // Create database
-$createDB = "CREATE DATABASE IF NOT EXISTS $database";
-$conn->query($createDB);
-
-
-$conn->close();
-
-// Create connection
-$connection = new mysqli($servername, $username, $password, $database);
-// Check connection
-if ($connection->connect_error) {
-  die("Connection failed: " . $connection->connect_error);
-}
+$createDB = "CREATE DATABASE IF NOT EXISTS `".Database::NAME."`";
+QueryExecutor::query($createDB);
 
 // sql to create table
 $createTb = "CREATE TABLE BloodDetail (
@@ -43,14 +22,14 @@ $createTb = "CREATE TABLE BloodDetail (
 CREATE TABLE Executive (
   ExecutiveId int(11) NOT NULL AUTO_INCREMENT, 
   UserName varchar(50) NOT NULL UNIQUE, 
-  Password varchar(10) NOT NULL, 
+  Password varchar(255) NOT NULL, 
   PRIMARY KEY (ExecutiveId));
 
 CREATE TABLE Hospital (
   HospitalId int(10) NOT NULL AUTO_INCREMENT, 
   UserName varchar(50) NOT NULL UNIQUE, 
   Email varchar(20), 
-  Password varchar(10) NOT NULL, 
+  Password varchar(255) NOT NULL, 
   Name varchar(255), 
   TelephoneNo varchar(25), 
   Address varchar(255), 
@@ -85,7 +64,7 @@ CREATE TABLE HospitalCylinderDetail (
 CREATE TABLE NewAccount (
   NewAccountID int(10) NOT NULL AUTO_INCREMENT, 
   UserName varchar(16) NOT NULL UNIQUE,
-  Password varchar(12) NOT NULL, 
+  Password varchar(255) NOT NULL, 
   Email varchar(50) NOT NULL, 
   AccountType enum('HOSPITAL','PROVIDER') NOT NULL, 
   BankName enum('BOC','PEOPLE','HNB','COMMERCIAL','NSB'), 
@@ -99,7 +78,7 @@ CREATE TABLE Provider (
   ProviderId int(10) NOT NULL AUTO_INCREMENT, 
   UserName varchar(50) NOT NULL UNIQUE, 
   Email varchar(20), 
-  Password varchar(10) NOT NULL, 
+  Password varchar(255) NOT NULL, 
   Name varchar(255), 
   TelephoneNo varchar(25), 
   Address varchar(255), 
@@ -160,7 +139,5 @@ CREATE TABLE VaccineDetail (
 
 ";
 
-
-if ($connection->multi_query($createTb)) {
-  echo "DONE";
+if(QueryExecutor::multi_query($createTb)) {
 }

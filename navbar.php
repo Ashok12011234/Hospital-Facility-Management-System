@@ -7,7 +7,7 @@ if (array_key_exists("logout",$_GET)) {
 }
 
 include("member.php");
-
+$_SESSION["type"] = 1;
 switch ($_SESSION["type"]) {
   case MemberType::GUEST:
     # code...
@@ -15,14 +15,14 @@ switch ($_SESSION["type"]) {
   
   case MemberType::HOSPITAL:
     # you can use $SESSION["acID"] to create Hospital obj
-    # $user = Hospital::createHospital($_SESSION["acID"], $connection);
+    # $user = Hospital::getInstance($_SESSION["acID"]);
     # for simplicity,
-    $user = Hospital::createHospital(1, $connection);
+    $user = Hospital::getInstance(1);
     break;
 
   case MemberType::PROVIDER:
     # you can use $SESSION["acID"] to create Provider obj
-    # $user = Provider::createProvider($_SESSION["acID"], $connection);
+    # $user = Provider::getInstance($_SESSION["acID"]);
     break;
   
   default:

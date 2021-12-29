@@ -1,8 +1,8 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "1234";
-$database="hfms";
+$password = "";
+$database = "hfms";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password);
@@ -57,7 +57,9 @@ CREATE TABLE Hospital (
   Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultDp.png' ,
   Website varchar(100),
   BankName varchar(20) NOT NULL, 
-  AccountNumber varchar(20) NOT NULL, 
+  AccountNumber varchar(20) NOT NULL,
+  staredHospital varchar(512) NOT NULL DEFAULT 'a:0:{}',
+  staredProvider varchar(512) NOT NULL DEFAULT 'a:0:{}',
   PRIMARY KEY (HospitalId));
 
 CREATE TABLE HospitalBedDetail (
@@ -104,7 +106,9 @@ CREATE TABLE Provider (
   Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultDp.png',
   Website varchar(100),
   BankName varchar(20) NOT NULL, 
-  AccountNumber varchar(20) NOT NULL, 
+  AccountNumber varchar(20) NOT NULL,
+  staredHospital varchar(512) NOT NULL DEFAULT 'a:0:{}',
+  staredProvider varchar(512) NOT NULL DEFAULT 'a:0:{}',
   PRIMARY KEY (ProviderId));
 
 CREATE TABLE ProviderBedDetail (
@@ -156,10 +160,7 @@ CREATE TABLE VaccineDetail (
 
 ";
 
-    
-if($connection->multi_query($createTb)) {
+
+if ($connection->multi_query($createTb)) {
   echo "DONE";
 }
-   
-?>
-

@@ -1,3 +1,7 @@
+<?php
+include("request.php");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,20 +15,34 @@
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link rel="stylesheet" href="/assets/css/Hospital-page.css">
     <link rel="stylesheet" href="/assets/css/Request-Page.css">
-    <title>Dashboard</title>
-</head>
+    <title>Request Dashboard</title>
 
+
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+    <script src="donate.js"></script>
+
+    </head>
 <body>
-
+<?php
+include("navbar.php");
+?>
     <!-- Headings and title-->
     <div class="row justify-content-between mt-5 ms-2 me-2">
         <div class="col-md-8 ">
-            <h2>Request</h2>
+            <h2>All Requests</h2>
             <br>
         </div>
         <div class="col-md-4">
             <div class="input-group">
-                <select class="form-select" aria-label="Default select example" disabled>
+                <select class="form-select" aria-label="Default select example">
                     <option selected>Sent requests</option>
                     <option value="1">Receive requests</option>
                 </select>
@@ -34,13 +52,25 @@
     <!-- Headings and title end-->
 
     <!--Content-->
-    <div class="container mt-4 mb-4">
+    <?php
+            $hospitalID = 2;
+            $sql = "SELECT * FROM HHrequest WHERE HospitalId=$hospitalID";
+               
+             if($connection->query($sql)){
+                $rows = $connection->query($sql);
+             
+            foreach($rows as $row){
+                $current = new HHRequest( $row['RequestId'],  $connection);
+                $current->assignAll();
+               
+                ?>
+    <div class="container mt-5 mb-4">
         <div class="row">
-            <div class="col-md-5 mb-4">
+            <div class="col-lg-4 col-md-6 col-xl-3 mb-4">
                 <div class="card">
                     <div class="card-body">
                         <div class="row justify-content-between mb-1">
-                            <h2 class="col-9 card-title">ID - 21091101A</h2>
+                            <h3 class="col-9 card-title">Request ID - <?php echo $current->getId()?></h3>
                         </div>
                         <div class="row">
                             <div class="col-5">
@@ -49,7 +79,7 @@
                             <div class="col-7">
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-link link-btn" data-bs-toggle="modal" data-bs-target="#fromModal">
-                                    user-name
+                                    <?php echo $current->getFrom()->get_name();?>
                                 </button>
 
                                 <!-- Modal -->
@@ -155,7 +185,7 @@
                             <div class="col-7">
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-link link-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    user-name
+                                    <?php echo $current->getTo()->get_name();?>
                                 </button>
                                 <!-- Modal -->
                                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -259,7 +289,7 @@
                             </div>
                             <div class="col-7">
                                 <p class="btn">
-                                    Normal Bed
+                                    <?php echo $current->getEquipment();?>
                                 </p>
                             </div>
                         </div>
@@ -269,99 +299,24 @@
                             </div>
                             <div class="col-7">
                                 <p class="btn">
-                                    3
+                                    <?php echo $current->getQuantity();?>
                                 </p>
                             </div>
                         </div>
-                        <div class="row mb-2" id="status">
-                            <div class="col-12 px-1">
-                                <button type="button" class="btn btn-primary" disabled>Requested</button>
-                            </div>
-                        </div>
-                        <div class="row mb-2" id="status">
-                            <div class="col-6 px-1">
-                                <button class="btn btn-success">Accept</button>
-                            </div>
-                            <div class="col-6 px-1">
-                                <button class="btn btn-danger">Decline</button>
-                            </div>
-                        </div>
-                        <div class="row mb-2" id="status">
-                            <div class="col-12 px-1">
-                                <button type="button" class="btn btn-success" disabled>Accepted</button>
-                            </div>
-                        </div>
-                        <div class="row mb-2" id="status">
-                            <div class="col-12 px-1">
-                                <button type="button" class="btn btn-danger" disabled>Declined</button>
-                            </div>
-                        </div>
-                        <div class="row mb-2" id="status">
-                            <div class="col-12 px-1">
-                                <button type="button" class="btn btn-warning">Transport</button>
-                            </div>
-                        </div>
-                        <div class="row mb-2" id="status">
-                            <div class="col-12 px-1">
-                                <button type="button" class="btn btn-warning" disabled>Transporting</button>
-                            </div>
-                        </div>
-                        <div class="row mb-2" id="status">
-                            <div class="col-12 px-1">
-                                <button type="button" class="btn btn-secondary">Confirm exchange</button>
-                            </div>
-                        </div>
-                        <div class="row mb-2" id="status">
-                            <div class="col-12 px-1">
-                                <button type="button" class="btn btn-success" disabled>Exchange completed</button>
-                            </div>
-                        </div>
-                        <div class="row" id="status" style="margin-bottom: -5px;">
-                            <div class="col-12 px-1">
-                                <button type="button" class="btn btn-dark">Cancel</button>
-                            </div>
+                        <div class="row">
+                            <p class="text-end" style="margin-bottom: -5px; margin-top: -5px;">
+                                <a href="/viewRequest.php" style="text-decoration: none; color: #aaa;">See more..</a>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-7 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card mb-2">
-                            <div class="card-header">
-                                <h3>Hospital x<h3>
-                            </div>
-                            <div id="chat-box-body" class="card-body">
-                                <div class="message" style="float: left;background-color: #f0fde4;">hi</div><br>
-                                <div class="message" style="float: right;background-color: #f2e4fd;">hi</div><br>
-                                <div style="clear: both;"></div>
-                                <div class="message" style="float: left;background-color: #f0fde4;">Info about Help In Writing. The fastest search engine. Discover us now! Fast and trusted. Easy Acces To Information. All the Answers. Simple in use. Multiple sources combined. Types: Information, Combined Web Results, Easy & Fast, 99% Match.</div><br>
-                                <div class="message" style="float: right;background-color: #f2e4fd;">Info about Help In Writing. The fastest search engine. Discover us now! Fast and trusted. Easy Acces To Information. All the Answers. Simple in use. Multiple sources combined. Types: Information, Combined Web Results, Easy & Fast, 99% Match.</div><br>
-                                <div style="clear: both;"></div>
-                            </div>
-                        </div>
-                        <div class="input-group">
-                            <textarea id="chat-textarea" class="form-control" aria-label="With textarea"></textarea>
-                            <button class="input-group-text btn btn-link chat-btn"><i class="fas fa-share-alt"></i></button>
-                            <button class="input-group-text btn btn-link chat-btn"><i class="far fa-paper-plane"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+           
+                <?php
+            }}?>
 </body>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+
 <script type="text/javascript">
     function myhref(web) {
         window.location.href = web;

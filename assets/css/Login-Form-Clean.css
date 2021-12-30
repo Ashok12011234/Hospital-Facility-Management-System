@@ -39,6 +39,11 @@ body {
   font-family: Poppins, Alatsi, Arial, Helvetica, sans-serif;
 }
 
+.illustration input {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
 .login-clean form .form-control {
   background: #f7f9fc;
   border: none;
@@ -55,10 +60,15 @@ body {
   border: none;
   border-radius: 4px;
   padding: 11px;
-  box-shadow: none;
+  box-shadow: none  !important;
   text-shadow: none;
-  outline: none !important;
+  outline: none;
   float: right;
+}
+
+.login-clean form .btn-primary:focus {
+  outline: 1px solid #198754;
+  box-shadow: none;
 }
 
 .login-clean form .forgot {
@@ -73,3 +83,30 @@ body {
   text-decoration: underline;
 }
 
+.link-btn {
+  text-decoration: none;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.link-btn:focus {
+  box-shadow: none;
+}
+
+#mail-sending {
+  width: 700px;
+  height: 440px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  display: none;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  color:#198754;
+  text-align: center;
+  font-size: 35px;
+  font-weight: 400;
+  font-family: Poppins, Alatsi, Arial, Helvetica, sans-serif;
+  background: url(../documents/PageDocuments/admin/mail_sent.gif) no-repeat;
+  background-size: cover;
+}

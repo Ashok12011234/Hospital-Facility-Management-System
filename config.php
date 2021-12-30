@@ -75,7 +75,7 @@ CREATE TABLE HospitalCylinderDetail (
 
 CREATE TABLE NewAccount (
   NewAccountID int(10) NOT NULL AUTO_INCREMENT, 
-  UserName varchar(16) NOT NULL UNIQUE,
+  UserName varchar(30) NOT NULL UNIQUE,
   Password varchar(12) NOT NULL, 
   Email varchar(50) NOT NULL, 
   AccountType enum('HOSPITAL','PROVIDER') NOT NULL, 
@@ -83,7 +83,9 @@ CREATE TABLE NewAccount (
   AccountNumber varchar(20), 
   BankEvidence varchar(255),
   InstituteEvidence varchar(255) NOT NULL, 
-  Status enum('NEW','PENDING','APPROVED','REJECTED') NOT NULL DEFAULT 'NEW', 
+  Status enum('NEW', 'PENDING', 'APPROVED', 'REJECTED') NOT NULL DEFAULT 'NEW', 
+  Doc_Status enum('Correct','False','Not Vertified') NOT NULL DEFAULT 'Not Vertified',
+  Bank_Status enum('Correct','False','Not Vertified') NOT NULL DEFAULT 'Not Vertified',
   PRIMARY KEY (NewAccountID));
 
 CREATE TABLE Provider (

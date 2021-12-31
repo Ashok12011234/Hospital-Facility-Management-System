@@ -3,14 +3,14 @@
 
 
 include("member.php");
-//session_start();
+session_start();
 
 
 $id = $_POST['id'];
 $equipment = $_POST['equipment'];
 $userType= $_POST['userType'];
 $quantity=$_POST['quantity'];
-
+$id2=$_SESSION["acID"];
 if($userType=='1'){
     $sql = "INSERT INTO HHrequest
 (RequestId,
@@ -22,7 +22,7 @@ Quantity)
 VALUES
 ('0',
 '$id',
-'2',
+'$id2',
 'Pending',
 '$equipment',
 '$quantity');
@@ -39,7 +39,7 @@ else{
     VALUES
     ('0',
     '$id',
-    '2',
+    '$id2',
     'Pending',
     '$equipment',
     '$quantity');
@@ -48,7 +48,7 @@ else{
 
 
 
-if ($connection->query($sql) === TRUE) {
+if ($result = QueryExecutor::query($sql)) {
     echo "New record created successfully";
   } else {
     echo "Error: " . $sql . "<br>" . $conn->error;

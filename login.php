@@ -5,7 +5,8 @@ session_start();
 $error = "";
 $success = "";
 if (array_key_exists("next", $_POST)) {
-    if ($result = $connection -> query("SELECT `password`,`HospitalID`,`Email` FROM `Hospital` WHERE username = '".$_POST["username"]."'")) {
+    $sql="SELECT `password`,`HospitalID`,`Email` FROM `Hospital` WHERE username = '".$_POST["username"]."'";
+    if ($result = QueryExecutor::query($sql)) {
         if ($result -> num_rows == 1) {
             $row = $result->fetch_assoc();
             if (!array_key_exists("forgot", $_GET)) {

@@ -222,12 +222,12 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
 <body>
   <?php
+ 
   $hospitalID = 1;
   $sql = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
-  $result = $connection->query($sql);
+  $result =QueryExecutor::query($sql); 
   $row = $result->fetch_assoc();
-  $currentHospital = new Hospital($hospitalID, $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
-
+  $currentHospital=Hospital::getInstance($hospitalID);
 
   ?>
 
@@ -267,13 +267,14 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
       foreach ($arry as $indexStar) {
         $sql = "SELECT * FROM Hospital WHERE `hospital`.`HospitalId` =  '$indexStar'";
 
-        if ($connection->query($sql)) {
-          $rows = $connection->query($sql);
-          $row = $result->fetch_row();
-          foreach ($rows as $row) {
-            // $current=new Hospital($row["HospitalId"],$row["Name"],$row['Address'],$row["TelephoneNo"],$connection);
-            $current = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
-
+       
+      if ($result = QueryExecutor::query($sql)) {
+       
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+ 
+         foreach ($rows as $row) {
+           $current = Hospital::getInstance($row["HospitalId"]);
+           if ($current->filter($_SESSION["hosdashboard"])) {
       ?>
             <div class='col-md-6 col-xl-4 mb-4'>
               <div class='card'>
@@ -780,7 +781,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
             </div>
 
       <?php }
-        }
+        }}
       }
 
       ?>
@@ -793,14 +794,12 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
       foreach ($arry as $indexStar) {
         $sql = "SELECT * FROM provider WHERE `provider`.`ProviderId` =  '$indexStar'";
 
-        if ($connection->query($sql)) {
-          $rows = $connection->query($sql);
-          $row = $result->fetch_row();
-
-
+        if ($result = QueryExecutor::query($sql)) {
+          $rows = $result->fetch_all(MYSQLI_ASSOC);
+  
           foreach ($rows as $row) {
-            $current = new Provider($row["ProviderId"], $row["Name"], $row['Address'], $row["TelephoneNo"], $connection);
-
+            $current =Provider::getInstance($row["ProviderId"]);
+            if ($current->filter($_SESSION["prodashboard"])) {
       ?>
 
 
@@ -1021,7 +1020,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
       <?php  }
         }
-      }
+      }}
 
 
       ?>

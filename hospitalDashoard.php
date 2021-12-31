@@ -222,11 +222,11 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
 <body>
   <?php
-  $hospitalID = 1;
+  $hospitalID = $_SESSION["acID"];
   $sql = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
-  $result = $connection->query($sql);
+  $result =QueryExecutor::query($sql); 
   $row = $result->fetch_assoc();
-  $currentHospital = new Hospital($hospitalID, $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
+  $currentHospital=Hospital::getInstance($hospitalID);
 
 
   ?>
@@ -260,25 +260,20 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
       <!-- Hospital-->
       <?php
-      //$sql = "SELECT HospitalId,Name, TelephoneNo, Address FROM Hospital";
       if (isset($_POST['SearchContent'])) {
-        //header("location: hgpadfp.com");
         $content = $_POST['SearchContent'];
-        //$sql = "SELECT * FROM Hospital WHERE UserName LIKE  '%1234%' ";
         $sql = "SELECT * FROM Hospital WHERE UserName LIKE '%$content%' OR Name LIKE '%$content%' OR Website LIKE '%$content%' OR Address LIKE '%$content%';";;
       } else {
-        // print_r($_POST);
-        //header("location: hgpadfp.com");
         $sql = "SELECT * FROM Hospital"; // WHERE UserName LIKE  '%1234%' ";
       }
 
 
-      if ($connection->query($sql)) {
-        $rows = $connection->query($sql);
+      if ($result = QueryExecutor::query($sql)) {
+       
+       $rows = $result->fetch_all(MYSQLI_ASSOC);
 
         foreach ($rows as $row) {
-          // $current=new Hospital($row["HospitalId"],$row["Name"],$row['Address'],$row["TelephoneNo"],$connection);
-          $current = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
+          $current = Hospital::getInstance($row["HospitalId"]);
           if ($current->filter($_SESSION["hosdashboard"])) {
       ?>
             <div class='col-md-6 col-xl-4 mb-4'>
@@ -287,20 +282,27 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
                   <div class='mb-3' style='min-height: 150px; background-color: grey;display: flex;justify-content: center;'>
                     <img style="object-fit:fill;width:300px;height:400px;border: solid 1px #CCC" src="<?php
                                                                                                       echo $current->get_profile();
-                                                                                                      ?>" alt="Hodpital" class="center">
+                                                                                                      ?>" alt="Hospital" class="center">
                   </div>
                   <div class='row justify-content-between mb-1'>
                     <h3 class='col-9 card-title'>
                       <?php
                       echo $current->get_name();
+                      if($_SESSION["acID"]==$current->get_id()){
+                        echo '(Me)';
+                      }
                       ?>
                     </h3>
-
-                    <i class='<?php if (in_array($row["HospitalId"], $currentHospital->get_staredHospital())) {
+                    <i  style="<?php
+                    if($_SESSION["acID"]==$current->get_id()){
+                      echo 'display:none;';
+                    }
+                  ?>" class='<?php if (in_array($row["HospitalId"], $currentHospital->get_staredHospital()) ) {
                                 echo "fas";
                               } else {
                                 echo "far";
                               } ?> fa-star col fa-lg ms-4' name='hospitalStar' id=<?php echo $current->get_id() ?> onclick="starHospitalUser(this)"></i>
+                   
                   </div>
                   <p class='ms-2' style='font-size: 13px; margin-bottom:-5px; '><i class='fas fa-map-marker-alt'></i>&nbsp;
                     <?php
@@ -500,7 +502,11 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
                       </div>
                     </div>
                   </div>
-                  <Button class='btn btn-success w-100 mt-4 me-2' onclick="request(this,1)" value="<?php echo $current->get_id() ?>">Request</Button>
+                  <Button class='btn btn-success w-100 mt-4 me-2' style="<?php
+                    if( $_SESSION["type"]==1 || $_SESSION["acID"]==$current->get_id() ){
+                      echo 'display:none;';
+                    }
+                  ?>" onclick="request(this,1)" value="<?php echo $current->get_id() ?>">Request</Button>
 
                 </div>
               </div>
@@ -803,14 +809,12 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
         $sql = "SELECT * FROM Provider";
       }
 
-      // $sql = "SELECT * FROM Provider";
-      //$sql=$_SESSION["prodashboard"];
-
-      if ($sql != "" && $connection->query($sql)) {
-        $rows = $connection->query($sql);
+      
+      if ($result = QueryExecutor::query($sql)) {
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
 
         foreach ($rows as $row) {
-          $current = new Provider($row["ProviderId"], $row["Name"], $row['Address'], $row["TelephoneNo"], $connection);
+          $current =Provider::getInstance($row["ProviderId"]);
           if ($current->filter($_SESSION["prodashboard"])) {
       ?>
 
@@ -833,7 +837,8 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
                               } else {
                                 echo "far";
                               } ?> fa-star col fa-lg ms-3 providerStar' name='providerStar' id=<?php echo $current->get_id() ?> onclick="starProviderUser(this)"></i>
-                  </div>
+                  
+                </div>
                   <p class='ms-2' style='font-size: 13px; margin-bottom:-5px; '><i class='fas fa-map-marker-alt'></i>&nbsp;
                     <?php echo $current->get_address(); ?></p>
                   <p class='m-2' style='font-size: 13px;'><i class='fas fa-phone'></i> &nbsp;<?php echo $current->get_phoneno(); ?></p>
@@ -1398,6 +1403,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
     window.location.href = web;
   }
 </script>
+
 <script type="text/javascript">
   function starProviderUser(x) {
     //console.log(x.id);

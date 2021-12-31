@@ -11,6 +11,7 @@ $_SESSION["type"] = 1;
 switch ($_SESSION["type"]) {
   case MemberType::GUEST:
     # code...
+    //$_SESSION["acID"]="";
     break;
   
   case MemberType::HOSPITAL:
@@ -53,7 +54,7 @@ switch ($_SESSION["type"]) {
                 </li>
                 
                 <li class="nav-item ms-2">
-                    <a class="nav-link" href="#">Stared</a>
+                    <a class="nav-link" href="stared.php">Stared</a>
                 </li>
                 <li class="nav-item ms-2">
                     <a class="nav-link" href="./requestDashboard.php">Requests</a>

@@ -1,6 +1,6 @@
 <?php
 
-include("member.php");
+//include("member.php");
 
 abstract class Request{
     public $id;
@@ -9,7 +9,7 @@ abstract class Request{
     public $state;
     public $equipment;
     public $quantity;
-    public $connection;
+    //public $connection;
 
   public function getId () {return $this->id;}
   public function getFrom () {return $this->from;}
@@ -26,9 +26,9 @@ abstract class Request{
     
 
 
-    public function __construct($id,$connection){
+    public function __construct($id){
         $this->id=$id;
-        $this->connection=$connection;
+        //$this->connection=$connection;
         $this->state=new NewRequest(); 
     }
     
@@ -62,37 +62,39 @@ abstract class Request{
 
 class HHRequest extends Request{
 
-    public function __construct($id,$connection){
+    public function __construct($id){
        // super($id,$connection);
-        parent::__construct($id,$connection);
+        parent::__construct($id);
     }
 
     public function assignAll(){
         $sql1 = "SELECT * FROM HHrequest WHERE RequestId=$this->id";
 
-        if($this->connection->query($sql1)){
-            $result = $this->connection->query($sql1);
+        if($result = QueryExecutor::query($sql1)){
+           
             $row = $result->fetch_assoc();
-            $hospitalID=$row["HospitalId"];
-            $providerID=$row["ProviderId"];
-            $this->equipment=$row["Equipment"];
-            $this->quantity=$row["Quantity"];
+            
+                $hospitalID=$row["HospitalId"];
+                $providerID=$row["ProviderId"];
+                $this->equipment=$row["Equipment"];
+                $this->quantity=$row["Quantity"];
+        
+          
         }
         $sql2 = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
 
-        if($this->connection->query($sql2)){
-            $result = $this->connection->query($sql2);
+        if($result = QueryExecutor::query($sql2)){
             $row = $result->fetch_assoc();
-            $this->from = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $this->connection);
+            $this->from = Hospital::getInstance($row["HospitalId"]);
 
         }
 
         $sql3 = "SELECT * FROM Hospital WHERE HospitalId=$providerID";
 
-        if($this->connection->query($sql3)){
-            $result = $this->connection->query($sql3);
+        if($result = QueryExecutor::query($sql3)){
+            
             $row = $result->fetch_assoc();
-            $this->to = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $this->connection);
+            $this->to = Hospital::getInstance($row["HospitalId"]);
 
         }
 
@@ -105,37 +107,39 @@ class HHRequest extends Request{
 
 class HPRequest extends Request{
 
-    public function __construct($id,$connection){
+    public function __construct($id){
         //super($id,$connection);
-        parent::__construct($id,$connection);
+        parent::__construct($id);
     }
 
     public function assignAll(){
-        $sql1 = "SELECT * FROM HPrequest WHERE RequestId=$id";
+        $sql1 = "SELECT * FROM HPrequest WHERE RequestId=$this->id";
 
-        if($this->connection->query($sql1)){
-            $result = $this->connection->query($sql1);
+        if($result = QueryExecutor::query($sql1)){
+           // $result = $this->connection->query($sql1);
+           
             $row = $result->fetch_assoc();
             $hospitalID=$row["HospitalId"];
             $providerID=$row["ProviderId"];
             $this->equipment=$row["Equipment"];
             $this->quantity=$row["Quantity"];
+          
         }
         $sql2 = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
 
-        if($this->connection->query($sql2)){
-            $result = $this->connection->query($sql2);
+        if($result = QueryExecutor::query($sql2)){
+            //$result = $this->connection->query($sql2);
             $row = $result->fetch_assoc();
-            $this->from = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $this->connection);
+            $this->from = Hospital::getInstance($row["HospitalId"]);
 
         }
 
         $sql3 = "SELECT * FROM Provider WHERE ProviderId=$providerID";
 
-        if($this->connection->query($sql3)){
-            $result = $this->connection->query($sql3);
+        if($result = QueryExecutor::query($sql3)){
+            //$result = $this->connection->query($sql3);
             $row = $result->fetch_assoc();
-            $this->to = new Provider($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $this->connection);
+            $this->to = Provider::getInstance($row["ProviderId"]);
 
         }
     }

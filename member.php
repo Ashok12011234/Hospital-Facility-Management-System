@@ -297,7 +297,9 @@ class Hospital extends Member
   public function get_staredHospital()
   {
     $sql = "SELECT staredHospital FROM `Hospital` WHERE HospitalId = '1'";
-    $result = $this->connection->query($sql);
+    //$result = $this->connection->query($sql);
+    //$row = $result->fetch_assoc();
+    $result = QueryExecutor::query($sql);
     $row = $result->fetch_assoc();
     // print_r($row);
     $serialized = $row['staredHospital'];
@@ -313,7 +315,8 @@ class Hospital extends Member
       array_push($temp, $userId);
       $data = serialize($temp);
       $sql = "UPDATE `hospital` SET `staredHospital`= '$data' WHERE `hospital`.`HospitalId` =  '1'";
-      $this->connection->query($sql);
+      //$this->connection->query($sql);
+      QueryExecutor::query($sql);
     }
   }
   public function remove_staredHospital($userId)
@@ -330,12 +333,15 @@ class Hospital extends Member
       $data = serialize($temp);
       $sql = "UPDATE `hospital` SET `staredHospital`= '$data' WHERE `hospital`.`HospitalId` =  $this->id";
     }
-    $this->connection->query($sql);
+    //$this->connection->query($sql);
+    QueryExecutor::query($sql);
   }
   public function get_staredProvider()
   {
     $sql = "SELECT staredProvider FROM `Hospital` WHERE HospitalId = '1'";
-    $result = $this->connection->query($sql);
+    // $result = $this->connection->query($sql);
+    // $row = $result->fetch_assoc();
+    $result = QueryExecutor::query($sql);
     $row = $result->fetch_assoc();
     // print_r($row);
     $serialized = $row['staredProvider'];
@@ -353,7 +359,8 @@ class Hospital extends Member
       array_push($temp, $userId);
       $data = serialize($temp);
       $sql = "UPDATE `hospital` SET `staredProvider`= '$data' WHERE `hospital`.`HospitalId` =  '1'";
-      $this->connection->query($sql);
+      //$this->connection->query($sql);
+      QueryExecutor::query($sql);
     }
   }
   public function remove_staredProvider($userId)
@@ -370,7 +377,8 @@ class Hospital extends Member
       $data = serialize($temp);
       $sql = "UPDATE `hospital` SET `staredProvider`= '$data' WHERE `hospital`.`HospitalId` =  $this->id";
     }
-    $this->connection->query($sql);
+    //$this->connection->query($sql);
+    QueryExecutor::query($sql);
   }
 
 

@@ -1,8 +1,8 @@
 <?php
-include "./connection.php";
+include('connection.php');
 
 // Create database
-$createDB = "CREATE DATABASE IF NOT EXISTS `".Database::NAME."`";
+$createDB = "CREATE DATABASE IF NOT EXISTS `" . Database::NAME . "`";
 QueryExecutor::query($createDB);
 
 // sql to create table
@@ -143,7 +143,5 @@ CREATE TABLE VaccineDetail (
 
 ";
 
-if(QueryExecutor::multi_query($createTb)) {
+if (QueryExecutor::multi_query($createTb)) {
 }
-
-?>

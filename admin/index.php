@@ -1,7 +1,11 @@
-<?php 
+<?php
 include 'header.php';
 
+
 ?>
+<script>
+    window.location.href = "check_new.php";
+</script>
 <!--Content-->
 <div class="container mt-5 mb-4">
     <div class="row">
@@ -14,8 +18,7 @@ include 'header.php';
                         <!-- <i class="fas fa-star col-1 fa-lg"></i> -->
                         <i class="far fa-star col fa-lg ms-4"></i>
                     </div>
-                    <p class="ms-2" style="font-size: 13px; margin-bottom:-5px; "><i
-                            class="fas fa-map-marker-alt"></i>&nbsp;
+                    <p class="ms-2" style="font-size: 13px; margin-bottom:-5px; "><i class="fas fa-map-marker-alt"></i>&nbsp;
                         No1,
                         Hospital
                         Road,
@@ -100,8 +103,7 @@ include 'header.php';
                         <i class="fas fa-star col-1"></i>
                         <i class="far fa-star col-1"></i>
                     </div>
-                    <p class="ms-2" style="font-size: 13px; margin-bottom:-5px; "><i
-                            class="fas fa-map-marker-alt"></i>&nbsp;
+                    <p class="ms-2" style="font-size: 13px; margin-bottom:-5px; "><i class="fas fa-map-marker-alt"></i>&nbsp;
                         No1,
                         Producer 1
                         Road,
@@ -142,8 +144,7 @@ include 'header.php';
                         <i class="fas fa-star col-1"></i>
                         <i class="far fa-star col-1"></i>
                     </div>
-                    <p class="ms-2" style="font-size: 13px; margin-bottom:-5px; "><i
-                            class="fas fa-map-marker-alt"></i>&nbsp;
+                    <p class="ms-2" style="font-size: 13px; margin-bottom:-5px; "><i class="fas fa-map-marker-alt"></i>&nbsp;
                         No1,
                         Hospital
                         Road,
@@ -209,8 +210,7 @@ include 'header.php';
                             </div>
                         </div>
                     </div>
-                    <p class="text-end" style="margin-bottom: -5px; margin-top: -5px;"><a href="#"
-                            style="text-decoration: none; color: #aaa;">See
+                    <p class="text-end" style="margin-bottom: -5px; margin-top: -5px;"><a href="#" style="text-decoration: none; color: #aaa;">See
                             more..</a>
                     </p>
                 </div>
@@ -225,8 +225,7 @@ include 'header.php';
                         <i class="fas fa-star col-1"></i>
                         <i class="far fa-star col-1"></i>
                     </div>
-                    <p class="ms-2" style="font-size: 13px; margin-bottom:-5px; "><i
-                            class="fas fa-map-marker-alt"></i>&nbsp;
+                    <p class="ms-2" style="font-size: 13px; margin-bottom:-5px; "><i class="fas fa-map-marker-alt"></i>&nbsp;
                         No1,
                         Hospital
                         Road,
@@ -292,8 +291,7 @@ include 'header.php';
                             </div>
                         </div>
                     </div>
-                    <p class="text-end" style="margin-bottom: -5px; margin-top: -5px;"><a href="#"
-                            style="text-decoration: none; color: #aaa;">See
+                    <p class="text-end" style="margin-bottom: -5px; margin-top: -5px;"><a href="#" style="text-decoration: none; color: #aaa;">See
                             more..</a>
                     </p>
                 </div>
@@ -302,4 +300,4 @@ include 'header.php';
 
     </div>
 </div>
-<?php include 'footer.php'?>
+<?php include 'footer.php' ?>

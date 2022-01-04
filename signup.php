@@ -10,78 +10,13 @@ else {
 }
 $error = "";
 $success = "";
-$signupper;
 
 if (array_key_exists("next", $_POST)) {
-    $newAC = $signupper->getNewAccount();
-    if (array_key_exists("emailAddress", $_POST)) {
-        $newAC->setEmailAddress($_POST["emailAddress"]);
-        if(!$signupper->sendOTP()) {
-            $error = "We couldn't send an OTP";
-            $_POST["next"] = "one-sendOTP";
-        }
+    $result = $signupper->signup($_POST);
+    $error = $result["error"];
+    if (!empty($result["next"])) {
+        $_POST["next"] = $result["next"];
     }
-    else if (array_key_exists("OTP-3", $_POST)) {
-        $enteredOTP = "";
-        for ($i = 3; $i >= 0; $i--) { 
-            $enteredOTP .= $_POST["OTP-$i"];
-        }
-        if(!$signupper->verifyEmail($enteredOTP)) {
-            $error = "OTP didn't match";
-            $_POST["next"] = "two-verify";
-        }
-        else {
-        }
-    }
-    else if (array_key_exists("username", $_POST)) {
-        $signupper->setConnection($connection);
-        if(!$signupper->isAvailableUsername($_POST["username"])) {
-            $error = "Username already exists";
-            $_POST["next"] = "three-username";
-        }
-        else {
-            $newAC->setUsername($_POST["username"]);
-        }
-    }
-    else if (array_key_exists("password", $_POST)) {
-        $newAC->setPassword($_POST["password"]);
-    }
-    else if (array_key_exists("cPassword", $_POST)) {
-        if(!$signupper->confirmPassword($_POST["cPassword"])) {
-            $error = "Passwords didn't match";
-            $_POST["next"] = "four-password";
-        }
-        else {
-        }
-    }
-    else if (array_key_exists("acType", $_POST)) {
-        $newAC->setAcType($_POST["acType"]);
-        if($_POST["acType"] == "PROVIDER") {
-            $_POST["next"] = "eight-evidence";
-        }
-        else {
-        }
-    }
-    else if (array_key_exists("bankType", $_POST)) {
-        $newAC->setBankName($_POST["bankType"]);
-        $newAC->setBankAcNumber($_POST["acNo"]);
-        //$newAC->setBankEvidence($_POST["bankEvidence"]);
-        $newAC->setBankEvidence("dummyEg");
-    }
-    else if (array_key_exists("instituteEvidence", $_POST)) {
-        $newAC->setInstituteEvidence("dummyEg");
-        $signupper->setConnection($connection);
-        if(!$signupper->insertInToNewAc()) {
-            echo 1;
-        }
-        else {
-        }
-    }
-}
-else
-{
-    
-    //$newAC = $signupper->getNewAccount();
 }
 
 $_SESSION["signupper"] = $signupper;

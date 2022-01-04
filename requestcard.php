@@ -57,7 +57,7 @@
                         </div>
                         <div class="row">
                             <p class="text-end" style="margin-bottom: -5px; margin-top: -5px;">
-                                <a href="/viewRequest.php" style="text-decoration: none; color: #aaa;">See more..</a>
+                                <a href="./viewRequest.php?id=<?php echo $current->getId(); ?>" style="text-decoration: none; color: #aaa;">See more..</a>
                             </p>
                         </div>
                     </div>

@@ -7,9 +7,6 @@ require $path.'/assets/PHPMailer-master/src/PHPMailer.php';
 require $path.'/assets/PHPMailer-master/src/SMTP.php';
 
 Class MailSender{
-        public static function dsf(){
-            echo 'sfs';
-        }
         public static function sendMail($name,$address,$subject,$content) {
             
             

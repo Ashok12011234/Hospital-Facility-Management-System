@@ -1,73 +1,89 @@
 <?php
 
-//include("member.php");
+abstract class Request
+{
+    protected int $id;
+    protected Member $from;
+    protected Member $to;
+    protected RequestState $state;
+    protected String $equipment;
+    protected String $quantity;
+    protected Chat $chat;
 
-abstract class Request{
-    public $id;
-    public $from;
-    public $to;
-    public $state;
-    public $equipment;
-    public $quantity;
-    //public $connection;
+    public function __construct(int $id)
+    {
+        $this->id = $id;
+        $this->state = new Requested(); 
+    }
 
-  public function getId () {return $this->id;}
-  public function getFrom () {return $this->from;}
+    public function getId(): int 
+    {
+        return $this->id;
+    }
 
-  public function getTo () {return $this->to;}
+    public function getFrom() 
+    {
+        return $this->from;
+    }
 
-  public function getEquipment () {return $this->equipment;}
+    public function getTo () 
+    {
+        return $this->to;
+    }
 
-  public function getQuantity () {return $this->quantity;}
+    public function getEquipment(): String 
+    {
+        return $this->equipment;
+    }
 
-  
-
- 
-    
-
-
-    public function __construct($id){
-        $this->id=$id;
-        //$this->connection=$connection;
-        $this->state=new NewRequest(); 
+    public function getQuantity(): String
+    {
+        return $this->quantity;
     }
     
-    public function setState($state){
-        $this->state=$state; 
-
+    public function setState(RequestState $state)
+    {
+        $this->state = $state;
     }
 
     public abstract function assignAll();
     
-    public function send(){
-        $this->state->send($this);
+    public function accept()
+    {
+        $this->state->accept($this);
     }
-    public function cancel(){
+
+    public function cancel()
+    {
         $this->state->cancel($this);
     }
-    public function decline(){
+
+    public function decline()
+    {
         $this->state->decline($this);
     }
-    public function acceptRequest(){
-        $this->state->acceptRequest($this);
+
+    public function confirmExchange()
+    {
+        $this->state->confirmExchange($this);
     }
-    public function acceptEquipment(){
-        $this->state->acceptEquipment($this);
-    }
-    public function transport(){
+
+    public function transport()
+    {
         $this->state->transport($this);
     }
 
 }
 
-class HHRequest extends Request{
-
-    public function __construct($id){
-       // super($id,$connection);
+class HHRequest extends Request
+{
+    public function __construct($id)
+    {
         parent::__construct($id);
     }
 
-    public function assignAll(){
+    public function assignAll()
+    {
         $sql1 = "SELECT * FROM HHrequest WHERE RequestId=$this->id";
 
         if($result = QueryExecutor::query($sql1)){
@@ -97,27 +113,24 @@ class HHRequest extends Request{
             $this->to = Hospital::getInstance($row["HospitalId"]);
 
         }
-
-
     }
 
 
 
 }
 
-class HPRequest extends Request{
-
-    public function __construct($id){
-        //super($id,$connection);
+class HPRequest extends Request
+{
+    public function __construct($id) 
+    {
         parent::__construct($id);
     }
 
-    public function assignAll(){
+    public function assignAll()
+    {
         $sql1 = "SELECT * FROM HPrequest WHERE RequestId=$this->id";
 
-        if($result = QueryExecutor::query($sql1)){
-           // $result = $this->connection->query($sql1);
-           
+        if($result = QueryExecutor::query($sql1)) {
             $row = $result->fetch_assoc();
             $hospitalID=$row["HospitalId"];
             $providerID=$row["ProviderId"];
@@ -145,141 +158,199 @@ class HPRequest extends Request{
     }
 }
 
-abstract class State{
-    public abstract function send($request);
-    public abstract function cancel($request);
-    public abstract function decline($request);
-    public abstract function acceptRequest($request);
-    public abstract function acceptEquipment($request);
-    public abstract function transport($request);
+abstract class RequestState
+{
+    //public abstract function request(Request $request);
+    public abstract function accept(Request $request);
+    public abstract function transport(Request $request);
+    public abstract function confirmExchange(Request $request);
+    public abstract function cancel(Request $request);
+    public abstract function decline(Request $request);
 
 }
 
-class NewRequest extends State{
-    public function send($request){
-        $request.setState(new PendingRequest() );
+class Requested extends RequestState
+{
+    public function accept(Request $request)
+    {
+        $request->setState(new Accepted());
     }
-    public function cancel($request){
-        $request.setState(new CancelledRequest() );
+
+    public function cancel(Request $request)
+    {
+        $request->setState(new Cancelled());
     }
-    public function decline($request){
+
+    public function decline(Request $request)
+    {
+        $request->setState(new Declined());
     }
-    public function acceptRequest($request){
+
+    public function transport(Request $request){}
+    public function confirmExchange(Request $request){}
+}
+
+class Accepted extends RequestState
+{
+    public function transport(Request $request)
+    {
+        $request->setState(new Transporting());
     }
-    public function acceptEquipment($request){
+
+    public function cancel(Request $request)
+    {
+        $request->setState(new Cancelled());
     }
-    public function transport($request){
+
+    public function accept(Request $request){}
+    public function decline(Request $request){}
+    public function confirmExchange(Request $request){}
+}
+
+class Transporting extends RequestState
+{
+    public function confirmExchange(Request $request)
+    {
+        $request->setState(new ExchangeCompleted());
+    }
+
+    public function accept(Request $request){}
+    public function cancel(Request $request){}
+    public function decline(Request $request){}
+    public function transport(Request $request){}
+}
+
+class Cancelled extends RequestState
+{
+    public function accept(Request $request){}
+    public function transport(Request $request){}
+    public function confirmExchange(Request $request){}
+    public function cancel(Request $request){}
+    public function decline(Request $request){}
+}
+
+class Declined extends RequestState
+{
+    public function accept(Request $request){}
+    public function transport(Request $request){}
+    public function confirmExchange(Request $request){}
+    public function cancel(Request $request){}
+    public function decline(Request $request){}
+}
+
+class ExchangeCompleted extends RequestState
+{
+    public function accept(Request $request){}
+    public function transport(Request $request){}
+    public function confirmExchange(Request $request){}
+    public function cancel(Request $request){}
+    public function decline(Request $request){}
+}
+
+class Chat
+{
+    private array $messages;
+
+    public function __construct()
+    {
+        $this->messages = array();
+    }
+
+    public function getMessages(): array
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $msg): void
+    {
+        $this->messages[] = $msg;
     }
 }
 
-class PendingRequest extends State{
-    public function send($request){
-    }
-    public function cancel($request){
-        $request.setState(new CancelledRequest() );
-    }
-    public function decline($request){
-        $request.setState(new DeclinedRequest() );
+class ChatBuilder
+{
+    private Chat $chat;
 
+    public function buildHHChat(HHRequest $hhrequest): Chat
+    {
+        $this->chat = new Chat();
+        $sql="SELECT * FROM `Message` WHERE requestId ='".$hhrequest->getId()."' AND requestType ='HH' ORDER BY time ASC";
+        $result = QueryExecutor::query($sql);
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        foreach($rows as $row) {
+            $this->chat->addMessage(new Message($row));
+        }
+        return $this->chat;
     }
-    public function acceptRequest($request){
-        $request.setState(new AcceptedRequest() );
 
-    }
-    public function acceptEquipment($request){
-    }
-    public function transport($request){
+    public function buildHPChat(HPRequest $hprequest): Chat
+    {
+        $this->chat = new Chat();
+        $sql="SELECT * FROM `Message` WHERE requestId ='".$hprequest->getId()."' AND requestType ='HP' ORDER BY time ASC";
+        $result = QueryExecutor::query($sql);
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        foreach($rows as $row) {
+            $this->chat->addMessage(new Message($row));
+        }
+        return $this->chat;
     }
 }
+class Message
+{
+    private int $id;
+    private int $requestId;
+    private String $requestType;
+    private int $senderId;
+    private int $receiverId;
+    private String $msg;
+    private int $time;
 
-class CancelledRequest extends State{
-    public function send($request){
+    public function __construct(array $data)
+    {
+        $this->id = $data["id"];
+        $this->requestId = $data["requestId"];
+        $this->requestType = $data["requestType"];
+        $this->senderId = $data["senderId"];
+        $this->receiverId = $data["receiverId"];
+        $this->msg = $data["msg"];
+        $this->time = $data["time"];
     }
-    public function cancel($request){
-    }
-    public function decline($request){
 
+    public function getId()
+    {
+        $this->id;
     }
-    public function acceptRequest($request){
 
+    public function getRequestId()
+    {
+        $this->requestId;
     }
-    public function acceptEquipment($request){
-    }
-    public function transport($request){
-    }
-}
 
-class DeclinedRequest extends State{
-    public function send($request){
+    public function getRequestType()
+    {
+        $this->requestType;
     }
-    public function cancel($request){
-    }
-    public function decline($request){
 
+    public function getSenderId()
+    {
+        $this->senderId;
     }
-    public function acceptRequest($request){
 
+    public function getReceiverId()
+    {
+        $this->receiverId;
     }
-    public function acceptEquipment($request){
-    }
-    public function transport($request){
-    }
-}
 
-class AcceptedRequest extends State{
-    public function send($request){
+    public function getMsg()
+    {
+        $this->msg;
     }
-    public function cancel($request){
-        $request.setState(new CancelledRequest() );
-    }
-    public function decline($request){
 
+    public function getTime()
+    {
+        $this->time;
     }
-    public function acceptRequest($request){
 
-    }
-    public function acceptEquipment($request){
-    }
-    public function transport($request){
-        $request.setState(new TransportedRequest() );
-
-    }
-}
-
-class TransportedRequest extends State{
-    public function send($request){
-    }
-    public function cancel($request){
-    }
-    public function decline($request){
-
-    }
-    public function acceptRequest($request){
-        $request.setState(new ArrivedRequest() );
-
-    }
-    public function acceptEquipment($request){
-    }
-    public function transport($request){
-
-    }
-}
-
-class ArrivedRequest extends State{
-    public function send($request){
-    }
-    public function cancel($request){
-    }
-    public function decline($request){
-
-    }
-    public function acceptRequest($request){
-
-    }
-    public function acceptEquipment($request){
-    }
-    public function transport($request){
-    }
 }
 
 

@@ -16,14 +16,12 @@ if($userType=='1'){
 (RequestId,
 ProviderId,
 HospitalId,
-Status,
 Equipment,
 Quantity)
 VALUES
 ('0',
 '$id',
 '$id2',
-'Pending',
 '$equipment',
 '$quantity');
 ";
@@ -33,14 +31,12 @@ else{
     (RequestId,
     ProviderId,
     HospitalId,
-    Status,
     Equipment,
     Quantity)
     VALUES
     ('0',
     '$id',
     '$id2',
-    'Pending',
     '$equipment',
     '$quantity');
     "; 

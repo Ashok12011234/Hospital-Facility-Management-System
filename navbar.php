@@ -7,28 +7,20 @@ if (array_key_exists("logout", $_GET)) {
 }
 
 include("member.php");
-$_SESSION["type"] = 1;
-switch ($_SESSION["type"]) {
-  case MemberType::GUEST:
-    # code...
-    //$_SESSION["acID"]="";
-    break;
 
-  case MemberType::HOSPITAL:
-    # you can use $SESSION["acID"] to create Hospital obj
-    # $user = Hospital::getInstance($_SESSION["acID"]);
-    # for simplicity,
-    $user = Hospital::getInstance(1);
-    break;
-
-  case MemberType::PROVIDER:
-    # you can use $SESSION["acID"] to create Provider obj
-    # $user = Provider::getInstance($_SESSION["acID"]);
-    break;
-
-  default:
-    # code...
-    break;
+if (array_key_exists("type", $_SESSION)) {
+  switch ($_SESSION["type"]) {
+    case MemberType::HOSPITAL:
+      $user = Hospital::getInstance($_SESSION["acID"]);
+      break;
+  
+    case MemberType::PROVIDER:
+      $user = Provider::getInstance($_SESSION["acID"]);
+      break;
+  }
+}
+else {
+  $_SESSION["type"] = MemberType::GUEST;
 }
 
 ?>

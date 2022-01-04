@@ -1,3 +1,7 @@
+<?php
+include("navbar.php");
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,9 +13,10 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/assets/css/Hospital-page.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="assets/css/Hospital-page.css">
     <link rel="stylesheet" href="/assets/css/Request-Page.css">
-    <title>Dashboard</title>
+    <title>Request</title>
 </head>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 
@@ -24,9 +29,6 @@
 
     <script src="donate.js"></script>
 <body>
-<?php
-include("navbar.php");
-?>
     <!-- Headings and title-->
     <div class="row justify-content-between mt-5 ms-2 me-2">
         <div class="col-md-8 ">

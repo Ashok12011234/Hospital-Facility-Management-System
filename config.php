@@ -1,5 +1,5 @@
 <?php
-include "./connection.php";
+include('connection.php');
 
 // Create database
 $conn = new mysqli("localhost","root","");
@@ -158,7 +158,5 @@ CREATE TABLE VaccineDetail (
 
 ";
 
-if(QueryExecutor::multi_query($createTb)) {
+if (QueryExecutor::multi_query($createTb)) {
 }
-
-?>

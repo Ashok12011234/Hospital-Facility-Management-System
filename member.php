@@ -242,12 +242,11 @@ class Hospital extends Member
 
   public static function getInstance($id): Hospital|null
   {
-    if(!array_key_exists($id, self::$hospitals)) {
+    if (!array_key_exists($id, self::$hospitals)) {
       $sql = "SELECT HospitalId FROM `Hospital` WHERE HospitalId = $id";
       if (QueryExecutor::query($sql)->num_rows == 0) {
         return null;
-      }
-      else {
+      } else {
         self::$hospitals[$id] = new Hospital($id);
       }
     }
@@ -633,12 +632,11 @@ class Provider extends Member
 
   public static function getInstance($id): Provider|null
   {
-    if(!array_key_exists($id, self::$providers)) {
+    if (!array_key_exists($id, self::$providers)) {
       $sql = "SELECT ProviderId FROM `Provider` WHERE ProviderId = $id";
       if (QueryExecutor::query($sql)->num_rows == 0) {
         return null;
-      }
-      else {
+      } else {
         self::$providers[$id] = new Provider($id);
       }
     }

@@ -222,11 +222,12 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
 <body>
   <?php
+  $_SESSION["acID"] = 1;
   $hospitalID = $_SESSION["acID"];
   $sql = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
-  $result =QueryExecutor::query($sql); 
+  $result = QueryExecutor::query($sql);
   $row = $result->fetch_assoc();
-  $currentHospital=Hospital::getInstance($hospitalID);
+  $currentHospital = Hospital::getInstance($hospitalID);
 
 
   ?>
@@ -269,8 +270,8 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
 
       if ($result = QueryExecutor::query($sql)) {
-       
-       $rows = $result->fetch_all(MYSQLI_ASSOC);
+
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
 
         foreach ($rows as $row) {
           $current = Hospital::getInstance($row["HospitalId"]);
@@ -288,21 +289,21 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
                     <h3 class='col-9 card-title'>
                       <?php
                       echo $current->get_name();
-                      if($_SESSION["acID"]==$current->get_id()){
+                      if ($_SESSION["acID"] == $current->get_id()) {
                         echo '(Me)';
                       }
                       ?>
                     </h3>
-                    <i  style="<?php
-                    if($_SESSION["acID"]==$current->get_id()){
-                      echo 'display:none;';
-                    }
-                  ?>" class='<?php if (in_array($row["HospitalId"], $currentHospital->get_staredHospital()) ) {
-                                echo "fas";
-                              } else {
-                                echo "far";
-                              } ?> fa-star col fa-lg ms-4' name='hospitalStar' id=<?php echo $current->get_id() ?> onclick="starHospitalUser(this)"></i>
-                   
+                    <i style="<?php
+                              if ($_SESSION["acID"] == $current->get_id()) {
+                                echo 'display:none;';
+                              }
+                              ?>" class='<?php if (in_array($row["HospitalId"], $currentHospital->get_staredHospital())) {
+                                            echo "fas";
+                                          } else {
+                                            echo "far";
+                                          } ?> fa-star col fa-lg ms-4' name='hospitalStar' id=<?php echo $current->get_id() ?> onclick="starHospitalUser(this)"></i>
+
                   </div>
                   <p class='ms-2' style='font-size: 13px; margin-bottom:-5px; '><i class='fas fa-map-marker-alt'></i>&nbsp;
                     <?php
@@ -503,10 +504,10 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
                     </div>
                   </div>
                   <Button class='btn btn-success w-100 mt-4 me-2' style="<?php
-                    if( $_SESSION["type"]==1 || $_SESSION["acID"]==$current->get_id() ){
-                      echo 'display:none;';
-                    }
-                  ?>" onclick="request(this,1)" value="<?php echo $current->get_id() ?>">Request</Button>
+                                                                          if ($_SESSION["type"] == 1 || $_SESSION["acID"] == $current->get_id()) {
+                                                                            echo 'display:none;';
+                                                                          }
+                                                                          ?>" onclick="request(this,1)" value="<?php echo $current->get_id() ?>">Request</Button>
 
                 </div>
               </div>
@@ -809,12 +810,12 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
         $sql = "SELECT * FROM Provider";
       }
 
-      
+
       if ($result = QueryExecutor::query($sql)) {
         $rows = $result->fetch_all(MYSQLI_ASSOC);
 
         foreach ($rows as $row) {
-          $current =Provider::getInstance($row["ProviderId"]);
+          $current = Provider::getInstance($row["ProviderId"]);
           if ($current->filter($_SESSION["prodashboard"])) {
       ?>
 
@@ -837,8 +838,8 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
                               } else {
                                 echo "far";
                               } ?> fa-star col fa-lg ms-3 providerStar' name='providerStar' id=<?php echo $current->get_id() ?> onclick="starProviderUser(this)"></i>
-                  
-                </div>
+
+                  </div>
                   <p class='ms-2' style='font-size: 13px; margin-bottom:-5px; '><i class='fas fa-map-marker-alt'></i>&nbsp;
                     <?php echo $current->get_address(); ?></p>
                   <p class='m-2' style='font-size: 13px;'><i class='fas fa-phone'></i> &nbsp;<?php echo $current->get_phoneno(); ?></p>

@@ -13,7 +13,7 @@ abstract class ObjectPool
     private int $expirationTime;
     private array $locked, $unlocked;
     private array $objects;
-    
+
     public function __construct()
     {
         $this->expirationTime = 30000; // 30 seconds
@@ -39,19 +39,17 @@ abstract class ObjectPool
                     unset($this->objects[$objId]);
                     $this->expire($o);
                     $o = null;
-                }
-                else {
+                } else {
                     if ($this->validate($o)) {
                         unset($this->unlocked[$objId]);
                         $this->locked[$objId] = time();
                         return $o;
-                    }
-                    else {
+                    } else {
                         unset($this->unlocked[$objId]);
                         unset($this->objects[$objId]);
                         $this->expire($o);
                         $o = null;
-                    }   
+                    }
                 }
             }
         }
@@ -87,7 +85,7 @@ class Connection implements IConnection
         $this->connection = new mysqli($host, $dbusername, $dbpassword, $dbname);
 
         if ($this->connection->connect_errno) {
-            echo "Failed to connect to MySQL: " . $this->connection -> connect_error;
+            echo "Failed to connect to MySQL: " . $this->connection->connect_error;
             exit();
         }
     }
@@ -170,7 +168,6 @@ class ConnectionPool extends ObjectPool
     {
         parent::checkIn($conn);
     }
-
 }
 
 class QueryExecutor
@@ -204,5 +201,3 @@ class QueryExecutor
         return self::exe($query, self::MULTI_QUERY);
     }
 }
-
-?>

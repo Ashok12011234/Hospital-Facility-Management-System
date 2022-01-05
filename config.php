@@ -41,7 +41,7 @@ CREATE TABLE Hospital (
   AccountNumber varchar(20) NOT NULL,
   staredHospital varchar(512) NOT NULL DEFAULT 'a:0:{}',
   staredProvider varchar(512) NOT NULL DEFAULT 'a:0:{}',
-  State enum('NEW', 'UPDATED') NOT NULL DEFAULT 'NEW',
+  State enum('NEW', 'INITIATED') NOT NULL DEFAULT 'NEW',
   PRIMARY KEY (HospitalId));
 
 CREATE TABLE HospitalBedDetail (
@@ -95,7 +95,7 @@ CREATE TABLE Provider (
   AccountNumber varchar(20) NOT NULL,
   staredHospital varchar(512) NOT NULL DEFAULT 'a:0:{}',
   staredProvider varchar(512) NOT NULL DEFAULT 'a:0:{}',
-  State enum('NEW', 'UPDATED') NOT NULL DEFAULT 'NEW',
+  State enum('NEW', 'INITIATED') NOT NULL DEFAULT 'NEW',
   PRIMARY KEY (ProviderId));
 
 CREATE TABLE ProviderBedDetail (

@@ -25,20 +25,20 @@ class ForgotPassword
 
 abstract class MemberState
 {
-  public abstract function update(Member $member);
+  public abstract function initiate(Member $member);
 }
 
 class NewMember extends MemberState
 {
-  public function update(Member $member)
+  public function initiate(Member $member)
   {
-    $member->set_state(new UpdatedMember());
+    $member->set_state(new InitiatedMember());
   }
 }
 
-class UpdatedMember extends MemberState
+class InitiatedMember extends MemberState
 {
-  public function update(Member $member){}
+  public function initiate(Member $member){}
 }
 
 abstract class Member

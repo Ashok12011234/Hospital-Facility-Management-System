@@ -1,46 +1,25 @@
 <?php
-include("classes/probDomCls/Mail.php");
-include("./member.php");
+include("member.php");
 session_start();
 $error = "";
 $success = "";
+
+if (array_key_exists("acID", $_SESSION)) {
+    header("Location: hospitalDashoard.php");
+}
+
 if (array_key_exists("next", $_POST)) {
-    $sql="SELECT `password`,`HospitalID`,`Email` FROM `Hospital` WHERE username = '".$_POST["username"]."'";
-    if ($result = QueryExecutor::query($sql)) {
-        if ($result -> num_rows == 1) {
-            $row = $result->fetch_assoc();
-            if (!array_key_exists("forgot", $_GET)) {
-                if($_POST["password"] == Password::decrypt($row["password"])) {
-                    $_SESSION["acID"] = $row["HospitalID"];
-                    $_SESSION["type"] = MemberType::HOSPITAL;
-                    header("Location: hospitalDashoard.php");
-                } 
-                else {
-                    $error = "Password didn't match";
-                }
-            }
-            else {
-                $emailAddress = $row["Email"];
-                if (Mail::isValidEmailAddress($emailAddress)) {
-                    $passwordMail = new Mail($emailAddress, "Password from Life Share", Password::decrypt($row["password"]));
-                    if ($passwordMail->send()) {
-                        $success = "Password has been sent to your email";
-                    }
-                    else {
-                        $error = "Try again later";
-                    }
-                }
-                else {
-                    $error = "Your email address is invalid";
-                }
-            }
+    if (array_key_exists("forgot", $_GET)) {
+        $status = Member::forgotPassword($_POST["username"]);
+        if ($status == ForgotPassword::SUCCESS) {
+            $success = $status;
         }
-        else if ($result -> num_rows == 0) { 
-            $error = "Username doesn't exist";
+        else {
+            $error = $status;
         }
     }
     else {
-        $error = "Something went wrong.Try again";
+        $error = Member::login($_POST["username"], $_POST["password"]);
     }
 }
 

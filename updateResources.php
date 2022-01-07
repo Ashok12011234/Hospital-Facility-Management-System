@@ -5,19 +5,22 @@ include('common.php');
 $hospitalID = 1;
 $sql = "SELECT * FROM `hospital` WHERE `HospitalId`=$hospitalID;";
 //$sql = "SELECT * FROM `hospital` WHERE 1";
-$result = $connection->query($sql);
+$result = QueryExecutor::query($sql);
 $row = $result->fetch_assoc();
-$Hospital = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'], $connection);
+$Hospital = Hospital::getInstance($hospitalID);
 
 
 
 
 if ((isset($_POST['updateResources']))) {
+    print_r($Hospital);
     if ($_POST['password-confirm'] == $Hospital->get_password()) {
         $Hospital->set_bed();
         $Hospital->set_vaccine();
         $Hospital->set_blood();
         $Hospital->set_ceylinder();
+    } else {
+        header('location:google.lk');
     }
 }
 
@@ -141,7 +144,7 @@ if ((isset($_POST['updateResources']))) {
                                 <?php
                                 $hospitalID = 1;
                                 $sql = "SELECT * FROM `hospitalbeddetail`  WHERE HospitalId=$hospitalID;";
-                                $result = $connection->query($sql);
+                                $result = QueryExecutor::query($sql);
                                 $row = $result->fetch_assoc();
                                 //print_r($row);
                                 ?>
@@ -162,7 +165,7 @@ if ((isset($_POST['updateResources']))) {
                             <div class="row ms-1 me-2">
                                 <?php
                                 $sql = "SELECT * FROM `blooddetail`  WHERE HospitalId=$hospitalID;";
-                                $result = $connection->query($sql);
+                                $result = QueryExecutor::query($sql);
                                 $row = $result->fetch_assoc();
                                 //print_r($row);
                                 ?>
@@ -215,7 +218,7 @@ if ((isset($_POST['updateResources']))) {
                             <div class="row ms-1 me-2">
                                 <?php
                                 $sql = "SELECT * FROM `hospitalcylinderdetail`  WHERE HospitalId=$hospitalID;";
-                                $result = $connection->query($sql);
+                                $result = QueryExecutor::query($sql);
                                 $row = $result->fetch_assoc();
                                 //print_r($row);
                                 ?>
@@ -241,7 +244,7 @@ if ((isset($_POST['updateResources']))) {
                             <div class="row ms-1 me-2">
                                 <?php
                                 $sql = "SELECT * FROM `VaccineDetail`  WHERE HospitalId=$hospitalID;";
-                                $result = $connection->query($sql);
+                                $result = QueryExecutor::query($sql);
                                 $row = $result->fetch_assoc();
                                 //print_r($row);
                                 ?>

@@ -2,12 +2,43 @@
 
 include("config.php");
 include("./classes/sysLvlCls/Password.php");
+include("./classes/probDomCls/Mail.php");
 
 class MemberType
 {
   const GUEST = 0;
   const HOSPITAL = 1;
   const PROVIDER = 2;
+}
+
+class LoginFail
+{
+  const USERNAME = "Username doesn't exist";
+  const PASSWORD = "Password didn't match";
+}
+
+class ForgotPassword
+{
+  const SUCCESS = "Password has been sent to your email";
+  const FAIL = "Try again later";
+}
+
+abstract class MemberState
+{
+  public abstract function initiate(Member $member);
+}
+
+class NewMember extends MemberState
+{
+  public function initiate(Member $member)
+  {
+    $member->set_state(new InitiatedMember());
+  }
+}
+
+class InitiatedMember extends MemberState
+{
+  public function initiate(Member $member){}
 }
 
 abstract class Member
@@ -26,6 +57,7 @@ abstract class Member
   public $website;
   public $password;
   public $staredUser;
+  protected $state;
 
   public abstract function request();
   public abstract function filter($type);
@@ -128,6 +160,57 @@ abstract class Member
     QueryExecutor::query($sql);
     $this->accountNo = $accountNo;
   }
+
+  public function get_state()
+  {
+    return $this->state;
+  }
+
+  public function set_state($state)
+  {
+    $sql = "UPDATE `hospital` SET `State`= '$state' WHERE `hospital`.`HospitalId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->state = $state;
+  }
+
+  public static function fetchByUserName(String $username): Member|null
+  {
+    if (!is_null($hospital = Hospital::fetchByUserName($username))) {
+      return $hospital;
+    }
+    if (!is_null($provider = Provider::fetchByUserName($username))) {
+      return $provider;
+    }
+    return null;
+  }
+
+  public static function forgotPassword(String $username): String
+  {
+    if (!is_null($member = self::fetchByUserName($username))) {
+      $emailAddress = $member->get_email();
+      if (Mail::isValidEmailAddress($emailAddress)) {
+        $passwordMail = new Mail($emailAddress, "Password from Life Share", $member->get_password());
+        if ($passwordMail->send()) {
+            return ForgotPassword::SUCCESS;
+        }
+        else {
+          return ForgotPassword::FAIL;
+        }
+      }
+      return "Invalid email address";
+    }
+    return LoginFail::USERNAME;
+  }
+
+  public static function login(String $username, String $password): String
+  {
+    if(($error = Hospital::login($username, $password)) == LoginFail::PASSWORD) {
+      return $error;
+    }
+    $error = Provider::login($username, $password);
+    return $error;
+  }
+
 }
 
 class Hospital extends Member
@@ -157,14 +240,13 @@ class Hospital extends Member
     $this->staredUser = "";
   }
 
-  public static function getInstance($id): Hospital
+  public static function getInstance($id): Hospital|null
   {
-    if(!array_key_exists($id, self::$hospitals)) {
+    if (!array_key_exists($id, self::$hospitals)) {
       $sql = "SELECT HospitalId FROM `Hospital` WHERE HospitalId = $id";
       if (QueryExecutor::query($sql)->num_rows == 0) {
         return null;
-      }
-      else {
+      } else {
         self::$hospitals[$id] = new Hospital($id);
       }
     }
@@ -487,6 +569,41 @@ class Hospital extends Member
 
     return $out;
   }
+
+  public static function fetchByUserName(String $username): Hospital|null
+  {
+    $sql="SELECT `HospitalId` FROM `Hospital` WHERE username = '$username'";
+    if($result = QueryExecutor::query($sql)) {
+      if ($result->num_rows == 1) {
+        $row = $result->fetch_assoc();
+        return Hospital::getInstance($row["HospitalId"]);
+      }
+    }
+    return null;
+  }
+
+  public static function authorise(String $username, String $password): Hospital|String
+  {
+    if (!is_null($hospital = self::fetchByUserName($username))) {
+      if ($hospital->get_password() == $password) {
+        return $hospital;
+      }
+      return LoginFail::PASSWORD;
+    }
+    return LoginFail::USERNAME;
+  }
+
+  public static function login(String $username, String $password): String
+  {
+    if (($hospital = self::authorise($username, $password)) instanceof Hospital) {
+      $_SESSION["acID"] = $hospital->get_id() ;
+      $_SESSION["type"] = MemberType::HOSPITAL;
+      header("Location: hospitalDashoard.php");
+    }
+    else {
+      return $hospital;
+    }
+  }
 }
 
 class Provider extends Member
@@ -499,21 +616,27 @@ class Provider extends Member
     $result = QueryExecutor::query($sql);
     $row = $result->fetch_assoc();
 
+    $this->id = $row["ProviderId"];
+    $this->username = $row['UserName'];
     $this->name = $row["Name"];
     $this->address = $row['Address'];
     $this->phoneNo = $row["TelephoneNo"];
-    $this->id = $row["ProviderId"];
+    $this->profile = $row['Profile'];
+    $this->email = $row["Email"];
+    $this->website = $row["Website"];
+    $this->accountNo = $row['AccountNumber'];
+    $this->bankName = $row['BankName'];
+    $this->password = Password::decrypt($row['Password']);
     $this->staredUser = "";
   }
 
-  public static function getInstance($id): Provider
+  public static function getInstance($id): Provider|null
   {
-    if(!array_key_exists($id, self::$providers)) {
+    if (!array_key_exists($id, self::$providers)) {
       $sql = "SELECT ProviderId FROM `Provider` WHERE ProviderId = $id";
       if (QueryExecutor::query($sql)->num_rows == 0) {
         return null;
-      }
-      else {
+      } else {
         self::$providers[$id] = new Provider($id);
       }
     }
@@ -596,6 +719,42 @@ class Provider extends Member
     }
 
     return $out;
+  }
+
+  public static function fetchByUserName(String $username): Provider|null
+  {
+    $sql="SELECT `ProviderId` FROM `Provider` WHERE username = '$username'";
+    if($result = QueryExecutor::query($sql)) {
+      if ($result -> num_rows == 1) {
+        $row = $result->fetch_assoc();
+        
+        return Provider::getInstance($row["ProviderId"]);
+      }
+    }
+    return null;
+  }
+
+  public static function authorise(String $username, String $password): Provider|String
+  {
+    if (!is_null($provider = self::fetchByUserName($username))) {
+      if ($provider->get_password() == $password) {
+        return $provider;
+      }
+      return LoginFail::PASSWORD;
+    }
+    return LoginFail::USERNAME;
+  }
+
+  public static function login(String $username, String $password): String
+  {
+    if (($provider = self::authorise($username, $password)) instanceof Provider) {
+      $_SESSION["acID"] = $provider->get_id() ;
+      $_SESSION["type"] = MemberType::PROVIDER;
+      header("Location: hospitalDashoard.php");
+    }
+    else {
+      return $provider;
+    }
   }
 }
 

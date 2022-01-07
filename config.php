@@ -1,9 +1,11 @@
 <?php
-include "./connection.php";
+include('connection.php');
 
 // Create database
+$conn = new mysqli("localhost","root","");
 $createDB = "CREATE DATABASE IF NOT EXISTS `".Database::NAME."`";
-QueryExecutor::query($createDB);
+$conn->query($createDB);
+$conn->close();
 
 // sql to create table
 $createTb = "CREATE TABLE BloodDetail (
@@ -28,8 +30,8 @@ CREATE TABLE Executive (
 CREATE TABLE Hospital (
   HospitalId int(10) NOT NULL AUTO_INCREMENT, 
   UserName varchar(50) NOT NULL UNIQUE, 
-  Email varchar(20), 
-  Password varchar(255) NOT NULL, 
+  Email varchar(100), 
+  Password varchar(100) NOT NULL, 
   Name varchar(255), 
   TelephoneNo varchar(25), 
   Address varchar(255), 
@@ -39,6 +41,7 @@ CREATE TABLE Hospital (
   AccountNumber varchar(20) NOT NULL,
   staredHospital varchar(512) NOT NULL DEFAULT 'a:0:{}',
   staredProvider varchar(512) NOT NULL DEFAULT 'a:0:{}',
+  State enum('NEW', 'INITIATED') NOT NULL DEFAULT 'NEW',
   PRIMARY KEY (HospitalId));
 
 CREATE TABLE HospitalBedDetail (
@@ -63,22 +66,26 @@ CREATE TABLE HospitalCylinderDetail (
 
 CREATE TABLE NewAccount (
   NewAccountID int(10) NOT NULL AUTO_INCREMENT, 
+
   UserName varchar(16) NOT NULL UNIQUE,
-  Password varchar(255) NOT NULL, 
-  Email varchar(50) NOT NULL, 
+  Password varchar(100) NOT NULL, 
+
+  Email varchar(100) NOT NULL, 
   AccountType enum('HOSPITAL','PROVIDER') NOT NULL, 
   BankName enum('BOC','PEOPLE','HNB','COMMERCIAL','NSB'), 
   AccountNumber varchar(20), 
   BankEvidence varchar(255),
   InstituteEvidence varchar(255) NOT NULL, 
-  Status enum('NEW','PENDING','APPROVED','REJECTED') NOT NULL DEFAULT 'NEW', 
+  Status enum('NEW', 'PENDING', 'APPROVED', 'REJECTED') NOT NULL DEFAULT 'NEW', 
+  Doc_Status enum('Correct','False','Not Vertified') NOT NULL DEFAULT 'Not Vertified',
+  Bank_Status enum('Correct','False','Not Vertified') NOT NULL DEFAULT 'Not Vertified',
   PRIMARY KEY (NewAccountID));
 
 CREATE TABLE Provider (
   ProviderId int(10) NOT NULL AUTO_INCREMENT, 
   UserName varchar(50) NOT NULL UNIQUE, 
-  Email varchar(20), 
-  Password varchar(255) NOT NULL, 
+  Email varchar(100), 
+  Password varchar(100) NOT NULL, 
   Name varchar(255), 
   TelephoneNo varchar(25), 
   Address varchar(255), 
@@ -88,6 +95,7 @@ CREATE TABLE Provider (
   AccountNumber varchar(20) NOT NULL,
   staredHospital varchar(512) NOT NULL DEFAULT 'a:0:{}',
   staredProvider varchar(512) NOT NULL DEFAULT 'a:0:{}',
+  State enum('NEW', 'INITIATED') NOT NULL DEFAULT 'NEW',
   PRIMARY KEY (ProviderId));
 
 CREATE TABLE ProviderBedDetail (
@@ -111,7 +119,7 @@ CREATE TABLE ProviderCylinderDetail (
   RequestId int NOT NULL AUTO_INCREMENT,
   ProviderId int NOT NULL,
   HospitalId int NOT NULL,
-  Status varchar(10) NOT NULL,
+  State enum('REQUESTED', 'ACCEPTED', 'DECLINED', 'TRANSPORTING', 'EXCHANGE_COMPLETED') NOT NULL DEFAULT 'REQUESTED',
   Equipment varchar(20) NOT NULL,
   Quantity varchar(20) NOT NULL,
   PRIMARY KEY (RequestId)
@@ -121,10 +129,21 @@ CREATE TABLE HPrequest (
   RequestId int NOT NULL AUTO_INCREMENT,
   ProviderId int NOT NULL,
   HospitalId int NOT NULL,
-  Status varchar(10) NOT NULL,
+  State enum('REQUESTED', 'ACCEPTED', 'DECLINED', 'TRANSPORTING', 'EXCHANGE_COMPLETED') NOT NULL DEFAULT 'REQUESTED',
   Equipment varchar(20) NOT NULL,
   Quantity varchar(20) NOT NULL,
   PRIMARY KEY (RequestId)
+) ;
+
+CREATE TABLE Message (
+  MessageId int NOT NULL AUTO_INCREMENT,
+  RequestId int NOT NULL,
+  RequestType enum('HH', 'HP') NOT NULL,
+  SenderId int NOT NULL,
+  ReceiverId int NOT NULL,
+  Message varchar(255) NOT NULL,
+  Time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (MessageId)
 ) ;
 
 CREATE TABLE VaccineDetail (
@@ -139,7 +158,5 @@ CREATE TABLE VaccineDetail (
 
 ";
 
-if(QueryExecutor::multi_query($createTb)) {
+if (QueryExecutor::multi_query($createTb)) {
 }
-
-?>

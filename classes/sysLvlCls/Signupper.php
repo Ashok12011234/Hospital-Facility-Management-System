@@ -2,14 +2,13 @@
 require("classes/probDomCls/Mail.php");
 require("classes/probDomCls/NewAccount.php");
 require("classes/sysLvlCls/Password.php");
-require("config.php");
+require("./config.php");
 
 class Signupper
 {
     private String $OTP;
     private NewAccount $newAC;
     private String $usernameSuffix;
-    private mysqli $connection;
 
     public function __construct()
     {
@@ -18,11 +17,6 @@ class Signupper
         //$row = $result -> fetch_assoc();
         //$id = $row["NewAccountID"] + 1;
         $this->usernameSuffix = "@001";
-    }
-
-    public function setConnection(mysqli $connection): void
-    {
-        $this->connection = $connection;
     }
 
     public function getNewAccount(): NewAccount
@@ -66,7 +60,7 @@ class Signupper
 
     public function isAvailableUsername(String $username): bool
     {
-        $result = $this->connection -> query("SELECT * FROM `NewAccount` WHERE username = '$username'");
+        $result = QueryExecutor::query("SELECT * FROM `NewAccount` WHERE username = '$username' AND NOT status = 'REJECTED'");
         return $result->num_rows == 0;
     }
 
@@ -101,6 +95,79 @@ class Signupper
             ")";
         }
 
-        return $this->connection->query($query);
+        return QueryExecutor::query($query);
+    }
+
+    public function signup(array $data)
+    {
+        $error = "";
+        $next = "";
+        $result = array();
+
+        if (array_key_exists("emailAddress", $data)) {
+            $this->newAC->setEmailAddress($data["emailAddress"]);
+            if(!$this->sendOTP()) {
+                $error = "We couldn't send an OTP";
+                $next = "one-sendOTP";
+            }
+        }
+        else if (array_key_exists("OTP-3", $data)) {
+            $enteredOTP = "";
+            for ($i = 3; $i >= 0; $i--) { 
+                $enteredOTP .= $data["OTP-$i"];
+            }
+            if(!$this->verifyEmail($enteredOTP)) {
+                $error = "OTP didn't match";
+                $next = "two-verify";
+            }
+            else {
+            }
+        }
+        else if (array_key_exists("username", $data)) {
+            if(!$this->isAvailableUsername($data["username"])) {
+                $error = "Username already exists";
+                $next = "three-username";
+            }
+            else {
+                $this->newAC->setUsername($data["username"]);
+            }
+        }
+        else if (array_key_exists("password", $data)) {
+            $this->newAC->setPassword($data["password"]);
+        }
+        else if (array_key_exists("cPassword", $data)) {
+            if(!$this->confirmPassword($data["cPassword"])) {
+                $error = "Passwords didn't match";
+                $next = "four-password";
+            }
+            else {
+            }
+        }
+        else if (array_key_exists("acType", $data)) {
+            $this->newAC->setAcType($data["acType"]);
+            if($data["acType"] == "PROVIDER") {
+                $next = "eight-evidence";
+            }
+            else {
+            }
+        }
+        else if (array_key_exists("bankType", $data)) {
+            $this->newAC->setBankName($data["bankType"]);
+            $this->newAC->setBankAcNumber($data["acNo"]);
+            //$newAC->setBankEvidence($_POST["bankEvidence"]);
+            $this->newAC->setBankEvidence("dummyEg");
+        }
+        else if (array_key_exists("instituteEvidence", $data)) {
+            $this->newAC->setInstituteEvidence("dummyEg");
+            if(!$this->insertInToNewAc()) {
+                echo 1;
+            }
+            else {
+            }
+        }
+
+        $result["error"] = $error;
+        $result["next"] = $next;
+        return $result;
     }
 }

@@ -6,4 +6,4 @@ INSERT INTO `hospitalbeddetail` VALUES (1,1,'NO','YES'),(2,4,'NO','NO'),(3,2,'YE
 INSERT INTO `providerbeddetail` VALUES (1,1,'NO','NO'),(2,2,'YES','NO'),(3,3,'YES','NO');
 INSERT INTO `hospitalcylinderdetail` VALUES (1,1,'YES','YES','NO'),(2,4,'NO','YES','YES'),(3,2,'NO','YES','YES');
 INSERT INTO `providercylinderdetail` VALUES (1,1,'YES','NO','YES'),(2,2,'NO','NO','YES'),(3,3,'YES','YES','NO');
-INSERT INTO `newaccount` VALUES (1,'kajan','&$59&$60&$61&$','assignmentoneoop@gmail.com','HOSPITAL','PEOPLE','1122334455','dummyEg','dummyEg','NEW');
+INSERT INTO `newaccount` VALUES (1,'kajan','&$59&$60&$61&$','assignmentoneoop@gmail.com','HOSPITAL','PEOPLE','1122334455','dummyEg','dummyEg','NEW','Not Vertified','Not Vertified');

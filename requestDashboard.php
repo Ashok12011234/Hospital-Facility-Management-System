@@ -68,7 +68,7 @@ include("navbar.php");
                //style="display: none;"
               // if($_SESSION["request_option"]=="sent"){
                 $_SESSION["request_option"]="sent";
-                //include("requestcard.php");
+                include("requestcard.php");
                //}
             }
         }
@@ -105,7 +105,7 @@ include("navbar.php");
                 
                //if($_SESSION["request_option"]=="received"){
                 $_SESSION["request_option"]="received";
-               // include("requestcard.php");
+               include("requestcard.php");
                //}
 
            

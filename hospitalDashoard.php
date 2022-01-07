@@ -222,12 +222,13 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
 <body>
   <?php
-  $hospitalID = $_SESSION["acID"];
-  $sql = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
-  $result =QueryExecutor::query($sql); 
-  $row = $result->fetch_assoc();
-  $currentHospital=Hospital::getInstance($hospitalID);
-
+  if(array_key_exists("acID", $_SESSION)){
+    $hospitalID = $_SESSION["acID"];
+    $sql = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
+    $result =QueryExecutor::query($sql); 
+    $row = $result->fetch_assoc();
+    $currentHospital=Hospital::getInstance($hospitalID);
+  }
 
   ?>
 
@@ -236,7 +237,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
   <div class="row justify-content-between mt-5 ms-2 me-2">
     <div class="col-md-8 ">
       <h2 style="display:inline;">All Hospitals & Providers</h2>
-      <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#filtermodal" style="display:inline;"><i class='fas fa-filter'></i>Filter</button>
+      <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#filtermodal" style="display:inline;"><i class='fas fa-filter'></i>Filter</button>
 
       <br>
     </div>
@@ -246,7 +247,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
         <input type="text" class="form-control" name="searchBox" id="searchBox" placeholder="Search for Hospital or Provider" aria-label="Recipient's username" aria-describedby="basic-addon2">
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+          <button class="btn btn-lg btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
         </div>
       </div>
     </div>
@@ -288,20 +289,32 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
                     <h3 class='col-9 card-title'>
                       <?php
                       echo $current->get_name();
-                      if($_SESSION["acID"]==$current->get_id()){
-                        echo '(Me)';
-                      }
+                      if(array_key_exists("acID", $_SESSION)){
+                        if($_SESSION["acID"]==$current->get_id()){
+                          echo '(Me)';
+                        }
+                    }
                       ?>
                     </h3>
                     <i  style="<?php
-                    if($_SESSION["acID"]==$current->get_id()){
-                      echo 'display:none;';
-                    }
-                  ?>" class='<?php if (in_array($row["HospitalId"], $currentHospital->get_staredHospital()) ) {
-                                echo "fas";
-                              } else {
-                                echo "far";
-                              } ?> fa-star col fa-lg ms-4' name='hospitalStar' id=<?php echo $current->get_id() ?> onclick="starHospitalUser(this)"></i>
+                    if(array_key_exists("acID", $_SESSION)){
+                      if($_SESSION["acID"]==$current->get_id()){
+                        echo 'display:none;';
+                      }
+                  }
+                  else{
+                    echo 'display:none;';
+                  }
+                  ?>" class='<?php 
+                  if(array_key_exists("acID", $_SESSION)){
+                    if (in_array($row["HospitalId"], $currentHospital->get_staredHospital()) ) {
+                                  echo "fas";
+                      } else {
+                                  echo "far";
+                    } 
+                }
+                  ?> fa-star col fa-lg ms-4' 
+                name='hospitalStar' id=<?php echo $current->get_id() ?> onclick="starHospitalUser(this)"></i>
                    
                   </div>
                   <p class='ms-2' style='font-size: 13px; margin-bottom:-5px; '><i class='fas fa-map-marker-alt'></i>&nbsp;
@@ -503,10 +516,16 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
                     </div>
                   </div>
                   <Button class='btn btn-success w-100 mt-4 me-2' style="<?php
-                    if( $_SESSION["type"]==1 || $_SESSION["acID"]==$current->get_id() ){
+                    if( $_SESSION["type"]==0 || ($_SESSION["acID"]==$current->get_id() && $_SESSION["type"]==1) ){
                       echo 'display:none;';
                     }
                   ?>" onclick="request(this,1)" value="<?php echo $current->get_id() ?>">Request</Button>
+
+                  <Button class='btn btn-success w-100 mt-4 me-2' style="<?php
+                    if( $_SESSION["type"]==1 ||  $_SESSION["type"]==2) {
+                      echo 'display:none;';
+                    }
+                  ?>" data-bs-toggle="modal" data-bs-target="#donationmodal" value="<?php echo $current->get_id() ?>">Donate</Button>
 
                 </div>
               </div>
@@ -832,11 +851,15 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
                                                   echo $current->get_name();
                                                   ?></h3>
-                    <i class='<?php if (in_array($row["ProviderId"], $currentHospital->get_staredProvider())) {
-                                echo "fas";
-                              } else {
-                                echo "far";
-                              } ?> fa-star col fa-lg ms-3 providerStar' name='providerStar' id=<?php echo $current->get_id() ?> onclick="starProviderUser(this)"></i>
+                    <i class='<?php 
+                    if(array_key_exists("acID", $_SESSION)){
+                      if (in_array($row["ProviderId"], $currentHospital->get_staredProvider())) {
+                                  echo "fas";
+                      } else {
+                        echo "far";
+                      } 
+                    }
+                              ?> fa-star col fa-lg ms-3 providerStar' name='providerStar' id=<?php echo $current->get_id() ?> onclick="starProviderUser(this)"></i>
                   
                 </div>
                   <p class='ms-2' style='font-size: 13px; margin-bottom:-5px; '><i class='fas fa-map-marker-alt'></i>&nbsp;
@@ -901,7 +924,11 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
                     </div>
                   </div>
 
-                  <Button class='btn btn-success w-100 mt-4 me-2' onclick="request(this,2)" value="<?php echo $current->get_id() ?>">Request</Button>
+                  <Button class='btn btn-success w-100 mt-4 me-2' style="<?php
+                    if( $_SESSION["type"]==0 || ($_SESSION["acID"]==$current->get_id() && $_SESSION["type"]==2) ){
+                      echo 'display:none;';
+                    }
+                  ?>" onclick="request(this,2)" value="<?php echo $current->get_id() ?>">Request</Button>
 
 
 

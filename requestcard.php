@@ -2,7 +2,10 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row justify-content-between mb-1">
-                            <h3 class="col-9 card-title">Request ID - <?php echo $current->getId()?></h3>
+                            <h3 class="col-9 card-title">Request ID - <?php 
+                            if($_SESSION["request_option"]=="sent"){
+                                echo ' '.$current->getId().'s';
+                                }else echo ' '.$current->getId().'p';?></h3>
                         </div>
                         <div class="row" style="display: <?php
                              if($_SESSION["request_option"]=="sent"){

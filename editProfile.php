@@ -10,30 +10,32 @@ $result = QueryExecutor::query($sql);
 $row = $result->fetch_assoc();
 $current = Hospital::getInstance($hospitalID);
 
-if (isset($_POST['updateProfile'])) {
-    //$hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);
-    $hospitalName = trim($_POST['hospitalName'], "\n\r\t\v\0");
+if (isset($_POST['updateDetails'])) {
+    if ($_POST['password-confirm'] == $current->get_password()) {
+        //$hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);
+        $hospitalName = trim($_POST['hospitalName'], "\n\r\t\v\0");
 
-    $email =  $_POST['email'];
-    $phoneNo =  $_POST['phoneNo'];
-    $accountNumber =  $_POST['accountNumber'];
-    $bankName =  $_POST['bankName'];
-    $website =  $_POST['website'];
-    $address =  $_POST['address'];
-    $current->set_name($hospitalName);
-    $current->set_email($email);
-    $current->set_phoneno($phoneNo);
-    $current->set_accountNo($accountNumber);
-    $current->set_bankName($bankName);
-    $current->set_website($website);
-    $current->set_address($address);
+        $email =  $_POST['email'];
+        $phoneNo =  $_POST['phoneNo'];
+        $accountNumber =  $_POST['accountNumber'];
+        $bankName =  $_POST['bankName'];
+        $website =  $_POST['website'];
+        $address =  $_POST['address'];
+        $current->set_name($hospitalName);
+        $current->set_email($email);
+        $current->set_phoneno($phoneNo);
+        $current->set_accountNo($accountNumber);
+        $current->set_bankName($bankName);
+        $current->set_website($website);
+        $current->set_address($address);
 
-    $image = basename($_FILES["profile_picture"]["name"]);
-    if ($image != "") {
-        $target = "assets/pictures/profile/" . $image;
-        move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target);
-        unlink($current->get_profile());
-        $current->set_profile($target);
+        $image = basename($_FILES["profile_picture"]["name"]);
+        if ($image != "") {
+            $target = "assets/pictures/profile/" . $image;
+            move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target);
+            unlink($current->get_profile());
+            $current->set_profile($target);
+        }
     }
 }
 
@@ -59,12 +61,12 @@ if (isset($_POST['updateProfile'])) {
 include("navbar.php");
 ?-->
     <!-- Body -->
-    <div class="rounded bg-white m-4 pt-3 pr-3 pl-3 body-contentx">
+    <div class="rounded bg-white m-4 pt-3 pe-3 ps-3 body-contentx">
         <form action="" method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-4 border-right">
                     <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                        <img class="rounded-circle mt-5" width="200px" <?php echo "src='" .     $current->get_profile() . "'" ?>>
+                        <img class="rounded-circle mt-5" width="200px" <?php echo "src='" . $current->get_profile() . "'" ?>>
                         <div class="input-group  input-group-sm mb-3" style="width: 300px;">
                             <input type="file" class="form-control" id="inputGroupFile02" name="profile_picture">
                             <label class="input-group-text" for="inputGroupFile02">Update</label>
@@ -74,7 +76,7 @@ include("navbar.php");
                         <span> </span>
                     </div>
                 </div>
-                <div class="col-md-7 border-right me-3">
+                <div class="col-md-8 border-right ">
                     <div class="p-3 py-5">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h4 class="text-right">Profile</h4>
@@ -98,22 +100,25 @@ include("navbar.php");
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="mb-3">
+                                        <div class="mb-6">
                                             <label for="Username" class="col-form-label">Username:</label>
-                                            <input type="text" class="form-control" id="Username" value="<?php echo $Hospital->get_username(); ?>" disabled>
+                                            <input type="text" class="form-control" id="Username" value="<?php echo $current->get_username(); ?>" disabled>
                                         </div>
-                                        <div class="mb-3">
+                                        <div class="mb-6">
                                             <label for="password-confirm" class="col-form-label">Password:</label>
                                             <input type="password" class="form-control" id="password-confirm" name="password-confirm">
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <input class="btn btn-primary float-clear mb-3" type="submit" name="updateResources" id="updateResources">
+                                        <input class="btn btn-primary float-clear mb-3" type="submit" name="updateDetails" id="updateDetails">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4 text-center"><button type="submit" class="btn btn-primary profile-button" name="updateProfile" id="updateProfile">Edit Profile</button></div>
+
+                        <button class="btn btn-primary" style="margin-left: 45%;margin-top:20px;" name="updateProfile" id="updateProfile" data-bs-toggle="modal" data-bs-target="#confirmPasswordModal">Confirm</button>
+
+
                     </div>
                 </div>
             </div>
@@ -121,26 +126,31 @@ include("navbar.php");
     </div>
 
 </body>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script type="text/javascript">
-    function myhref(web) {
-        window.location.href = web;
-    }
-</script>
-<script>
-    $(document).ready(function() {
-        $('#updateProfile').on('click', function(e) {
-            e.preventDefault();
-            $('#confirmPasswordModal').modal('show');
-        })
-        $("#resources-form").on('submit', function(e) {
-            //e.preventDefault();
-            location.reload();
-            //$('#confirmPasswordModal').modal('show');
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" />
+< script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        function myhref(web) {
+            window.location.href = web;
+        }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#updateProfile').on('click', function(e) {
+                e.preventDefault();
+                $('#confirmPasswordModal').modal('show');
+            })
+            $("#resources-form").on('submit', function(e) {
+                //e.preventDefault();
+                location.reload();
+                //$('#confirmPasswordModal').modal('show');
+            });
         });
-    });
-</script>
+    </script>
 
 </html>

@@ -5,7 +5,7 @@ $error = "";
 $success = "";
 
 if (array_key_exists("acID", $_SESSION)) {
-    header("Location: hospitalDashoard.php");
+    //header("Location: hospitalDashoard.php");
 }
 
 if (array_key_exists("next", $_POST)) {

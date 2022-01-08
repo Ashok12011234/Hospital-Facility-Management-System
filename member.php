@@ -263,7 +263,9 @@ class Hospital extends Member
       $sql = "SELECT  NormalAvailability, ICUAvailability FROM hospitalbeddetail WHERE HospitalId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-      $this->bedAval = new Bed($row["NormalAvailability"], $row["ICUAvailability"]);
+      //if($row){
+        $this->bedAval = new Bed($row["NormalAvailability"], $row["ICUAvailability"]);
+     // }
     }
     return $this->bedAval;
   }
@@ -293,8 +295,9 @@ class Hospital extends Member
       $sql = "SELECT  SmallAvailability,MediumAvailability, LargeAvailability FROM HospitalCylinderDetail WHERE HospitalId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-
-      $this->ceylinderAval = new Ceylinder($row["SmallAvailability"], $row["MediumAvailability"], $row["LargeAvailability"]);
+      //if($row!=null){
+        $this->ceylinderAval = new Ceylinder($row["SmallAvailability"], $row["MediumAvailability"], $row["LargeAvailability"]);
+      //}
     }
     return $this->ceylinderAval;
   }
@@ -466,7 +469,7 @@ class Hospital extends Member
 
   public function filter($para)
   {
-
+    $out = false;
     switch ($para) {
 
       case '1':
@@ -474,92 +477,137 @@ class Hospital extends Member
         break;
       case '11':
         $this->get_bed();
-        $out = $this->bedAval->providable();
+        if($this->bedAval!=null){
+          $out = $this->bedAval->providable();
+        }
         break;
       case '12':
+        
         $this->get_ceylinder();
-        $out = $this->ceylinderAval->providable();
+        if($this->ceylinderAval!=null){
+          $out = $this->ceylinderAval->providable();
+        }
         break;
       case '13':
         $this->get_blood();
+        if($this->bloodAval!=null){
         $out = $this->bloodAval->providable();
+        }
         break;
       case '14':
         $this->get_vaccine();
+        if($this->vaccineAval!=null){
         $out = $this->vaccineAval->providable();
+        }
         break;
 
       case '111':
         $this->get_bed();
-        $out = $this->bedAval->check_normal();
+        if($this->bedAval!=null){
+          $out = $this->bedAval->check_normal();
+        }
         break;
       case '112':
         $this->get_bed();
-        $out = $this->bedAval->check_icu();
+        if($this->bedAval!=null){
+          $out = $this->bedAval->check_icu();
+        }
         break;
       case '121':
         $this->get_ceylinder();
+        if($this->ceylinderAval!=null){
         $out = $this->ceylinderAval->check_small();
+        }
         break;
       case '122':
         $this->get_ceylinder();
+        if($this->ceylinderAval!=null){
         $out = $this->ceylinderAval->check_large();
+        }
         break;
       case '123':
         $this->get_ceylinder();
+        if($this->ceylinderAval!=null){
         $out = $this->ceylinderAval->check_medium();
+        }
         break;
       case '131':
         $this->get_blood();
+        if($this->bloodAval!=null){
         $out = $this->bloodAval->check_aplus();
+        }
         break;
       case '132':
         $this->get_blood();
+        if($this->bloodAval!=null){
         $out = $this->bloodAval->check_aminus();
+        }
         break;
       case '133':
         $this->get_blood();
+        if($this->bloodAval!=null){
         $out = $this->bloodAval->check_bplus();
+        }
         break;
       case '134':
         $this->get_blood();
+        if($this->bloodAval!=null){
         $out = $this->bloodAval->check_bminus();
+        }
         break;
       case '135':
         $this->get_blood();
+        if($this->bloodAval!=null){
         $out = $this->bloodAval->check_oplus();
+        }
         break;
       case '136':
         $this->get_blood();
+        if($this->bloodAval!=null){
         $out = $this->bloodAval->check_ominus();
+        }
         break;
       case '137':
         $this->get_blood();
+        if($this->bloodAval!=null){
         $out = $this->bloodAval->check_abplus();
+        }
         break;
       case '138':
         $this->get_blood();
+        if($this->bloodAval!=null){
         $out = $this->bloodAval->check_abminus();
+        }
         break;
       case '141':
         $this->get_vaccine();
+        if($this->vaccineAval!=null){
         $out = $this->vaccineAval->check_oxford();
+        }
         break;
       case '142':
         $this->get_vaccine();
+        if($this->vaccineAval!=null){
         $out = $this->vaccineAval->check_pfizer();
+        }
         break;
       case '143':
         $this->get_vaccine();
+        if($this->vaccineAval!=null){
         $out = $this->vaccineAval->check_moderna();
+        }
         break;
       case '144':
         $this->get_vaccine();
+        if($this->vaccineAval!=null){
         $out = $this->vaccineAval->check_sinopharm();
+        }
         break;
       case '145':
         $this->get_vaccine();
+        if($this->vaccineAval!=null){
         $out = $this->vaccineAval->check_sputnik();
+        }
         break;
 
 
@@ -679,39 +727,57 @@ class Provider extends Member
         break;
       case '21':
         $this->get_bed();
+        if($this->bedAval!=null){
         $out = $this->bedAval->providable();
+        }
         break;
       case '22':
         $this->get_ceylinder();
+        if($this->ceylinderAval!=null){
         $out = $this->ceylinderAval->providable();
+        }
         break;
       case '21':
         $this->get_bed();
+        if($this->bedAval!=null){
         $out = $this->bedAval->providable();
+        }
         break;
       case '22':
         $this->get_ceylinder();
+        if($this->ceylinderAval!=null){
         $out = $this->ceylinderAval->providable();
+        }
         break;
       case '211':
         $this->get_bed();
+        if($this->bedAval!=null){
         $out = $this->bedAval->check_normal();
+        }
         break;
       case '212':
         $this->get_bed();
+        if($this->bedAval!=null){
         $out = $this->bedAval->check_icu();
+        }
         break;
       case '221':
         $this->get_ceylinder();
+        if($this->ceylinderAval!=null){
         $out = $this->ceylinderAval->check_small();
+        }
         break;
       case '222':
         $this->get_ceylinder();
+        if($this->ceylinderAval!=null){
         $out = $this->ceylinderAval->check_medium();
+        }
         break;
       case '223':
         $this->get_ceylinder();
+        if($this->ceylinderAval!=null){
         $out = $this->ceylinderAval->check_large();
+        }
         break;
 
       default:

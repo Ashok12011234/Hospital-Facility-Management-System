@@ -46,8 +46,12 @@ include("navbar.php");
         <div class="col-md-4">
             <div class="input-group" >
                 <select class="form-select div-toggle" data-target=".my-info-1" aria-label="Default select example">
-                    <option selected data-show=".sent">Sent requests</option>
-                    <option value="1" data-show=".received">Receive requests</option>
+                    <option style="<?php
+                    if($_SESSION["type"] ==2){
+                        echo 'display:none;';  
+                  }
+                  ?>" data-show=".sent">Sent requests</option>
+                    <option  selected  value="1" data-show=".received">Receive requests</option>
                 </select>
             </div>
         </div>

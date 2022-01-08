@@ -30,6 +30,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="donate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.14.0/jquery.validate.min.js"></script>
 
 
 <script>
@@ -216,6 +217,59 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
       }
     });
   }
+
+function donate(){
+  var name=document.getElementById("name").value;
+  var email=document.getElementById("email").value;
+  var amount=document.getElementById("amount").value;
+
+   
+
+    $.ajax({
+        url:'donate.php',
+        type:'POST',
+        data:{
+          name:name,
+          email:email,
+          amount:amount
+        },
+        success:function(result){
+          //console.log(result);
+
+          
+      
+
+
+            if(result.data=='0'){
+                var typeModal = new bootstrap.Modal(document.getElementById("donationresult"+result), {
+                keyboard: false
+            });
+            }
+            else{
+                var typeModal = new bootstrap.Modal(document.getElementById("donationresult"+result), {
+                keyboard: false
+            });
+            }
+            typeModal.show();
+           
+        }
+    });
+ ///
+
+}
+
+
+function donateID(elem){
+  $.ajax({
+      url: 'donateID.php',
+      type: 'POST',
+      data: {id:elem.value},
+      success: function(result) {
+        //window.location.reload();
+      }
+    });
+}
+
 </script>
 
 
@@ -223,13 +277,13 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 <body>
   <?php
 
-  if(array_key_exists("acID", $_SESSION)){
-    $hospitalID = $_SESSION["acID"];
-    $sql = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
-    $result =QueryExecutor::query($sql); 
-    $row = $result->fetch_assoc();
-    $currentHospital=Hospital::getInstance($hospitalID);
-  }
+  // if(array_key_exists("acID", $_SESSION)){
+  //   $hospitalID = $_SESSION["acID"];
+  //   $sql = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
+  //   $result =QueryExecutor::query($sql); 
+  //   $row = $result->fetch_assoc();
+  //   $currentHospital=Hospital::getInstance($hospitalID);
+  // }
 
 
   ?>
@@ -238,8 +292,13 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
   <div class="row justify-content-between mt-5 ms-2 me-2">
     <div class="col-md-8 ">
-      <h2 style="display:inline;">All Hospitals & Providers</h2>
-      <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#filtermodal" style="display:inline;"><i class='fas fa-filter'></i>Filter</button>
+      
+      <button style="<?php
+                    if($_SESSION["type"] !=1){
+                    
+                        echo 'display:none;'; 
+                  }
+                 ?>" type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#filtermodal" style="display:inline;"><i class='fas fa-filter'></i>Filter</button>
 
       <br>
     </div>
@@ -255,7 +314,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
     </div>
   </div>
   <!-- Headings and title end-->
-
+  <h2 class="mt-3 ms-5 me-2" >Hospitals</h2>
   <!--Content-->
   <div class="container mt-5 mb-4">
     <div class="row">
@@ -274,558 +333,41 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
       if ($result = QueryExecutor::query($sql)) {
 
         $rows = $result->fetch_all(MYSQLI_ASSOC);
+        if($_SESSION["type"] ==1){
+          $current=$user;
+          include 'hospitalCard.php';
+        }
+        if($_SESSION["type"] ==2){
+          
+        }
 
         foreach ($rows as $row) {
           $current = Hospital::getInstance($row["HospitalId"]);
           if ($current->filter($_SESSION["hosdashboard"])) {
-      ?>
-            <div class='col-md-6 col-xl-4 mb-4'>
-              <div class='card'>
-                <div class='card-body'>
-                  <div class='mb-3' style='min-height: 150px; background-color: grey;display: flex;justify-content: center;'>
-                    <img style="object-fit:fill;width:300px;height:400px;border: solid 1px #CCC" src="<?php
-                                                                                                      echo $current->get_profile();
-                                                                                                      ?>" alt="Hospital" class="center">
-                  </div>
-                  <div class='row justify-content-between mb-1'>
-                    <h3 class='col-9 card-title'>
-                      <?php
-                      echo $current->get_name();
+            if($_SESSION["type"] ==1){
+              if($current==$user){
+                continue;
+              }
+            }
+            
+            include 'hospitalCard.php';
+            
 
-                      if(array_key_exists("acID", $_SESSION)){
-                        if($_SESSION["acID"]==$current->get_id()){
-                          echo '(Me)';
-                        }
-                    }
-                      ?>
-                    </h3>
-                    <i  style="<?php
-                    if(array_key_exists("acID", $_SESSION)){
-                      if($_SESSION["acID"]==$current->get_id()){
-                        echo 'display:none;';
-                      }
-                  }
-                  else{
-                    echo 'display:none;';
-                  }
-                  ?>" class='<?php 
-                  if(array_key_exists("acID", $_SESSION)){
-                    if (in_array($row["HospitalId"], $currentHospital->get_staredHospital()) ) {
-                                  echo "fas";
-                      } else {
-                                  echo "far";
-                    } 
-                }
-                  ?> fa-star col fa-lg ms-4' 
-                name='hospitalStar' id=<?php echo $current->get_id() ?> onclick="starHospitalUser(this)"></i>
-                   
-
-                  </div>
-                  <p class='ms-2' style='font-size: 13px; margin-bottom:-5px; '><i class='fas fa-map-marker-alt'></i>&nbsp;
-                    <?php
-                    echo $current->get_address();
-                    ?>
-                  </p>
-                  <p class='m-2' style='font-size: 13px;'><i class='fas fa-phone'></i> &nbsp;<?php echo $current->get_phoneno(); ?></p>
-                  <div class='row'>
-                    <div class='col-6 Hospital-Facilities'>
-                      <p style='margin-bottom: -25px; margin-top: 2px;'>Bed</p> <br />
-                      <div class='row justify-content-start ms-1'>
-                        <div class='col-6'>
-                          <p class="<?php
-
-                                    if ($current->get_bed()->check_normal()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">Normal Bed </p>
-                        </div>
-                        <div class='col-6'>
-                          <p class="<?php
-
-                                    if ($current->get_bed()->check_icu()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">ICU Bed </p>
-                        </div>
-                      </div>
-                      <p style='margin-bottom: -25px; margin-top: 2px;'>Blood</p> <br />
-                      <div class='row justify-content-start ms-1'>
-                        <div class='col-4'>
-                          <p class="<?php
-
-                                    if ($current->get_blood()->check_aplus()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">A+</p>
-                        </div>
-                        <div class='col-4'>
-                          <p class="<?php
-
-                                    if ($current->get_blood()->check_oplus()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">O+</p>
-                        </div>
-                        <div class='col-4'>
-                          <p class="<?php
-
-                                    if ($current->get_blood()->check_bplus()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">B+</p>
-                        </div>
-                        <div class='col-4'>
-                          <p style='font-size: 11.5px;' class="<?php
-
-                                                                if ($current->get_blood()->check_abplus()) {
-                                                                  echo 'available';
-                                                                } else {
-                                                                  echo 'shortage';
-                                                                }
-                                                                ?>">
-                            AB+</p>
-                        </div>
-                        <div class='col-4'>
-                          <p class="<?php
-
-                                    if ($current->get_blood()->check_aminus()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">A-</p>
-                        </div>
-                        <div class='col-4'>
-                          <p class="<?php
-
-                                    if ($current->get_blood()->check_ominus()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">O-</p>
-                        </div>
-                        <div class='col-4'>
-                          <p class="<?php
-
-                                    if ($current->get_blood()->check_bminus()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">B-</p>
-                        </div>
-                        <div class='col-4'>
-                          <p class="<?php
-
-                                    if ($current->get_blood()->check_abminus()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">AB-</p>
-                        </div>
-                      </div>
-
-                      <p style='margin-bottom:  -25px; margin-top: 2px;'>Oxygen Cylinder </p><br />
-                      <div class='row justify-content-start ms-1'>
-                        <div class='col-6'>
-                          <p class="<?php
-
-                                    if ($current->get_ceylinder()->check_small()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">Small</p>
-                        </div>
-                        <div class='col-6'>
-                          <p class="<?php
-
-                                    if ($current->get_ceylinder()->check_medium()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">Medium</p>
-
-                        </div>
-                        <div class='col-6'>
-                          <p class="<?php
-
-                                    if ($current->get_ceylinder()->check_large()) {
-                                      echo 'available';
-                                    } else {
-                                      echo 'shortage';
-                                    }
-                                    ?>">Large </p>
-
-                        </div>
-                      </div>
-                    </div>
-                    <div class='col-6 '>
-                      <p style='margin-bottom: 0px;'>Vaccine</p> <br />
-                      <div class='row justify-content-start ms-1'>
-                        <p class="<?php
-
-                                  if ($current->get_vaccine()->check_oxford()) {
-                                    echo 'available';
-                                  } else {
-                                    echo 'shortage';
-                                  }
-                                  ?>">Oxford-Astrazeneca</p>
-                        <p class="<?php
-
-                                  if ($current->get_vaccine()->check_pfizer()) {
-                                    echo 'available';
-                                  } else {
-                                    echo 'shortage';
-                                  }
-                                  ?>">Pfizer-BioNTech</p>
-                        <p class="<?php
-
-                                  if ($current->get_vaccine()->check_moderna()) {
-                                    echo 'available';
-                                  } else {
-                                    echo 'shortage';
-                                  }
-                                  ?>">Moderna</p>
-                        <p class="<?php
-
-                                  if ($current->get_vaccine()->check_sinopharm()) {
-                                    echo 'available';
-                                  } else {
-                                    echo 'shortage';
-                                  }
-                                  ?>">Sinopharm</p>
-                        <p class="<?php
-
-                                  if ($current->get_vaccine()->check_sputnik()) {
-                                    echo 'available';
-                                  } else {
-                                    echo 'shortage';
-                                  }
-                                  ?>">Sputnik V</p>
-                      </div>
-                    </div>
-                  </div>
-                  <Button class='btn btn-success w-100 mt-4 me-2' style="<?php
-
-                    if( $_SESSION["type"]==0 || ($_SESSION["acID"]==$current->get_id() && $_SESSION["type"]==1) ){
-                      echo 'display:none;';
-                    }
-                  ?>" onclick="request(this,1)" value="<?php echo $current->get_id() ?>">Request</Button>
-
-
-                  <Button class='btn btn-success w-100 mt-4 me-2' style="<?php
-                    if( $_SESSION["type"]==1 ||  $_SESSION["type"]==2) {
-                      echo 'display:none;';
-                    }
-                  ?>" data-bs-toggle="modal" data-bs-target="#donationmodal" value="<?php echo $current->get_id() ?>">Donate</Button>
-
-                </div>
-              </div>
-            </div>
-
-            <!--itemCategoryModal of hospital-->
-            <div class="modal fade" id="itemCategoryModal1<?php echo $current->get_id(); ?>" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel">Select item category</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-
-                  <div class="modal-body">
-
-                    <select id="category1<?php echo $current->get_id() ?>" class="form-select" name="category" aria-label="Default select example">
-
-                      <option <?php
-                              if ($current->get_bed()->providable()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="1">BED</option>
-                      <option <?php
-                              if ($current->get_ceylinder()->providable()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="2"> Oxygen cylinder</option>
-                      <option <?php
-                              if ($current->get_vaccine()->providable()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="3">Vaccine</option>
-
-                      <option <?php
-                              if ($current->get_blood()->providable()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="4">Blood</option>
-                    </select>
-
-                  </div>
-                  <div class="modal-footer">
-
-                    <button class="btn btn-primary" onclick="next(this,'1')" value="<?php echo $current->get_id() ?>" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-            <!--bedModal of hospital-->
-            <div class="modal fade" id="bedModal1<?php echo $current->get_id(); ?>" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel2">Select the specific type</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <select id="types11<?php echo $current->get_id() ?>" class="form-select" name="types" aria-label="Default select example">
-
-                      <option <?php
-                              if ($current->get_bed()->check_normal()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="11">Normal Bed</option>
-                      <option <?php
-                              if ($current->get_bed()->check_icu()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="12">ICU Bed</option>
-
-                    </select>
-                    </br>
-                    <div class="mb-3">
-                      <label for="exampleFormControlInput1" class="form-label">Quantity</label>
-                      <input id="input11<?php echo $current->get_id() ?>" type="text" class="form-control" id="exampleFormControlInput1" value="20">
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <div class="d-grid gap-2 d-md-block">
-                      <button class="submit btn btn-primary" onclick="prev(this,'1')" value="<?php echo $current->get_id() ?>" type="button" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-
-                      <button class="submit btn btn-primary" onclick="submit(this,'1','1')" value="<?php echo $current->get_id() ?>" type="button" data-bs-toggle="modal" data-bs-dismiss="modal">Submit</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!--ceylinderModal of hospital-->
-            <div class="modal fade" id="ceylinderModal1<?php echo $current->get_id(); ?>" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel2">Select the specific type</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <select id="types12<?php echo $current->get_id() ?>" class="form-select" name="types" aria-label="Default select example">
-
-                      <option <?php
-                              if ($current->get_ceylinder()->check_small()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="21">Small Ceylinder</option>
-                      <option <?php
-                              if ($current->get_ceylinder()->check_medium()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="22">Medium Ceylinder</option>
-                      <option <?php
-                              if ($current->get_ceylinder()->check_large()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="23">Large Ceylinder</option>
-
-                    </select>
-                    </br>
-                    <div class="mb-3">
-                      <label for="exampleFormControlInput1" class="form-label">Quantity</label>
-                      <input id="input12<?php echo $current->get_id() ?>" type="text" class="form-control" id="exampleFormControlInput1" value="20">
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <div class="d-grid gap-2 d-md-block">
-                      <button class="submit btn btn-primary" onclick="prev(this,'1')" value="<?php echo $current->get_id() ?>" type="button" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-
-                      <button class="btn btn-primary" type="button" onclick="submit(this,'2','1')" value="<?php echo $current->get_id() ?>" data-bs-toggle="modal" data-bs-dismiss="modal">Submit</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!--vaccineModal of hospital-->
-            <div class="modal fade" id="vaccineModal1<?php echo $current->get_id(); ?>" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel2">Select the specific type</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <select id="types13<?php echo $current->get_id() ?>" class="form-select" name="types" aria-label="Default select example">
-
-                      <option <?php
-                              if ($current->get_vaccine()->check_oxford()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="31">Oxford Astrasenica</option>
-                      <option <?php
-                              if ($current->get_vaccine()->check_pfizer()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="32">Phizer</option>
-
-                      <option <?php
-                              if ($current->get_vaccine()->check_moderna()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="33">Moderna</option>
-                      <option <?php
-                              if ($current->get_vaccine()->check_sinopharm()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="34">Sinopharm</option>
-                      <option <?php
-                              if ($current->get_vaccine()->check_sputnik()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="35">Sputnik</option>
-                    </select>
-
-                    </br>
-                    <div class="mb-3">
-                      <label for="exampleFormControlInput1" class="form-label">Quantity</label>
-                      <input id="input13<?php echo $current->get_id() ?>" type="text" class="form-control" id="exampleFormControlInput1" value="20">
-                    </div>
-
-                  </div>
-                  <div class="modal-footer">
-                    <div class="d-grid gap-2 d-md-block">
-                      <button class="submit btn btn-primary" onclick="prev(this,'1')" value="<?php echo $current->get_id() ?>" type="button" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-
-                      <button class="btn btn-primary" type="button" onclick="submit(this,'3','1')" value="<?php echo $current->get_id() ?>" data-bs-toggle="modal" data-bs-dismiss="modal">Submit</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!--bloodModal of hospital -->
-            <div class="modal fade" id="bloodModal1<?php echo $current->get_id(); ?>" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel2">Select the specific type</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <select id="types14<?php echo $current->get_id() ?>" class="form-select" name="types" aria-label="Default select example">
-
-                      <option <?php
-                              if ($current->get_blood()->check_aplus()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="41">A+</option>
-                      <option <?php
-                              if ($current->get_blood()->check_aminus()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="42">A-</option>
-
-                      <option <?php
-                              if ($current->get_blood()->check_bplus()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="43">B+</option>
-                      <option <?php
-                              if ($current->get_blood()->check_bminus()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="44">B-</option>
-                      <option <?php
-                              if ($current->get_blood()->check_oplus()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="45">O+</option>
-                      <option <?php
-                              if ($current->get_blood()->check_ominus()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="46">O-</option>
-                      <option <?php
-                              if ($current->get_blood()->check_abplus()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="47">AB+</option>
-                      <option <?php
-                              if ($current->get_blood()->check_abminus()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="48">AB-</option>
-
-
-                    </select>
-
-                    </br>
-                    <div class="mb-3">
-                      <label for="exampleFormControlInput1" class="form-label">Quantity</label>
-                      <input id="input14<?php echo $current->get_id() ?>" type="text" class="form-control" id="exampleFormControlInput1" value="20">
-                    </div>
-
-                  </div>
-                  <div class="modal-footer">
-                    <div class="d-grid gap-2 d-md-block">
-                      <button class="submit btn btn-primary" onclick="prev(this,'1')" value="<?php echo $current->get_id() ?>" type="button" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-
-                      <button class="btn btn-primary" type="button" onclick="submit(this,'4','1')" value="<?php echo $current->get_id() ?>" data-bs-toggle="modal" data-bs-dismiss="modal">Submit</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-      <?php }
+       }
         }
       }
       ?>
-
+  </div>
+            </div>
       <!-- Provider-->
+      <h2 class="mt-3 ms-5 me-2" style="<?php
+                    if($_SESSION["type"] ==0){
+                    
+                        echo 'display:none;'; 
+                  }
+                 ?>">Providers</h2>
+      <div class="container mt-5 mb-4">
+    <div class="row">
       <?php
       if (isset($_POST['SearchContent'])) {
         $content = $_POST['SearchContent'];
@@ -838,246 +380,25 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
       if ($result = QueryExecutor::query($sql)) {
         $rows = $result->fetch_all(MYSQLI_ASSOC);
 
+        if($_SESSION["type"] ==2){
+          $current=$user;
+          include 'providerCard.php';
+        }
+
         foreach ($rows as $row) {
           $current = Provider::getInstance($row["ProviderId"]);
-          if ($current->filter($_SESSION["prodashboard"])) {
-      ?>
+          if ($current->filter($_SESSION["prodashboard"]) && $_SESSION["type"] ==1) {
+            
+            include 'providerCard.php';
 
+            
 
-            <div class='col-md-6 col-xl-4 mb-4'>
-              <div class='card'>
-                <div class='card-body'>
-                  <div class='mb-3' style='min-height: 150px; background-color: grey;display: flex;justify-content: center;'>
-                    <img style="object-fit:fill;width:300px;height:400px;border: solid 1px #CCC" src="<?php
-                                                                                                      echo $current->get_profile();
-                                                                                                      ?>" alt="Provider" class="center">
-                  </div>
-                  <div class='row justify-content-between mb-1'>
-                    <h3 class='col-10 card-title'><?php
-
-                                                  echo $current->get_name();
-                                                  ?></h3>
-
-                    <i class='<?php 
-                    if(array_key_exists("acID", $_SESSION)){
-                      if (in_array($row["ProviderId"], $currentHospital->get_staredProvider())) {
-                                  echo "fas";
-                      } else {
-                        echo "far";
-                      } 
-                    }
-                              ?> fa-star col fa-lg ms-3 providerStar' name='providerStar' id=<?php echo $current->get_id() ?> onclick="starProviderUser(this)"></i>
-                  
-                </div>
-
-                  <p class='ms-2' style='font-size: 13px; margin-bottom:-5px; '><i class='fas fa-map-marker-alt'></i>&nbsp;
-                    <?php echo $current->get_address(); ?></p>
-                  <p class='m-2' style='font-size: 13px;'><i class='fas fa-phone'></i> &nbsp;<?php echo $current->get_phoneno(); ?></p>
-
-                  <p style='margin-bottom: -25px; margin-top: 2px;'>Bed</p> <br />
-                  <div class='row justify-content-start ms-1'>
-                    <div class='col-6'>
-                      <p class="<?php
-
-                                if ($current->get_bed()->check_normal()) {
-                                  echo 'available';
-                                } else {
-                                  echo 'shortage';
-                                }
-                                ?>">Normal Bed</p>
-                    </div>
-                    <div class='col-6'>
-                      <p class="<?php
-
-                                if ($current->get_bed()->check_icu()) {
-                                  echo 'available';
-                                } else {
-                                  echo 'shortage';
-                                }
-                                ?>">ICU Bed </p>
-                    </div>
-                  </div>
-                  <p style='margin-bottom:  -25px; margin-top: 2px;'>Oxygen Cylinder </p><br />
-                  <div class='row justify-content-start ms-1'>
-                    <div class="col-3 <?php
-
-                                      if ($current->get_ceylinder()->check_small()) {
-                                        echo 'available';
-                                      } else {
-                                        echo 'shortage';
-                                      }
-                                      ?>">
-                      <p>Small</p>
-                    </div>
-                    <div class="col-3 <?php
-
-                                      if ($current->get_ceylinder()->check_medium()) {
-                                        echo 'available';
-                                      } else {
-                                        echo 'shortage';
-                                      }
-                                      ?>">
-                      <p>Medium</p>
-                    </div>
-                    <div class="col-3 <?php
-
-                                      if ($current->get_ceylinder()->check_large()) {
-                                        echo 'available';
-                                      } else {
-                                        echo 'shortage';
-                                      }
-                                      ?>">
-
-                      <p>Large</p>
-                    </div>
-                  </div>
-
-                  <Button class='btn btn-success w-100 mt-4 me-2' style="<?php
-                    if( $_SESSION["type"]==0 || ($_SESSION["acID"]==$current->get_id() && $_SESSION["type"]==2) ){
-                      echo 'display:none;';
-                    }
-                  ?>" onclick="request(this,2)" value="<?php echo $current->get_id() ?>">Request</Button>
-
-
-
-                </div>
-              </div>
-            </div>
-
-
-            <!--itemCategoryModal of provider-->
-            <div class="modal fade" id="itemCategoryModal2<?php echo $current->get_id(); ?>" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel">Select item category</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-
-                  <div class="modal-body">
-
-                    <select id="category2<?php echo $current->get_id() ?>" class="form-select" name="category" aria-label="Default select example">
-
-                      <option <?php
-                              if ($current->get_bed()->providable()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="1">BED</option>
-                      <option <?php
-                              if ($current->get_ceylinder()->providable()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="2"> Oxygen cylinder</option>
-
-                    </select>
-
-                  </div>
-                  <div class="modal-footer">
-
-                    <button class="btn btn-primary" onclick="next(this,2)" value="<?php echo $current->get_id() ?>" data-bs-toggle="modal" data-bs-dismiss="modal">Next</button>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-            <!--bedModal of provider-->
-            <div class="modal fade" id="bedModal2<?php echo $current->get_id(); ?>" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel2">Select the specific type</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <select id="types21<?php echo $current->get_id() ?>" class="form-select" name="types" aria-label="Default select example">
-
-                      <option <?php
-                              if ($current->get_bed()->check_normal()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="11">Normal Bed</option>
-                      <option <?php
-                              if ($current->get_bed()->check_icu()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="12">ICU Bed</option>
-
-                    </select>
-                    </br>
-                    <div class="mb-3">
-                      <label for="exampleFormControlInput1" class="form-label">Quantity</label>
-                      <input id="input21<?php echo $current->get_id() ?>" type="text" class="form-control" id="exampleFormControlInput1" value="20">
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <div class="d-grid gap-2 d-md-block">
-                      <button class="submit btn btn-primary" onclick="prev(this,'2')" value="<?php echo $current->get_id() ?>" type="button" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-
-                      <button class="submit btn btn-primary" onclick="submit(this,'1','2')" value="<?php echo $current->get_id() ?>" type="button" data-bs-toggle="modal" data-bs-dismiss="modal">Submit</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!--ceylinderModal of provider-->
-            <div class="modal fade" id="ceylinderModal2<?php echo $current->get_id(); ?>" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel2">Select the specific type</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <select id="types22<?php echo $current->get_id() ?>" class="form-select" name="types" aria-label="Default select example">
-
-                      <option <?php
-                              if ($current->get_ceylinder()->check_small()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="21">Small Ceylinder</option>
-                      <option <?php
-                              if ($current->get_ceylinder()->check_medium()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="22">Medium Ceylinder</option>
-                      <option <?php
-                              if ($current->get_ceylinder()->check_large()) {
-                              } else {
-                                echo "disabled";
-                              }
-                              ?> value="23">Large Ceylinder</option>
-
-                    </select>
-                    </br>
-                    <div class="mb-3">
-                      <label for="exampleFormControlInput1" class="form-label">Quantity</label>
-                      <input id="input22<?php echo $current->get_id() ?>" type="text" class="form-control" id="exampleFormControlInput1" value="20">
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <div class="d-grid gap-2 d-md-block">
-                      <button class="submit btn btn-primary" onclick="prev(this,'2')" value="<?php echo $current->get_id() ?>" type="button" data-bs-toggle="modal" data-bs-dismiss="modal">Previous</button>
-
-                      <button class="btn btn-primary" type="button" onclick="submit(this,'2','2')" value="<?php echo $current->get_id() ?>" data-bs-toggle="modal" data-bs-dismiss="modal">Submit</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-      <?php  }
+        }
         }
       }
       ?>
-
+  </div>
+            </div>
 
 
 
@@ -1409,19 +730,19 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
       <?php
       if (isset($_POST['starHospitalId']) && ($_POST['star'] == "unStarHos")) {
-        $currentHospital->add_staredHospital($_POST['starHospitalId']);
+        $user->add_staredHospital($_POST['starHospitalId']);
         //print_r($current->get_staredHospital());
       } else if (isset($_POST['starHospitalId']) && $_POST['star'] == "starHos") {
-        $currentHospital->remove_staredHospital($_POST['starHospitalId']);
+        $user->remove_staredHospital($_POST['starHospitalId']);
         //Redirect_to("google.com");
         //print_r($current->get_staredHospital());
         //Redirect_to("google.com"); 
       }
       if (isset($_POST['starProviderId']) && ($_POST['star'] == "unStarProv")) {
-        $currentHospital->add_staredProvider($_POST['starProviderId']);
+        $user->add_staredProvider($_POST['starProviderId']);
         //print_r($current->get_staredHospital());
       } else if (isset($_POST['starProviderId']) && $_POST['star'] == "starProv") {
-        $currentHospital->remove_staredProvider($_POST['starProviderId']);
+        $user->remove_staredProvider($_POST['starProviderId']);
         //Redirect_to("google.com");
         //print_r($current->get_staredHospital());
         //Redirect_to("google.com"); 
@@ -1528,6 +849,55 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
       }
     });
   });
+
+  $(function() {
+
+$("#newModalForm").validate({
+  rules: {
+    cardnum: {
+      required: true,
+      creditcard: true
+    },
+    name: "required",
+    email: {
+      required: true,
+      email: true
+    },
+    cardcvv: {
+      required: true,
+      digits: true,
+      minlength: 3,
+      maxlength: 3
+    },
+    amount: {
+      required: true,
+      digits: true
+    },
+    expiry_month: {
+      required: true
+    },
+    expiry_year: {
+      required: true
+    }
+  },
+  messages: {
+    cardnum: {
+      required: "Please enter card number",
+      minlength: "Your card number must be 16 characters"
+    },
+    cardcvv: {
+      required: "Please enter cardcvv",
+      minlength: "Your card number must be 3 characters"
+    },
+    name: "Please provide card name"
+  },
+		submitHandler: function(form) {
+      $("#donationmodal").modal("hide");
+           donate();
+          }
+});
+});
+
 </script>
 
 </html>

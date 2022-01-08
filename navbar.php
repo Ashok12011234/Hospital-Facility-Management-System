@@ -133,12 +133,12 @@ else {
 
       <img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size: 40px; border-radius: 30px;" class="ms-2">
 
-
       <span class="user-name me-4 ms-1" id="hospitalDropdownButton"><?php 
       if($_SESSION["type"] !=0){
         echo $user->get_username(); 
       }
       ?></span>
+
     </div>
     <div class="dropdown-menu mt-3" aria-labelledby="hospitalDropdownButton" id="hospitalDropdownPanel">
       <a href="#" style="text-decoration: none; color: black;">

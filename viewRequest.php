@@ -2,17 +2,22 @@
 include("navbar.php");
 include("request.php");
 
-if (array_key_exists("id", $_GET)) {
+if (array_key_exists("id", $_GET) && array_key_exists("type", $_GET)) {
     if ($_GET["type"] == RequestType::HH_REQUEST) {
         $request = new HHRequest($_GET["id"]);
     } else {
         $request = new HPRequest($_GET["id"]);
     }
     $request->assignAll();
+    if (array_key_exists("send", $_POST)) {
+        $request->sendMsg($user, QueryExecutor::real_escape_string($_POST["msg"]));
+        
+    }
     $request->buildChat();
     $chat = $request->getChat();
-} else {
-    # code...
+}
+else {
+
 }
 
 ?>
@@ -349,33 +354,34 @@ if (array_key_exists("id", $_GET)) {
                     <div class="card-body">
                         <div class="card mb-2">
                             <div class="card-header">
-                                <h3>Hospital x<h3>
+                                <h3><?php if($request->getTo()->get_username() == $user->get_username()){echo $request->getFrom()->get_username();}else{echo $request->getTo()->get_username();}?><h3>
                             </div>
                             <div id="chat-box-body" class="card-body">
                                 <?php
-                                $messages = $chat->getMessages();
-                                foreach ($messages as $msg) {
-                                    if ($user->get_id() == $msg->getSenderId()) {
-                                        echo '<div class="message" style="float: right;background-color: #f2e4fd;">' . $msg->getMsg() . '</div><br>
+                                    $messages = $chat->getMessages();
+                                    foreach($messages as $msg)
+                                    {
+                                        $txt = $msg->getMsg();
+                                        if (($msg->getSenderType() == strtoupper(get_class($user))) 
+                                            && ($msg->getSenderId() == $user->get_id())) {
+                                            echo '<div class="message" style="float: right;background-color: #f2e4fd;">'.$txt.'</div><br>
                                                   <div style="clear: both;"></div>';
-                                    } else {
-                                        echo '<div class="message" style="float: left;background-color: #f0fde4;">' . $msg->getMsg() . '</div><br>';
+                                        }
+                                        else {
+                                            echo '<div class="message" style="float: left;background-color: #f0fde4;">'.$txt.'</div><br>
+                                                  <div style="clear: both;"></div>';
+                                        }
                                     }
                                 }
                                 ?>
-                                <!--div class="message" style="float: left;background-color: #f0fde4;">hi</div><br>
-                                <div class="message" style="float: right;background-color: #f2e4fd;">hi</div><br>
-                                <div style="clear: both;"></div>
-                                <div class="message" style="float: left;background-color: #f0fde4;">Info about Help In Writing. The fastest search engine. Discover us now! Fast and trusted. Easy Acces To Information. All the Answers. Simple in use. Multiple sources combined. Types: Information, Combined Web Results, Easy & Fast, 99% Match.</div><br>
-                                <div class="message" style="float: right;background-color: #f2e4fd;">Info about Help In Writing. The fastest search engine. Discover us now! Fast and trusted. Easy Acces To Information. All the Answers. Simple in use. Multiple sources combined. Types: Information, Combined Web Results, Easy & Fast, 99% Match.</div><br>
-                                <div style="clear: both;"></div-->
                             </div>
                         </div>
-                        <div class="input-group">
-                            <textarea id="chat-textarea" class="form-control" aria-label="With textarea"></textarea>
-                            <!--button class="input-group-text btn btn-link chat-btn"><i class="fas fa-share-alt"></i></button-->
-                            <button class="input-group-text btn btn-link chat-btn"><i class="far fa-paper-plane"></i></button>
-                        </div>
+                        <form action="" method="post">
+                            <div class="input-group">
+                                <textarea id="chat-textarea" class="form-control" aria-label="With textarea" name="msg"></textarea>
+                                <button type="submit" name="send" class="input-group-text btn btn-link chat-btn"><i class="far fa-paper-plane"></i></button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -387,6 +393,10 @@ if (array_key_exists("id", $_GET)) {
 <script type="text/javascript">
     function myhref(web) {
         window.location.href = web;
+    }
+
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
     }
 </script>
 

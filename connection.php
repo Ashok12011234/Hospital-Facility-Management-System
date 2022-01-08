@@ -70,17 +70,19 @@ abstract class ObjectPool
 
 interface IConnection
 {
+    public function connect(String $host, String $dbusername, String $dbpassword, String $dbname): void;
     public function is_valid(): bool;
     public function close(): void;
     public function query(String $query): mysqli_result|bool;
     public function multi_query(String $query): mysqli_result|bool;
+    public function real_escape_string(String $string): String;
 }
 
 class Connection implements IConnection
 {
     private mysqli $connection;
 
-    private function __construct(String $host, String $dbusername, String $dbpassword, String $dbname)
+    public function connect(String $host, String $dbusername, String $dbpassword, String $dbname): void
     {
         $this->connection = new mysqli($host, $dbusername, $dbpassword, $dbname);
 
@@ -89,7 +91,7 @@ class Connection implements IConnection
             exit();
         }
     }
-//----------------------------------------------------
+
     public function close(): void
     {
         $this->connection->close();
@@ -113,9 +115,9 @@ class Connection implements IConnection
         return $this->connection->multi_query($query);
     }
 
-    public static function getConnection(String $host, String $dbusername, String $dbpassword, String $dbname): Connection
+    public function real_escape_string(String $string): String
     {
-        return new Connection($host, $dbusername, $dbpassword, $dbname);
+        return $this->connection->real_escape_string($string);
     }
 }
 
@@ -146,7 +148,9 @@ class ConnectionPool extends ObjectPool
 
     protected function create(): IConnection
     {
-        return Connection::getConnection($this->host, $this->dbusername, $this->dbpassword, $this->dbname);
+        $conn = new Connection();
+        $conn->connect($this->host, $this->dbusername, $this->dbpassword, $this->dbname);
+        return $conn;
     }
 
     public function validate(Object $conn): bool
@@ -174,8 +178,9 @@ class QueryExecutor
 {
     private const QUERY = 0;
     private const MULTI_QUERY = 1;
+    private const REAL_ESCAPE_STRING = 2;
 
-    private static function exe(String $query, int $type): mysqli_result|bool
+    private static function exe(String $query, int $type): mysqli_result|bool|String
     {
         $connectionPool = ConnectionPool::getInstance();
         $connection = $connectionPool->getConnection();
@@ -185,6 +190,9 @@ class QueryExecutor
                 break;
             case self::MULTI_QUERY:
                 $result = $connection->multi_query($query);
+                break;
+            case self::REAL_ESCAPE_STRING:
+                $result = $connection->real_escape_string($query);
                 break;
         }
         $connectionPool->releaseConnection($connection);
@@ -199,5 +207,10 @@ class QueryExecutor
     public static function multi_query(String $query): mysqli_result|bool
     {
         return self::exe($query, self::MULTI_QUERY);
+    }
+
+    public static function real_escape_string(String $string): String
+    {
+        return self::exe($string, self::REAL_ESCAPE_STRING);
     }
 }

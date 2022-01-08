@@ -2,7 +2,7 @@
 include('connection.php');
 
 // Create database
-$conn = new mysqli("localhost","root","");
+$conn = new mysqli("localhost","root","1234");
 $createDB = "CREATE DATABASE IF NOT EXISTS `".Database::NAME."`";
 $conn->query($createDB);
 $conn->close();
@@ -155,6 +155,14 @@ CREATE TABLE VaccineDetail (
   SinopharmAvailability char(3), 
   SputnikAvailability char(3), 
   PRIMARY KEY (VaccineRecordId, HospitalId));
+
+  CREATE TABLE Donation (
+  DonationId int(10) NOT NULL AUTO_INCREMENT, 
+  HospitalId int(10) NOT NULL, 
+  Email varchar(100) NOT NULL, 
+  Name varchar(255) NOT NULL,
+  Amount varchar(10) NOT NULL,
+  PRIMARY KEY (DonationId));
 
 ";
 

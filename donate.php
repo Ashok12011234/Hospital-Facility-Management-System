@@ -1,77 +1,121 @@
 <?php
+include("member.php");
+session_start();
+
+// $id = $_POST['id'];
+
+$id=$_SESSION["donateHosID"];
+$name = $_POST['name'];
+$email = $_POST['email'];
+$amount = $_POST['amount'];
 
 $rand=rand(0,1);
 
 if($rand==0){
+
+    $sql = "INSERT INTO Donation
+    (DonationId,
+    HospitalId,
+    Email,
+    Name,
+    Amount)
+    VALUES
+    ('0',
+    '$id',
+    '$email',
+    '$name',
+    '$amount');
+    "; 
+
+    
+if ($result = QueryExecutor::query($sql)) {
+
+    //code to send email
+    //email template
+    //subject - HFMS Donation Receipt
+    //to-$email
+    //body- Dear $name , You have donated $amount Rs. to Hospital::getInstance($id)->get_name() .Thank you:)
+
     echo '0';
+  } else {
+   
+  }
+
 }
 else{
+     //code to send email
+    //email template
+    //subject - HFMS Donation Failed
+    //to-$email
+    //body- Dear $name , You have donation is failed due to "  " issue .Thank you:)
+
+
     echo '1';
 }
 
-class Donation
-{
-    private DonationStrategy $donationStrategy;
+// class Donation
+// {
+//     private DonationStrategy $donationStrategy;
 
-    public function __construct()
-    {
+//     public function __construct()
+//     {
 
-    }
+//     }
 
-    public function setStrategy(DonationStrategy $donationStrategy): void
-    {
-        $this->donationStrategy = $donationStrategy;
-    }
+//     public function setStrategy(DonationStrategy $donationStrategy): void
+//     {
+//         $this->donationStrategy = $donationStrategy;
+//     }
 
-    public function donate(int $amount): bool
-    {
-        return $this->donationStrategy->donate($amount);
-    }
-}
+//     public function donate(int $amount): bool
+//     {
+//         return $this->donationStrategy->donate($amount);
+//     }
+// }
 
-interface DonationStrategy
-{
-	public function donate(int $amount): bool;
-}
+// interface DonationStrategy
+// {
+// 	public function donate(int $amount): bool;
+// }
 
-class CreditCardStrategy implements DonationStrategy
-{
-	private String $name;
-	private String $cardNumber;
-	private String $cvv;
-	private String $dateOfExpiry;
+// class CreditCardStrategy implements DonationStrategy
+// {
+// 	private String $name;
+// 	private String $cardNumber;
+// 	private String $cvv;
+// 	private String $dateOfExpiry;
 	
-    public function __construct(String $name, String $cardNumber, String $cvv, String $dateOfExpiry)
-    {
-        $this->name = $name;
-        $this->cardNumber = $cardNumber;
-        $this->cvv = $cvv;
-        $this->dateOfExpiry = $dateOfExpiry;
-    }
+//     public function __construct(String $name, String $cardNumber, String $cvv, String $dateOfExpiry)
+//     {
+//         $this->name = $name;
+//         $this->cardNumber = $cardNumber;
+//         $this->cvv = $cvv;
+//         $this->dateOfExpiry = $dateOfExpiry;
+//     }
 	
-	public function donate(int $amount): bool
-    {
-        return rand(0,1)==0;
-	}
+// 	public function donate(int $amount): bool
+//     {
+//         return rand(0,1)==0;
+// 	}
 
-}
+// }
 
-class PaypalStrategy implements DonationStrategy
-{
-	private String $emailId;
-	private String $password;
+// class PaypalStrategy implements DonationStrategy
+// {
+// 	private String $emailId;
+// 	private String $password;
 	
-    public function __construct(String $emailId, String $password)
-    {
-        $this->emailId = $emailId;
-        $this->password = $password;
-    }
+//     public function __construct(String $emailId, String $password)
+//     {
+//         $this->emailId = $emailId;
+//         $this->password = $password;
+//     }
 	
-	public function donate(int $amount): bool
-    {
-		return rand(0,1)==0;
-	}
+// 	public function donate(int $amount): bool
+//     {
+// 		return rand(0,1)==0;
+// 	}
 
-}
+// }
 
 ?>

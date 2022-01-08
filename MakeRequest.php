@@ -19,7 +19,7 @@ HospitalId,
 Equipment,
 Quantity)
 VALUES
-('0',
+(
 '$id',
 '$id2',
 '$equipment',

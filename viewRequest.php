@@ -51,8 +51,16 @@ else {
         <div class="col-md-4">
             <div class="input-group">
                 <select class="form-select" aria-label="Default select example" disabled>
-                    <option selected>Sent requests</option>
-                    <option value="1">Receive requests</option>
+                    <option 
+                    <?php 
+                        if ($request->getFrom() === $user) 
+                        {echo "selected";}
+                    ?>>Sent requests</option>
+                    <option
+                    <?php 
+                        if ($request->getTo() === $user) 
+                        {echo "selected";}
+                    ?>>Receive requests</option>
                 </select>
             </div>
         </div>
@@ -372,7 +380,6 @@ else {
                                                   <div style="clear: both;"></div>';
                                         }
                                     }
-                                }
                                 ?>
                             </div>
                         </div>
@@ -387,6 +394,9 @@ else {
             </div>
         </div>
     </div>
+    <?php
+        include("./footer.php");
+    ?>
 
 </body>
 

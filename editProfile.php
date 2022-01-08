@@ -1,18 +1,10 @@
 <?php
-//include("config.php");
 include("common.php");
-//include("member.php");
 include("navbar.php");
-
-$hospitalID = 1;
-$sql = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
-$result = QueryExecutor::query($sql);
-$row = $result->fetch_assoc();
-$current = Hospital::getInstance($hospitalID);
 
 
 if (isset($_POST['updateDetails'])) {
-    if ($_POST['password-confirm'] == $current->get_password()) {
+    if ($_POST['password-confirm'] == $user->get_password()) {
         //$hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);
         $hospitalName = trim($_POST['hospitalName'], "\n\r\t\v\0");
 
@@ -22,20 +14,20 @@ if (isset($_POST['updateDetails'])) {
         $bankName =  $_POST['bankName'];
         $website =  $_POST['website'];
         $address =  $_POST['address'];
-        $current->set_name($hospitalName);
-        $current->set_email($email);
-        $current->set_phoneno($phoneNo);
-        $current->set_accountNo($accountNumber);
-        $current->set_bankName($bankName);
-        $current->set_website($website);
-        $current->set_address($address);
+        $user->set_name($hospitalName);
+        $user->set_email($email);
+        $user->set_phoneno($phoneNo);
+        $user->set_accountNo($accountNumber);
+        $user->set_bankName($bankName);
+        $user->set_website($website);
+        $user->set_address($address);
 
         $image = basename($_FILES["profile_picture"]["name"]);
         if ($image != "") {
             $target = "assets/pictures/profile/" . $image;
             move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target);
-            unlink($current->get_profile());
-            $current->set_profile($target);
+            unlink($user->get_profile());
+            $user->set_profile($target);
         }
     }
 }
@@ -67,7 +59,7 @@ include("navbar.php");
             <div class="row">
                 <div class="col-md-4 border-right">
                     <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                        <img class="rounded-circle mt-5" width="200px" <?php echo "src='" . $current->get_profile() . "'" ?>>
+                        <img class="rounded-circle mt-5" width="200px" <?php echo "src='" . $user->get_profile() . "'" ?>>
                         <div class="input-group  input-group-sm mb-3" style="width: 300px;">
                             <input type="file" class="form-control" id="inputGroupFile02" name="profile_picture">
                             <label class="input-group-text" for="inputGroupFile02">Update</label>
@@ -84,13 +76,13 @@ include("navbar.php");
                         </div>
                         <div class="row mt-3">
                             <?php
-                            echo "<div class='col-md-12'><label class='labels fw-bold'>Username</label><input type='text' name='username' class='form-control' placeholder='' value=" . $current->get_username() . " disabled ></div>
-                                <div class='col-md-12'><label class='labels fw-bold'>Hospital Name</label><input type='text' name='hospitalName' class='form-control' placeholder='' value=" . $current->get_name() . "></div>
-                                <div class='col-md-12'><label class='labels fw-bold'>Email ID</label><input type='text' name='email' class='form-control' placeholder='' value=" . $current->get_email() . "></div>
-                                <div class='col-md-12'><label class='labels fw-bold'>Phone</label><input type='text' name='phoneNo' class='form-control' placeholder='' value=" . $current->get_phoneno() . "></div>
-                                <div class='row'><div class='col-6'><label class='labels fw-bold'>Account Number</label><input type='text' name='accountNumber' class='form-control' placeholder='' value=" . $current->get_accountNo() . "></div><div class='col-6'><label class='labels fw-bold'>Bank Name</label><input type='text' class='form-control' name='bankName' placeholder='' value=" . $current->get_bankName() . "></div></div>
-                                <div class='col-md-12'><label class='labels fw-bold'>Website</label><input type='text' name='website' class='form-control' placeholder='' value=" . $current->get_website() . "></div>
-                                <div class='col-md-12'><label class='labels fw-bold'>Address</label><input type='text' name='address' class='form-control' placeholder='' value='" . $current->get_address() . "'></div>";
+                            echo "<div class='col-md-12'><label class='labels fw-bold'>Username</label><input type='text' name='username' class='form-control' placeholder='' value=" . $user->get_username() . " disabled ></div>
+                                <div class='col-md-12'><label class='labels fw-bold'>Hospital Name</label><input type='text' name='hospitalName' class='form-control' placeholder='' value=" . $user->get_name() . "></div>
+                                <div class='col-md-12'><label class='labels fw-bold'>Email ID</label><input type='text' name='email' class='form-control' placeholder='' value=" . $user->get_email() . "></div>
+                                <div class='col-md-12'><label class='labels fw-bold'>Phone</label><input type='text' name='phoneNo' class='form-control' placeholder='' value=" . $user->get_phoneno() . "></div>
+                                <div class='row'><div class='col-6'><label class='labels fw-bold'>Account Number</label><input type='text' name='accountNumber' class='form-control' placeholder='' value=" . $user->get_accountNo() . "></div><div class='col-6'><label class='labels fw-bold'>Bank Name</label><input type='text' class='form-control' name='bankName' placeholder='' value=" . $user->get_bankName() . "></div></div>
+                                <div class='col-md-12'><label class='labels fw-bold'>Website</label><input type='text' name='website' class='form-control' placeholder='' value=" . $user->get_website() . "></div>
+                                <div class='col-md-12'><label class='labels fw-bold'>Address</label><input type='text' name='address' class='form-control' placeholder='' value='" . $user->get_address() . "'></div>";
                             ?>
                         </div>
                         <div class="modal fade" id="confirmPasswordModal" aria-hidden="true" aria-labelledby="confirmPasswordModal" tabindex=" -1">
@@ -103,7 +95,7 @@ include("navbar.php");
                                     <div class="modal-body">
                                         <div class="mb-6">
                                             <label for="Username" class="col-form-label">Username:</label>
-                                            <input type="text" class="form-control" id="Username" value="<?php echo $current->get_username(); ?>" disabled>
+                                            <input type="text" class="form-control" id="Username" value="<?php echo $user->get_username(); ?>" disabled>
                                         </div>
                                         <div class="mb-6">
                                             <label for="password-confirm" class="col-form-label">Password:</label>

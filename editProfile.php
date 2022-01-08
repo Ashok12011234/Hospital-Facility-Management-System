@@ -1,25 +1,25 @@
 <?php
-#include("config.php");
+//include("config.php");
 include("common.php");
-#include("member.php");
+//include("member.php");
 include("navbar.php");
 
 $hospitalID = 1;
 $sql = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
-$result = $connection->query($sql);
+$result = QueryExecutor::query($sql);
 $row = $result->fetch_assoc();
-$current = new Hospital($row["HospitalId"], $row["Name"], $row['UserName'], $row['Address'], $row["TelephoneNo"], $row['Profile'], $row['Email'], $row["Website"], $row['AccountNumber'], $row['BankName'], $row['Password'],  $connection);
+$current = Hospital::getInstance($hospitalID);
 
 if (isset($_POST['updateProfile'])) {
     //$hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);
-    $hospitalName = trim($_POST['hospitalName'],"\n\r\t\v\0");
+    $hospitalName = trim($_POST['hospitalName'], "\n\r\t\v\0");
 
-    $email = mysqli_real_escape_string($GLOBALS['connection'], $_POST['email']);
-    $phoneNo = mysqli_real_escape_string($GLOBALS['connection'], $_POST['phoneNo']);
-    $accountNumber = mysqli_real_escape_string($GLOBALS['connection'], $_POST['accountNumber']);
-    $bankName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['bankName']);
-    $website = mysqli_real_escape_string($GLOBALS['connection'], $_POST['website']);
-    $address = mysqli_real_escape_string($GLOBALS['connection'], $_POST['address']);
+    $email =  $_POST['email'];
+    $phoneNo =  $_POST['phoneNo'];
+    $accountNumber =  $_POST['accountNumber'];
+    $bankName =  $_POST['bankName'];
+    $website =  $_POST['website'];
+    $address =  $_POST['address'];
     $current->set_name($hospitalName);
     $current->set_email($email);
     $current->set_phoneno($phoneNo);
@@ -54,12 +54,12 @@ if (isset($_POST['updateProfile'])) {
 </head>
 
 <body>
-    
-<!--?php
+
+    <!--?php
 include("navbar.php");
 ?-->
     <!-- Body -->
-    <div class="rounded bg-white m-4 p-3 body-contentx">
+    <div class="rounded bg-white m-4 pt-3 pr-3 pl-3 body-contentx">
         <form action="" method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-4 border-right">
@@ -90,7 +90,30 @@ include("navbar.php");
                                 <div class='col-md-12'><label class='labels fw-bold'>Address</label><input type='text' name='address' class='form-control' placeholder='' value='" . $current->get_address() . "'></div>";
                             ?>
                         </div>
-                        <div class="mt-4 text-center"><button type="submit" class="btn btn-primary profile-button" name="updateProfile">Edit Profile</button></div>
+                        <div class="modal fade" id="confirmPasswordModal" aria-hidden="true" aria-labelledby="confirmPasswordModal" tabindex=" -1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalToggleLabel">Enter your password</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="Username" class="col-form-label">Username:</label>
+                                            <input type="text" class="form-control" id="Username" value="<?php echo $Hospital->get_username(); ?>" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password-confirm" class="col-form-label">Password:</label>
+                                            <input type="password" class="form-control" id="password-confirm" name="password-confirm">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input class="btn btn-primary float-clear mb-3" type="submit" name="updateResources" id="updateResources">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-center"><button type="submit" class="btn btn-primary profile-button" name="updateProfile" id="updateProfile">Edit Profile</button></div>
                     </div>
                 </div>
             </div>
@@ -106,6 +129,18 @@ include("navbar.php");
         window.location.href = web;
     }
 </script>
-
+<script>
+    $(document).ready(function() {
+        $('#updateProfile').on('click', function(e) {
+            e.preventDefault();
+            $('#confirmPasswordModal').modal('show');
+        })
+        $("#resources-form").on('submit', function(e) {
+            //e.preventDefault();
+            location.reload();
+            //$('#confirmPasswordModal').modal('show');
+        });
+    });
+</script>
 
 </html>

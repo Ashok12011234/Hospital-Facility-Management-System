@@ -146,7 +146,6 @@ if ((isset($_POST['updateResources']))) {
                                 $sql = "SELECT * FROM `hospitalbeddetail`  WHERE HospitalId=$hospitalID;";
                                 $result = QueryExecutor::query($sql);
                                 $row = $result->fetch_assoc();
-                                //print_r($row);
                                 ?>
                                 <div class="col-6 fw-light"><label for="normalBed">Normal Bed</label> <input class="form-check-input float-end text-end me-2" type="checkbox" name="bed[]" id="normalBed" value="normalBed" <?php
                                                                                                                                                                                                                             if ($row['NormalAvailability'] == "YES") {

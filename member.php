@@ -263,9 +263,12 @@ class Hospital extends Member
       $sql = "SELECT  NormalAvailability, ICUAvailability FROM hospitalbeddetail WHERE HospitalId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-      //if($row){
+      if($row!=null){
         $this->bedAval = new Bed($row["NormalAvailability"], $row["ICUAvailability"]);
-     // }
+      }
+      else{
+        $this->bedAval = new Bed("NO", "NO");
+      }
     }
     return $this->bedAval;
   }
@@ -295,9 +298,12 @@ class Hospital extends Member
       $sql = "SELECT  SmallAvailability,MediumAvailability, LargeAvailability FROM HospitalCylinderDetail WHERE HospitalId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-      //if($row!=null){
+      if($row!=null){
         $this->ceylinderAval = new Ceylinder($row["SmallAvailability"], $row["MediumAvailability"], $row["LargeAvailability"]);
-      //}
+      }
+      else{
+        $this->ceylinderAval = new Ceylinder("NO","NO","NO");
+      }
     }
     return $this->ceylinderAval;
   }
@@ -327,9 +333,13 @@ class Hospital extends Member
       $sql = "SELECT  AplusAvailability,AminusAvailability, BplusAvailability ,BminusAvailability, OplusAvailability, OminusAvailability, ABplusAvailability ,ABminusAvailability  FROM BloodDetail WHERE HospitalId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-
-      $this->bloodAval = new Blood($row["AplusAvailability"], $row["AminusAvailability"], $row["BplusAvailability"], $row["BminusAvailability"], $row["OplusAvailability"], $row["OminusAvailability"], $row["ABplusAvailability"], $row["ABminusAvailability"]);
-    }
+      if($row!=null){
+        $this->bloodAval = new Blood($row["AplusAvailability"], $row["AminusAvailability"], $row["BplusAvailability"], $row["BminusAvailability"], $row["OplusAvailability"], $row["OminusAvailability"], $row["ABplusAvailability"], $row["ABminusAvailability"]);
+      }
+      else{
+        $this->bloodAval = new Blood("NO","NO","NO","NO","NO","NO","NO","NO");
+      }
+      }
     return $this->bloodAval;
   }
   public function set_blood()
@@ -357,7 +367,12 @@ class Hospital extends Member
       $sql = "SELECT  OxfordAvailability,PfizerAvailability, ModernalAvailability ,SinopharmAvailability, SputnikAvailability  FROM VaccineDetail WHERE HospitalId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-      $this->vaccineAval = new Vaccine($row["OxfordAvailability"], $row["PfizerAvailability"], $row["ModernalAvailability"], $row["SinopharmAvailability"], $row["SputnikAvailability"]);
+      if($row!=null){
+        $this->vaccineAval = new Vaccine($row["OxfordAvailability"], $row["PfizerAvailability"], $row["ModernalAvailability"], $row["SinopharmAvailability"], $row["SputnikAvailability"]);
+      } 
+      else{
+        $this->vaccineAval = new Vaccine("NO","NO","NO","NO","NO");
+      } 
     }
     return $this->vaccineAval;
   }
@@ -522,13 +537,13 @@ class Hospital extends Member
       case '122':
         $this->get_ceylinder();
         if($this->ceylinderAval!=null){
-        $out = $this->ceylinderAval->check_large();
+        $out = $this->ceylinderAval->check_medium();
         }
         break;
       case '123':
         $this->get_ceylinder();
         if($this->ceylinderAval!=null){
-        $out = $this->ceylinderAval->check_medium();
+        $out = $this->ceylinderAval->check_large();
         }
         break;
       case '131':
@@ -700,7 +715,12 @@ class Provider extends Member
       $sql = "SELECT  NormalAvailability, ICUAvailability FROM ProviderBedDetail WHERE ProviderId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-      $this->bedAval = new Bed($row["NormalAvailability"], $row["ICUAvailability"]);
+      if($row!=null){
+        $this->bedAval = new Bed($row["NormalAvailability"], $row["ICUAvailability"]);
+      }
+      else{
+        $this->bedAval = new Bed("NO","NO");
+      }
     }
     return $this->bedAval;
   }
@@ -712,7 +732,12 @@ class Provider extends Member
       $sql = "SELECT  SmallAvailability,MediumAvailability, LargeAvailability FROM ProviderCylinderDetail WHERE ProviderId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
+      if($row!=null){
       $this->ceylinderAval = new Ceylinder($row["SmallAvailability"], $row["MediumAvailability"], $row["LargeAvailability"]);
+      }
+      else{
+        $this->ceylinderAval = new Ceylinder("NO","NO","NO");
+      }
     }
     return $this->ceylinderAval;
   }

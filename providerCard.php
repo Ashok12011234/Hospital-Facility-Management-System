@@ -21,7 +21,7 @@
                                                 </h3>
 
                     <i style="<?php
-                    if($_SESSION["type"] ==3){
+                    if($_SESSION["type"] ==1){
                       if($user==$current){
                         echo 'display:none;';
                       }

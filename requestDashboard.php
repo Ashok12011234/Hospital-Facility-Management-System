@@ -45,9 +45,17 @@ include("navbar.php");
         </div>
         <div class="col-md-4">
             <div class="input-group" >
-                <select class="form-select div-toggle" data-target=".my-info-1" aria-label="Default select example">
-                    <option selected data-show=".sent">Sent requests</option>
-                    <option value="1" data-show=".received">Receive requests</option>
+                <select <?php
+                    if($_SESSION["type"] ==2){
+                        echo 'disabled';  
+                  }
+                  ?>   class="form-select div-toggle" data-target=".my-info-1" aria-label="Default select example">
+                    <option style="<?php
+                    if($_SESSION["type"] ==2){
+                        echo 'display:none;';  
+                  }
+                  ?>" data-show=".sent">Sent requests</option>
+                    <option  selected  value="1" data-show=".received">Receive requests</option>
                 </select>
             </div>
         </div>
@@ -57,6 +65,8 @@ include("navbar.php");
         <div class="row my-info-1">
     <!--sent request-->
     <?php
+        if($_SESSION["type"] ==1){
+
             $hospitalID = $_SESSION["acID"];
             $sql1 = "SELECT * FROM HHrequest WHERE HospitalId=$hospitalID";
                
@@ -81,18 +91,17 @@ include("navbar.php");
             foreach($rows as $row){
                 $current = new HPRequest( $row['RequestId']);
                 $current->assignAll();
-               //
-              // if($_SESSION["request_option"]=="sent"){
+              
                 $_SESSION["request_option"]="sent";
                 include("requestcard.php");
-               //}
+               
             }
                 
             }
             
-            ?>
-<!--received request-->
-<?php
+           
+            //<!--received request-->
+
             $hospitalID = $_SESSION["acID"];
             $sql = "SELECT * FROM HHrequest WHERE ProviderId=$hospitalID";
                
@@ -100,18 +109,40 @@ include("navbar.php");
                 $rows = $result->fetch_all(MYSQLI_ASSOC);
              
             foreach($rows as $row){
-                $current = new HPRequest( $row['RequestId']);
+                $current = new HHRequest( $row['RequestId']);
                 $current->assignAll();
-               //style="display: none;"
-                
-               //if($_SESSION["request_option"]=="received"){
+               //
                 $_SESSION["request_option"]="received";
                include("requestcard.php");
-               //}
+               
 
            
                
-            }}?>
+            }}
+        }else if($_SESSION["type"] ==2){
+
+            $providerID = $_SESSION["acID"];
+            $sql2 = "SELECT * FROM HPrequest WHERE ProviderId=$providerID";
+               
+            if($result = QueryExecutor::query($sql2)){
+               $rows = $result->fetch_all(MYSQLI_ASSOC);
+            
+           foreach($rows as $row){
+               $current = new HPRequest( $row['RequestId']);
+               $current->assignAll();
+           
+               $_SESSION["request_option"]="received";
+               include("requestcard.php");
+              
+           }
+               
+           }
+
+        }
+            
+            
+            
+            ?>
 </body>
 
 <script type="text/javascript">

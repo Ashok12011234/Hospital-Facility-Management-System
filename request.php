@@ -1,5 +1,11 @@
 <?php
 
+class RequestType
+{
+    public const HH_REQUEST = "HH";
+    public const HP_REQUEST = "HP";
+}
+
 abstract class Request
 {
     protected int $id;
@@ -9,12 +15,16 @@ abstract class Request
     protected String $equipment;
     protected String $quantity;
     protected Chat $chat;
+    private String $type;
 
-    public function __construct(int $id)
+    public function __construct(int $id, String $type)
     {
         $this->id = $id;
+        $this->type = $type;
         $this->state = new Requested(); 
     }
+
+    public abstract function buildChat();
 
     public function getId(): int 
     {
@@ -39,6 +49,16 @@ abstract class Request
     public function getQuantity(): String
     {
         return $this->quantity;
+    }
+
+    public function getType(): String
+    {
+        return $this->type;
+    }
+
+    public function getChat(): Chat
+    {
+        return $this->chat;
     }
     
     public function setState(RequestState $state)
@@ -79,7 +99,7 @@ class HHRequest extends Request
 {
     public function __construct($id)
     {
-        parent::__construct($id);
+        parent::__construct($id, RequestType::HH_REQUEST);
     }
 
     public function assignAll()
@@ -115,7 +135,11 @@ class HHRequest extends Request
         }
     }
 
-
+    public function buildChat()
+    {
+        $chatBuilder = new ChatBuilder();
+        $this->chat = $chatBuilder->buildHHChat($this);
+    }
 
 }
 
@@ -123,7 +147,7 @@ class HPRequest extends Request
 {
     public function __construct($id) 
     {
-        parent::__construct($id);
+        parent::__construct($id, RequestType::HP_REQUEST);
     }
 
     public function assignAll()
@@ -156,6 +180,13 @@ class HPRequest extends Request
 
         }
     }
+
+    public function buildChat()
+    {
+        $chatBuilder = new ChatBuilder();
+        $this->chat = $chatBuilder->buildHPChat($this);
+    }
+
 }
 
 abstract class RequestState

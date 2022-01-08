@@ -89,7 +89,7 @@ class Connection implements IConnection
             exit();
         }
     }
-
+//----------------------------------------------------
     public function close(): void
     {
         $this->connection->close();

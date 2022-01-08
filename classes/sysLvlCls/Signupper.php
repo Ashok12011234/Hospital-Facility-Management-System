@@ -3,6 +3,7 @@ require("classes/probDomCls/Mail.php");
 require("classes/probDomCls/NewAccount.php");
 require("classes/sysLvlCls/Password.php");
 require("./config.php");
+include("../File.php");
 
 class Signupper
 {

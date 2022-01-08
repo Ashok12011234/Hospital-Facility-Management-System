@@ -13,7 +13,7 @@ $Hospital = Hospital::getInstance($hospitalID);
 
 
 if ((isset($_POST['updateResources']))) {
-    print_r($Hospital);
+    //print_r($Hospital);
     if ($_POST['password-confirm'] == $Hospital->get_password()) {
         $Hospital->set_bed();
         $Hospital->set_vaccine();
@@ -25,6 +25,7 @@ if ((isset($_POST['updateResources']))) {
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

@@ -10,6 +10,7 @@ $result = QueryExecutor::query($sql);
 $row = $result->fetch_assoc();
 $current = Hospital::getInstance($hospitalID);
 
+
 if (isset($_POST['updateDetails'])) {
     if ($_POST['password-confirm'] == $current->get_password()) {
         //$hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);

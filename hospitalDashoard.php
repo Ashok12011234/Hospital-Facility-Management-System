@@ -41,7 +41,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
     var f = document.getElementById("input" + hos_or_prov + equip_type + elem.value);
     var quantity = f.value;
-    console.log(f);
+    console.log(quantity);
     $.ajax({
       url: 'MakeRequest.php',
       type: 'POST',
@@ -52,7 +52,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
         quantity: quantity
       },
       success: function(result) {
-
+        console.log(result);
       }
     });
   }
@@ -335,7 +335,9 @@ function donateID(elem){
         $rows = $result->fetch_all(MYSQLI_ASSOC);
         if($_SESSION["type"] ==1){
           $current=$user;
-          include 'hospitalCard.php';
+          if ($current->filter($_SESSION["hosdashboard"])) {
+            include 'hospitalCard.php';
+          }
         }
         if($_SESSION["type"] ==2){
           
@@ -684,7 +686,7 @@ function donateID(elem){
                 <option value="5">O+</option>
                 <option value="7">AB+</option>
                 <option value="2">A-</option>
-                <option value="3">B-</option>
+                <option value="4">B-</option>
                 <option value="6">O-</option>
                 <option value="8">AB-</option>
 
@@ -714,7 +716,7 @@ function donateID(elem){
                 <option value="2">Phizer</option>
                 <option value="3">Moderna</option>
                 <option value="4">Sinopharm</option>
-                <option value="4">Sputnik</option>
+                <option value="5">Sputnik</option>
 
               </select>
             </div>

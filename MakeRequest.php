@@ -16,12 +16,15 @@ if($userType=='1'){
 (RequestId,
 ProviderId,
 HospitalId,
+State,
 Equipment,
 Quantity)
 VALUES
 (
+  '0',
 '$id',
 '$id2',
+'REQUESTED',
 '$equipment',
 '$quantity');
 ";
@@ -31,12 +34,14 @@ else{
     (RequestId,
     ProviderId,
     HospitalId,
+    State,
     Equipment,
     Quantity)
     VALUES
     ('0',
     '$id',
     '$id2',
+    'REQUESTED',
     '$equipment',
     '$quantity');
     "; 
@@ -47,7 +52,7 @@ else{
 if ($result = QueryExecutor::query($sql)) {
     echo "New record created successfully";
   } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    echo "Error: " . $sql ;
   }
 
 

@@ -15,7 +15,7 @@ include("navbar.php");
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link rel="stylesheet" href="assets/css/Hospital-page.css">
-    <link rel="stylesheet" href="/assets/css/Request-Page.css">
+    <link rel="stylesheet" href="assets/css/Request-Page.css">
     <title>Request</title>
 </head>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>

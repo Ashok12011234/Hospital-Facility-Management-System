@@ -100,7 +100,7 @@ else {
       <img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size: 40px; border-radius: 30px;" class="ms-2">
 
 
-      <span class="user-name me-4 ms-1" id="hospitalDropdownButton"><?php echo $user->get_username(); ?></span>
+      <span class="user-name me-4 ms-1" id="hospitalDropdownButton"><?php echo $user->get_username();?></span>
     </div>
     <div class="dropdown-menu mt-3" aria-labelledby="hospitalDropdownButton" id="hospitalDropdownPanel">
       <a href="#" style="text-decoration: none; color: black;">
@@ -111,7 +111,7 @@ else {
 
         <?php echo $user->get_address(); ?>
       </p>
-      <p class="m-2" style="font-size: 15px;"><i class="fas fa-phone"></i> &nbsp;<?php echo $user->get_phoneno(); ?></p>
+      <p class="m-2" style="font-size: 15px;"><i class="fas fa-phone"></i> &nbsp;<?php echo $user->get_phoneno();?></p>
       <hr>
       <ul style="list-style: none;">
 

@@ -2,7 +2,7 @@
 include('connection.php');
 
 // Create database
-$conn = new mysqli("localhost","root","1234");
+$conn = new mysqli(Database::HOST,Database::USERNAME,Database::PASSWORD);
 $createDB = "CREATE DATABASE IF NOT EXISTS `".Database::NAME."`";
 $conn->query($createDB);
 $conn->close();

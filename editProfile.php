@@ -31,7 +31,6 @@ if (isset($_POST['updateDetails'])) {
         }
     }
 }
-
 ?>
 
 <!DOCTYPE html>

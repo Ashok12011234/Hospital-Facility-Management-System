@@ -31,7 +31,6 @@ if ((isset($_POST['updateResources']))) {
     <title>Update Resources</title>
 </head>
 
-
 <body>
     <!-- body -->
     <div class="justify-content-center d-flex body-contentx">

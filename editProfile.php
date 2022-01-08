@@ -8,12 +8,12 @@ if (isset($_POST['updateDetails'])) {
         //$hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);
         $hospitalName = trim($_POST['hospitalName'], "\n\r\t\v\0");
 
-        $email =  $_POST['email'];
-        $phoneNo =  $_POST['phoneNo'];
-        $accountNumber =  $_POST['accountNumber'];
-        $bankName =  $_POST['bankName'];
-        $website =  $_POST['website'];
-        $address =  $_POST['address'];
+        $email =  QueryExecutor::real_escape_string($_POST['email']);
+        $phoneNo =  QueryExecutor::real_escape_string($_POST['phoneNo']);
+        $accountNumber =  QueryExecutor::real_escape_string($_POST['accountNumber']);
+        $bankName =  QueryExecutor::real_escape_string($_POST['bankName']);
+        $website =  QueryExecutor::real_escape_string($_POST['website']);
+        $address =  QueryExecutor::real_escape_string($_POST['address']);
         $user->set_name($hospitalName);
         $user->set_email($email);
         $user->set_phoneno($phoneNo);
@@ -118,7 +118,7 @@ include("navbar.php");
     </div>
 
 </body>
-script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" />
 < script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">

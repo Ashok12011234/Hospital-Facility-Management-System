@@ -3,15 +3,20 @@
 include('common.php');
 include('navbar.php');
 
-$Hospital = $user;
+$User = $user;
 
 if ((isset($_POST['updateResources']))) {
-    //print_r($Hospital);
-    if ($_POST['password-confirm'] == $Hospital->get_password()) {
-        $Hospital->set_bed();
-        $Hospital->set_vaccine();
-        $Hospital->set_blood();
-        $Hospital->set_ceylinder();
+    //print_r($User);
+    if ($_POST['password-confirm'] == $User->get_password()) {
+        if ($_SESSION["type"] == 1) {
+            $User->set_bed();
+            $User->set_vaccine();
+            $User->set_blood();
+            $User->set_ceylinder();
+        } else if ($_SESSION["type"] == 2) {
+            $User->set_bed();
+            $User->set_ceylinder();
+        }
     } else {
         header('location:google.lk');
     }
@@ -45,8 +50,12 @@ if ((isset($_POST['updateResources']))) {
                             <label class="labels fw-bold fs-5 mt-2">Bed</label>
                             <div class="row  ms-1 me-2">
                                 <?php
-                                $hospitalID = $Hospital->get_id();
-                                $sql = "SELECT * FROM `hospitalbeddetail`  WHERE HospitalId=$hospitalID;";
+                                $UserID = $User->get_id();
+                                if ($_SESSION["type"] == 1) {
+                                    $sql = "SELECT * FROM `hospitalbeddetail`  WHERE HospitalId=$UserID;";
+                                } elseif ($_SESSION["type"] == 2) {
+                                    $sql = "SELECT * FROM `providerbeddetail`  WHERE ProviderId=$UserID;";
+                                }
                                 $result = QueryExecutor::query($sql);
                                 $row = $result->fetch_assoc();
                                 ?>
@@ -62,155 +71,166 @@ if ((isset($_POST['updateResources']))) {
                                                                                                                                                                                                                     ?>></div>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <?php
+                        if ($_SESSION["type"] == 1) {
+                            echo '<div class="col-md-12">
                             <label class="labels fw-bold fs-5 mt-2">Blood</label>
-                            <div class="row ms-1 me-2">
-                                <?php
-                                $sql = "SELECT * FROM `blooddetail`  WHERE HospitalId=$hospitalID;";
-                                $result = QueryExecutor::query($sql);
-                                $row = $result->fetch_assoc();
-                                //print_r($row);
-                                ?>
-                                <div class="col-3 fw-light"><label for="bloodAp">A+</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodAp" value="bloodAp" <?php
-                                                                                                                                                                                                                if ($row['AplusAvailability'] == "YES") {
-                                                                                                                                                                                                                    echo "checked";
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                                ?>></div>
-                                <div class="col-3 fw-light"><label for="bloodBp">B+</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodBp" value="bloodBp" <?php
-                                                                                                                                                                                                                if ($row['BplusAvailability'] == "YES") {
-                                                                                                                                                                                                                    echo "checked";
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                                ?>></div>
-                                <div class="col-3 fw-light"><label for="bloodOp">O+</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodOp" value="bloodOp" <?php
-                                                                                                                                                                                                                if ($row['OplusAvailability'] == "YES") {
-                                                                                                                                                                                                                    echo "checked";
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                                ?>></div>
-                                <div class="col-3 fw-light"><label for="bloodABp">AB+</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodABp" value="bloodABp" <?php
-                                                                                                                                                                                                                    if ($row['ABplusAvailability'] == "YES") {
-                                                                                                                                                                                                                        echo "checked";
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                    ?>></div>
-                            </div>
-                            <div class="row mt-2 ms-1 me-2">
-                                <div class="col-3 fw-light"><label for="bloodAn">A-</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodAn" value="bloodAn" <?php
-                                                                                                                                                                                                                if ($row['AminusAvailability'] == "YES") {
-                                                                                                                                                                                                                    echo "checked";
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                                ?>></div>
-                                <div class="col-3 fw-light"><label for="bloodBn">B-</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodBn" value="bloodBn" <?php
-                                                                                                                                                                                                                if ($row['BminusAvailability'] == "YES") {
-                                                                                                                                                                                                                    echo "checked";
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                                ?>></div>
-                                <div class="col-3 fw-light"><label for="bloodOn">O-</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodOn" value="bloodOn" <?php
-                                                                                                                                                                                                                if ($row['OminusAvailability'] == "YES") {
-                                                                                                                                                                                                                    echo "checked";
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                                ?>></div>
-                                <div class="col-3 fw-light"><label for="bloodABn">AB-</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodABn" value="bloodABn" <?php
-                                                                                                                                                                                                                    if ($row['ABminusAvailability'] == "YES") {
-                                                                                                                                                                                                                        echo "checked";
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                    ?>></div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="labels fw-bold fs-5 mt-2">Oxygen Cylinder</label>
-                            <div class="row ms-1 me-2">
-                                <?php
-                                $sql = "SELECT * FROM `hospitalcylinderdetail`  WHERE HospitalId=$hospitalID;";
-                                $result = QueryExecutor::query($sql);
-                                $row = $result->fetch_assoc();
-                                //print_r($row);
-                                ?>
-                                <div class="col-4 fw-light"><label for="oxCylinderSmall">Small Cylinder</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="cylinder[]" id="oxCylinderSmall" value="oxCylinderSmall" <?php
-                                                                                                                                                                                                                                                        if ($row['SmallAvailability'] == "YES") {
-                                                                                                                                                                                                                                                            echo "checked";
-                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                        ?>></div>
-                                <div class="col-4 fw-light"><label for="oxCylinderMedium">Medium Cylinder</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="cylinder[]" id="oxCylinderMedium" value="oxCylinderMedium" <?php
-                                                                                                                                                                                                                                                            if ($row['MediumAvailability'] == "YES") {
-                                                                                                                                                                                                                                                                echo "checked";
-                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                            ?>></div>
-                                <div class="col-4 fw-light"><label for="oxCylinderLarge">Large Cylinder</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="cylinder[]" id="oxCylinderLarge" value="oxCylinderLarge" <?php
-                                                                                                                                                                                                                                                        if ($row['LargeAvailability'] == "YES") {
-                                                                                                                                                                                                                                                            echo "checked";
-                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                        ?>></div>
-                            </div>
-                        </div>
-                        <div class="col-md-12" style="margin-bottom: 10px;">
-                            <label class="labels fw-bold fs-5 mt-2">Vaccine</label>
-                            <div class="row ms-1 me-2">
-                                <?php
-                                $sql = "SELECT * FROM `VaccineDetail`  WHERE HospitalId=$hospitalID;";
-                                $result = QueryExecutor::query($sql);
-                                $row = $result->fetch_assoc();
-                                //print_r($row);
-                                ?>
-                                <div class="fw-light"><label for="oxfordAsterzeneca">Oxford-Astrazeneca</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="vaccine[]" id="oxfordAsterzeneca" value="oxfordAsterzeneca" <?php
-                                                                                                                                                                                                                                                            if ($row['OxfordAvailability'] == "YES") {
-                                                                                                                                                                                                                                                                echo "checked";
-                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                            ?>></div>
-                                <div class="fw-light"><label for="pfizer">Pfizer-BioNTech</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="vaccine[]" id="pfizer" value="pfizer" <?php
-                                                                                                                                                                                                                        if ($row['PfizerAvailability'] == "YES") {
-                                                                                                                                                                                                                            echo "checked";
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                        ?>></div>
-                                <div class="fw-light"><label for="moderna">Moderna</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="vaccine[]" id="moderna" value="moderna" <?php
-                                                                                                                                                                                                                if ($row['ModernalAvailability'] == "YES") {
-                                                                                                                                                                                                                    echo "checked";
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                                ?>></div>
-                                <div class="fw-light"><label for="sinopharm">Sinopharm</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="vaccine[]" id="sinopharm" value="sinopharm" <?php
-                                                                                                                                                                                                                        if ($row['SinopharmAvailability'] == "YES") {
-                                                                                                                                                                                                                            echo "checked";
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                        ?>></div>
-                                <div class="fw-light"><label for="sputnik">Sputnik V</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="vaccine[]" id="sputnik" value="sputnik" <?php
-                                                                                                                                                                                                                    if ($row['SputnikAvailability'] == "YES") {
-                                                                                                                                                                                                                        echo "checked";
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                    ?>></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="confirmPasswordModal" aria-hidden="true" aria-labelledby="confirmPasswordModal" tabindex=" -1">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalToggleLabel">Enter your password</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="Username" class="col-form-label">Username:</label>
-                                        <input type="text" class="form-control" id="Username" value="<?php echo $Hospital->get_username(); ?>" disabled>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="password-confirm" class="col-form-label">Password:</label>
-                                        <input type="password" class="form-control" id="password-confirm" name="password-confirm">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <input class="btn btn-primary float-clear mb-3" type="submit" name="updateResources" id="updateResources">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            <div class="row ms-1 me-2">';
 
-                    <button class="btn btn-primary" style="margin-left: 45%; margin-top: -30px; margin-bottom: 30px;" name="confirmPasswordbutton" id="confirmPasswordbutton" data-bs-toggle="modal" data-bs-target="#confirmPasswordModal">Confirm</button>
-
+                            $sql = "SELECT * FROM `blooddetail`  WHERE HospitalId=$UserID;";
+                            $result = QueryExecutor::query($sql);
+                            $row = $result->fetch_assoc();
+                            //print_r($row);
+                        ?>
+                            <div class="col-3 fw-light"><label for="bloodAp">A+</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodAp" value="bloodAp" <?php
+                                                                                                                                                                                                            if ($row['AplusAvailability'] == "YES") {
+                                                                                                                                                                                                                echo "checked";
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                            ?>></div>
+                            <div class="col-3 fw-light"><label for="bloodBp">B+</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodBp" value="bloodBp" <?php
+                                                                                                                                                                                                            if ($row['BplusAvailability'] == "YES") {
+                                                                                                                                                                                                                echo "checked";
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                            ?>></div>
+                            <div class="col-3 fw-light"><label for="bloodOp">O+</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodOp" value="bloodOp" <?php
+                                                                                                                                                                                                            if ($row['OplusAvailability'] == "YES") {
+                                                                                                                                                                                                                echo "checked";
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                            ?>></div>
+                            <div class="col-3 fw-light"><label for="bloodABp">AB+</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodABp" value="bloodABp" <?php
+                                                                                                                                                                                                                if ($row['ABplusAvailability'] == "YES") {
+                                                                                                                                                                                                                    echo "checked";
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                                ?>></div>
+                    </div>
+                    <div class="row mt-2 ms-1 me-2">
+                        <div class="col-3 fw-light"><label for="bloodAn">A-</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodAn" value="bloodAn" <?php
+                                                                                                                                                                                                        if ($row['AminusAvailability'] == "YES") {
+                                                                                                                                                                                                            echo "checked";
+                                                                                                                                                                                                        }
+                                                                                                                                                                                                        ?>></div>
+                        <div class="col-3 fw-light"><label for="bloodBn">B-</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodBn" value="bloodBn" <?php
+                                                                                                                                                                                                        if ($row['BminusAvailability'] == "YES") {
+                                                                                                                                                                                                            echo "checked";
+                                                                                                                                                                                                        }
+                                                                                                                                                                                                        ?>></div>
+                        <div class="col-3 fw-light"><label for="bloodOn">O-</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodOn" value="bloodOn" <?php
+                                                                                                                                                                                                        if ($row['OminusAvailability'] == "YES") {
+                                                                                                                                                                                                            echo "checked";
+                                                                                                                                                                                                        }
+                                                                                                                                                                                                        ?>></div>
+                        <div class="col-3 fw-light"><label for="bloodABn">AB-</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="blood[]" id="bloodABn" value="bloodABn" <?php
+                                                                                                                                                                                                            if ($row['ABminusAvailability'] == "YES") {
+                                                                                                                                                                                                                echo "checked";
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                            ?>></div>
+                    </div>
             </div>
+        <?php } ?>
+        <div class="col-md-12">
+            <label class="labels fw-bold fs-5 mt-2">Oxygen Cylinder</label>
+            <div class="row ms-1 me-2">
+                <?php
+                if ($_SESSION["type"] == 1) {
 
-            </form>
+                    $sql = "SELECT * FROM `providercylinderdetail`  WHERE HospitalId=$UserID;";
+                } elseif ($_SESSION["type"] == 2) {
+                    $sql = "SELECT * FROM `providercylinderdetail`  WHERE ProviderId=$UserID;";
+                }
+                $result = QueryExecutor::query($sql);
+                $row = $result->fetch_assoc();
+                //print_r($row);
+                ?>
+                <div class="col-4 fw-light"><label for="oxCylinderSmall">Small Cylinder</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="cylinder[]" id="oxCylinderSmall" value="oxCylinderSmall" <?php
+                                                                                                                                                                                                                                        if ($row['SmallAvailability'] == "YES") {
+                                                                                                                                                                                                                                            echo "checked";
+                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                        ?>></div>
+                <div class="col-4 fw-light"><label for="oxCylinderMedium">Medium Cylinder</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="cylinder[]" id="oxCylinderMedium" value="oxCylinderMedium" <?php
+                                                                                                                                                                                                                                            if ($row['MediumAvailability'] == "YES") {
+                                                                                                                                                                                                                                                echo "checked";
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            ?>></div>
+                <div class="col-4 fw-light"><label for="oxCylinderLarge">Large Cylinder</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="cylinder[]" id="oxCylinderLarge" value="oxCylinderLarge" <?php
+                                                                                                                                                                                                                                        if ($row['LargeAvailability'] == "YES") {
+                                                                                                                                                                                                                                            echo "checked";
+                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                        ?>></div>
+            </div>
+        </div>
+        <?php
+        if ($_SESSION["type"] == 1) {
+            echo '<div class="col-md-12" style="margin-bottom: 10px;">
+                            <label class="labels fw-bold fs-5 mt-2">Vaccine</label>
+                            <div class="row ms-1 me-2">';
+
+            $sql = "SELECT * FROM `VaccineDetail`  WHERE HospitalId=$UserID;";
+            $result = QueryExecutor::query($sql);
+            $row = $result->fetch_assoc();
+            //print_r($row);
+        ?>
+            <div class="fw-light"><label for="oxfordAsterzeneca">Oxford-Astrazeneca</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="vaccine[]" id="oxfordAsterzeneca" value="oxfordAsterzeneca" <?php
+                                                                                                                                                                                                                                        if ($row['OxfordAvailability'] == "YES") {
+                                                                                                                                                                                                                                            echo "checked";
+                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                        ?>></div>
+            <div class="fw-light"><label for="pfizer">Pfizer-BioNTech</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="vaccine[]" id="pfizer" value="pfizer" <?php
+                                                                                                                                                                                                    if ($row['PfizerAvailability'] == "YES") {
+                                                                                                                                                                                                        echo "checked";
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                    ?>></div>
+            <div class="fw-light"><label for="moderna">Moderna</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="vaccine[]" id="moderna" value="moderna" <?php
+                                                                                                                                                                                            if ($row['ModernalAvailability'] == "YES") {
+                                                                                                                                                                                                echo "checked";
+                                                                                                                                                                                            }
+                                                                                                                                                                                            ?>></div>
+            <div class="fw-light"><label for="sinopharm">Sinopharm</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="vaccine[]" id="sinopharm" value="sinopharm" <?php
+                                                                                                                                                                                                    if ($row['SinopharmAvailability'] == "YES") {
+                                                                                                                                                                                                        echo "checked";
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                    ?>></div>
+            <div class="fw-light"><label for="sputnik">Sputnik V</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="vaccine[]" id="sputnik" value="sputnik" <?php
+                                                                                                                                                                                                if ($row['SputnikAvailability'] == "YES") {
+                                                                                                                                                                                                    echo "checked";
+                                                                                                                                                                                                }
+                                                                                                                                                                                                ?>></div>
         </div>
     </div>
+<?php } ?>
+</div>
+<div class="modal fade" id="confirmPasswordModal" aria-hidden="true" aria-labelledby="confirmPasswordModal" tabindex=" -1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel">Enter your password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="Username" class="col-form-label">Username:</label>
+                    <input type="text" class="form-control" id="Username" value="<?php echo $User->get_username(); ?>" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="password-confirm" class="col-form-label">Password:</label>
+                    <input type="password" class="form-control" id="password-confirm" name="password-confirm">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-primary float-clear mb-3" type="submit" name="updateResources" id="updateResources">
+            </div>
+        </div>
     </div>
-    </div>
+</div>
+
+<button class="btn btn-primary" style="margin-left: 45%; margin-top: -30px; margin-bottom: 30px;" name="confirmPasswordbutton" id="confirmPasswordbutton" data-bs-toggle="modal" data-bs-target="#confirmPasswordModal">Confirm</button>
+
+</div>
+
+</form>
+</div>
+</div>
+</div>
+</div>
 
 </body>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>

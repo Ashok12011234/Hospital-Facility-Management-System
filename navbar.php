@@ -13,13 +13,12 @@ if (array_key_exists("type", $_SESSION)) {
     case MemberType::HOSPITAL:
       $user = Hospital::getInstance($_SESSION["acID"]);
       break;
-  
+
     case MemberType::PROVIDER:
       $user = Provider::getInstance($_SESSION["acID"]);
       break;
   }
-}
-else {
+} else {
   $_SESSION["type"] = MemberType::GUEST;
 }
 
@@ -45,29 +44,29 @@ else {
       </li>
 
       <li style="<?php
-                    if($_SESSION["type"] !=0){
-                    
-                        echo 'display:none;'; 
+                  if ($_SESSION["type"] != 0) {
+
+                    echo 'display:none;';
                   }
-                 ?>" class="nav-item ms-2">
+                  ?>" class="nav-item ms-2">
         <a class="nav-link" href="login.php">Login</a>
       </li>
 
       <li style="<?php
-                    if($_SESSION["type"] ==0){
-                    
-                        echo 'display:none;'; 
+                  if ($_SESSION["type"] == 0) {
+
+                    echo 'display:none;';
                   }
-                 ?>" class="nav-item ms-2">
+                  ?>" class="nav-item ms-2">
         <a class="nav-link" href="stared.php">Stared</a>
       </li>
 
       <li style="<?php
-                    if($_SESSION["type"] ==0){
-                    
-                        echo 'display:none;'; 
+                  if ($_SESSION["type"] == 0) {
+
+                    echo 'display:none;';
                   }
-                 ?>"  class="nav-item ms-2">
+                  ?>" class="nav-item ms-2">
         <a class="nav-link" href="./requestDashboard.php">Requests</a>
       </li>
       <!--
@@ -88,14 +87,12 @@ else {
   </div>
 
   <!--Navbar notification panel-->
-  <div 
-  style="<?php
-                    if($_SESSION["type"] ==0){
-                    
-                        echo 'display:none;'; 
-                  }
-                 ?>"
-                  class="dropdown me-4 ms-auto" style="user-select: none;">
+  <div style="<?php
+              if ($_SESSION["type"] == 0) {
+
+                echo 'display:none;';
+              }
+              ?>" class="dropdown me-4 ms-auto" style="user-select: none;">
     <i class="fas fa-bell" id="hospitalNotificationBell" data-bs-toggle="dropdown" aria-expanded="false"></i>
     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger badge-pill">
       0
@@ -120,46 +117,44 @@ else {
   </div>
 
   <!--Navbar Signout panel-->
-  <div 
-  style="<?php
-                    if($_SESSION["type"] ==0){
-                    
-                        echo 'display:none;'; 
-                  }
-                 ?>"
-                  class="dropdown" style="user-select: none;">
+  <div style="<?php
+              if ($_SESSION["type"] == 0) {
+
+                echo 'display:none;';
+              }
+              ?>" class="dropdown" style="user-select: none;">
     <div id="hospitalDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
 
 
       <img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size: 40px; border-radius: 30px;" class="ms-2">
 
-      <span class="user-name me-4 ms-1" id="hospitalDropdownButton"><?php 
-      if($_SESSION["type"] !=0){
-        echo $user->get_username(); 
-      }
-      ?></span>
+      <span class="user-name me-4 ms-1" id="hospitalDropdownButton"><?php
+                                                                    if ($_SESSION["type"] != 0) {
+                                                                      echo $user->get_username();
+                                                                    }
+                                                                    ?></span>
 
     </div>
     <div class="dropdown-menu mt-3" aria-labelledby="hospitalDropdownButton" id="hospitalDropdownPanel">
       <a href="#" style="text-decoration: none; color: black;">
 
         <h2><?php
-         if($_SESSION["type"] !=0){
-          echo $user->get_name();
-         } ?><img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size:55px; border-radius: 30px; float: right;" class="ms-2"></h2>
+            if ($_SESSION["type"] != 0) {
+              echo $user->get_name();
+            } ?><img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size:55px; border-radius: 30px; float: right;" class="ms-2"></h2>
       </a>
       <p class="ms-2" style="font-size: 15px; margin-bottom:-5px; "><i class="fas fa-map-marker-alt"></i>&nbsp;
 
-        <?php 
-         if($_SESSION["type"] !=0){
+        <?php
+        if ($_SESSION["type"] != 0) {
           echo $user->get_address();
-         } 
+        }
         ?>
       </p>
-      <p class="m-2" style="font-size: 15px;"><i class="fas fa-phone"></i> &nbsp;<?php 
-       if($_SESSION["type"] !=0){
-        echo $user->get_phoneno(); 
-       }?></p>
+      <p class="m-2" style="font-size: 15px;"><i class="fas fa-phone"></i> &nbsp;<?php
+                                                                                  if ($_SESSION["type"] != 0) {
+                                                                                    echo $user->get_phoneno();
+                                                                                  } ?></p>
       <hr>
       <ul style="list-style: none;">
 
@@ -194,7 +189,7 @@ else {
 
 <!--Donation model-->
 
-<div class="modal fade" id="donationmodal"  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="donationmodal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -203,7 +198,7 @@ else {
       </div>
       <div class="modal-body">
 
-        <form class="form-horizontal" id="newModalForm" >
+        <form class="form-horizontal" id="newModalForm">
 
 
           <div class="mb-3 row">
@@ -227,7 +222,7 @@ else {
             </div>
           </div>
 
-         
+
 
           <!-- Expiry-->
           <div class="mb-3 row">
@@ -284,10 +279,10 @@ else {
               <input type="text" class="form-control" name="amount" id="amount">
             </div>
           </div>
-      </br>
-          <div class="modal-footer container" >
+          </br>
+          <div class="modal-footer container">
             <div class="col-md-12 text-center">
-              <button type="submit"   class="btn btn-primary" >Donate</button>
+              <button type="submit" class="btn btn-primary">Donate</button>
             </div>
           </div>
 
@@ -295,7 +290,7 @@ else {
 
       </div>
 
-      
+
     </div>
   </div>
 </div>

@@ -760,6 +760,7 @@ class Provider extends Member
 
 abstract class Equipment
 {
+  public abstract function providable();
 }
 
 class Bed extends Equipment

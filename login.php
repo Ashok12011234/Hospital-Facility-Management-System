@@ -11,18 +11,13 @@ if (array_key_exists("acID", $_SESSION)) {
 if (array_key_exists("next", $_POST)) {
     if (array_key_exists("forgot", $_GET)) {
         $status = Member::forgotPassword($_POST["username"]);
-        if ($status == ForgotPassword::SUCCESS) {
-            $success = $status;
-        }
-        else {
-            $error = $status;
-        }
+        if ($status == ForgotPassword::SUCCESS) {$success = $status;}
+        else {$error = $status;}
     }
     else {
         $error = Member::login($_POST["username"], $_POST["password"]);
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">

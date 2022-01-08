@@ -137,8 +137,8 @@ CREATE TABLE HPrequest (
 
 CREATE TABLE Message (
   MessageId int NOT NULL AUTO_INCREMENT,
-  RequestId int NOT NULL,
   RequestType enum('HH', 'HP') NOT NULL,
+  RequestId int NOT NULL,
   SenderId int NOT NULL,
   ReceiverId int NOT NULL,
   Message varchar(255) NOT NULL,

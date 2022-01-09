@@ -48,20 +48,11 @@ if (array_key_exists("type", $_SESSION)) {
                   ?>" class="nav-item ms-2">
         <a class="nav-link" href="login.php">Login</a>
       </li>
-      
+
       <li style="<?php
-                  if ($_SESSION["type"] != 0) {
+                  if ($_SESSION["type"] == 0) {
 
                     echo 'display:none;';
-                  }
-                  ?>" class="nav-item ms-2">
-        <a class="nav-link" href="signup.php">Signup</a>
-      </li>
-
-      <li style="<?php
-                    if($_SESSION["type"] ==0){
-                    
-                        echo 'display:none;'; 
                   }
                   ?>" class="nav-item ms-2">
         <a class="nav-link" href="stared.php">Stared</a>
@@ -132,13 +123,7 @@ if (array_key_exists("type", $_SESSION)) {
     <div id="hospitalDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
 
 
-      <img src="
-      <?php 
-        if($_SESSION["type"] !=0){
-          echo $user->get_profile(); 
-        }
-      ?>
-      " alt="usericon" style="width: 40px;height: 40px; border-radius: 50%;" class="ms-2">
+      <img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size: 40px; border-radius: 30px;" class="ms-2">
 
       <span class="user-name me-4 ms-1" id="hospitalDropdownButton"><?php
                                                                     if ($_SESSION["type"] != 0) {
@@ -153,11 +138,7 @@ if (array_key_exists("type", $_SESSION)) {
         <h2><?php
             if ($_SESSION["type"] != 0) {
               echo $user->get_name();
-            } ?><img src="<?php 
-                            if($_SESSION["type"] !=0){
-                              echo $user->get_profile(); 
-                            }
-                          ?>" alt="usericon" style="width: 50px;height: 50px;  border-radius: 50%; float: right;" class="ms-2"></h2>
+            } ?><img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size:55px; border-radius: 30px; float: right;" class="ms-2"></h2>
       </a>
       <p class="ms-2" style="font-size: 15px; margin-bottom:-5px; "><i class="fas fa-map-marker-alt"></i>&nbsp;
 
@@ -188,7 +169,7 @@ if (array_key_exists("type", $_SESSION)) {
       </ul>
     </div>
   </div>
-  </div>
+
 
 
   <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

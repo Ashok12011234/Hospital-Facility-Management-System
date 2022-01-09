@@ -60,6 +60,10 @@ abstract class Request
     {
         return $this->chat;
     }
+    public function getState(): RequestState
+    {
+        return $this->state;
+    }
     
     public function setState(RequestState $state)
     {
@@ -68,9 +72,9 @@ abstract class Request
 
     public abstract function assignAll();
     
-    public function accept()
+    public function accept(String $count)
     {
-        $this->state->accept($this);
+        $this->state->accept($count, $this);
     }
 
     public function cancel()
@@ -114,6 +118,22 @@ class HHRequest extends Request
                 $providerID=$row["ProviderId"];
                 $this->equipment=$row["Equipment"];
                 $this->quantity=$row["Quantity"];
+                $state = $row["Status"];            
+                if($state =="ACCEPTED"){
+                    $this->state = new Accepted(); 
+                }
+                else if($state =="DECLINED"){
+                    $this->state = new Declined();
+                }
+                else if($state =="TRANSPORTING"){
+                    $this->state = new Transporting();
+                }
+                else if($state =="EXCHANGE_COMPLETED"){
+                    $this->state = new ExchangeCompleted();
+                }
+                else if($state =="CANCELLED"){
+                    $this->state = new Cancelled();
+                }
         
           
         }
@@ -160,6 +180,23 @@ class HPRequest extends Request
             $providerID=$row["ProviderId"];
             $this->equipment=$row["Equipment"];
             $this->quantity=$row["Quantity"];
+            $state = $row["Status"];            
+            if($state =="ACCEPTED"){
+                $this->state = new Accepted(); 
+            }
+            else if($state =="DECLINED"){
+                $this->state = new Declined();
+            }
+            else if($state =="TRANSPORTING"){
+                $this->state = new Transporting();
+            }
+            else if($state =="EXCHANGE_COMPLETED"){
+                $this->state = new ExchangeCompleted();
+            }
+            else if($state =="CANCELLED"){
+                $this->state = new Cancelled();
+            }
+            
           
         }
         $sql2 = "SELECT * FROM Hospital WHERE HospitalId=$hospitalID";
@@ -192,7 +229,8 @@ class HPRequest extends Request
 abstract class RequestState
 {
     //public abstract function request(Request $request);
-    public abstract function accept(Request $request);
+    public abstract function showstate();
+    public abstract function accept(String $count, Request $request);
     public abstract function transport(Request $request);
     public abstract function confirmExchange(Request $request);
     public abstract function cancel(Request $request);
@@ -202,19 +240,61 @@ abstract class RequestState
 
 class Requested extends RequestState
 {
-    public function accept(Request $request)
+    public function showstate(){
+        return "Requested";
+    }
+    public function accept(String $count, Request $request)
     {
-        $request->setState(new Accepted());
+        $id1 = $request->getId();
+        if($request->getType()=="HP"){
+            $sql2 = "UPDATE hprequest  SET Status = 'ACCEPTED', Quantity= '$count' WHERE RequestId = '$id1'";
+            
+        }
+        else{
+            $sql2 = "UPDATE hhrequest  SET Status = 'ACCEPTED', Quantity= '$count' WHERE RequestId = '$id1'";
+        }
+        
+
+        if($result = QueryExecutor::query($sql2)){
+            $request->setState(new Accepted());
+        }
+        
     }
 
     public function cancel(Request $request)
     {
-        $request->setState(new Cancelled());
+        $id1 = $request->getId();
+        if($request->getType()=="HP"){
+            $sql2 = "UPDATE hprequest  SET Status = 'CANCELLED' WHERE RequestId = '$id1'";
+            
+        }
+        else{
+            $sql2 = "UPDATE hhrequest  SET Status = 'CANCELLED' WHERE RequestId = '$id1'";
+        }
+        
+
+        if($result = QueryExecutor::query($sql2)){
+            $request->setState(new Cancelled());
+        }
+        
     }
 
     public function decline(Request $request)
     {
-        $request->setState(new Declined());
+        $id1 = $request->getId();
+        if($request->getType()=="HP"){
+            $sql2 = "UPDATE hprequest  SET Status = 'DECLINED' WHERE RequestId = '$id1'";
+            
+        }
+        else{
+            $sql2 = "UPDATE hhrequest  SET Status = 'DECLINED' WHERE RequestId = '$id1'";
+        }
+        
+
+        if($result = QueryExecutor::query($sql2)){
+            $request->setState(new Declined());
+        }
+        
     }
 
     public function transport(Request $request){}
@@ -223,29 +303,73 @@ class Requested extends RequestState
 
 class Accepted extends RequestState
 {
+    public function showstate(){
+        return "Accepted";
+    }
     public function transport(Request $request)
     {
-        $request->setState(new Transporting());
+        $id1 = $request->getId();
+        if($request->getType()=="HP"){
+            $sql2 = "UPDATE hprequest  SET Status = 'TRANSPORTING' WHERE RequestId = '$id1'";
+            
+        }
+        else{
+            $sql2 = "UPDATE hhrequest  SET Status = 'TRANSPORTING' WHERE RequestId = '$id1'";
+        }
+        
+
+        if($result = QueryExecutor::query($sql2)){
+            $request->setState(new Transporting());
+        }
+       
     }
 
     public function cancel(Request $request)
     {
-        $request->setState(new Cancelled());
+        $id1 = $request->getId();
+        if($request->getType()=="HP"){
+            $sql2 = "UPDATE hprequest  SET Status = 'CANCELLED' WHERE RequestId = '$id1'";
+            
+        }
+        else{
+            $sql2 = "UPDATE hhrequest  SET Status = 'CANCELLED' WHERE RequestId = '$id1'";
+        }
+        
+
+        if($result = QueryExecutor::query($sql2)){
+            $request->setState(new Cancelled());
+        }
     }
 
-    public function accept(Request $request){}
+    public function accept(String $count, Request $request){}
     public function decline(Request $request){}
     public function confirmExchange(Request $request){}
 }
 
 class Transporting extends RequestState
 {
+    public function showstate(){
+        return "Transporting";
+    }
     public function confirmExchange(Request $request)
     {
-        $request->setState(new ExchangeCompleted());
+        $id1 = $request->getId();
+        if($request->getType()=="HP"){
+            $sql2 = "UPDATE hprequest  SET Status = 'EXCHANGE_COMPLETED' WHERE RequestId = '$id1'";
+            
+        }
+        else{
+            $sql2 = "UPDATE hhrequest  SET Status = 'EXCHANGE_COMPLETED' WHERE RequestId = '$id1'";
+        }
+        
+
+        if($result = QueryExecutor::query($sql2)){
+            $request->setState(new ExchangeCompleted());
+        }
+        
     }
 
-    public function accept(Request $request){}
+    public function accept(String $count, Request $request){}
     public function cancel(Request $request){}
     public function decline(Request $request){}
     public function transport(Request $request){}
@@ -253,7 +377,11 @@ class Transporting extends RequestState
 
 class Cancelled extends RequestState
 {
-    public function accept(Request $request){}
+    public function showstate(){
+        return "Cancelled";
+    }
+    
+    public function accept(String $count, Request $request){}
     public function transport(Request $request){}
     public function confirmExchange(Request $request){}
     public function cancel(Request $request){}
@@ -262,7 +390,10 @@ class Cancelled extends RequestState
 
 class Declined extends RequestState
 {
-    public function accept(Request $request){}
+    public function showstate(){
+        return "Declined";
+    }
+    public function accept(String $count, Request $request){}
     public function transport(Request $request){}
     public function confirmExchange(Request $request){}
     public function cancel(Request $request){}
@@ -271,7 +402,10 @@ class Declined extends RequestState
 
 class ExchangeCompleted extends RequestState
 {
-    public function accept(Request $request){}
+    public function showstate(){
+        return "Exchange Completed";
+    }
+    public function accept(String $count, Request $request){}
     public function transport(Request $request){}
     public function confirmExchange(Request $request){}
     public function cancel(Request $request){}

@@ -4,7 +4,7 @@ class Database
 {
     public const HOST = "localhost";
     public const USERNAME = "root";
-    public const PASSWORD = "1234";
+    public const PASSWORD = "";
     public const NAME = "hfms1";
 }
 

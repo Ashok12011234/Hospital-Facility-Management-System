@@ -2,7 +2,7 @@
 include('connection.php');
 
 // Create database
-$conn = new mysqli("localhost","root","1234");
+$conn = new mysqli("localhost","root","");
 $createDB = "CREATE DATABASE IF NOT EXISTS `".Database::NAME."`";
 $conn->query($createDB);
 $conn->close();
@@ -166,5 +166,4 @@ CREATE TABLE VaccineDetail (
 
 ";
 
-if (QueryExecutor::multi_query($createTb)) {
-}
+

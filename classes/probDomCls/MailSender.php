@@ -1,5 +1,5 @@
 <?php
-$path = dirname( dirname(__FILE__) );
+$path = dirname(dirname( dirname(__FILE__) ));
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require $path.'/assets/PHPMailer-master/src/Exception.php';
@@ -30,7 +30,7 @@ Class MailSender{
                 
                 
                 $mail->Subject = $subject;
-                $content = $content;
+                $content = $content." ";
             
                 $mail->MsgHTML($content); 
                 if(!$mail->Send()) {

@@ -295,12 +295,11 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
     <div class="col-md-8 ">
 
       <button style="<?php
-                      if ($_SESSION["type"] != 1) {
-
-                        echo 'display:none;';
-                      }
-                      ?>" type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#filtermodal" style="display:inline;"><i class='fas fa-filter'></i>Filter</button>
-
+                    if($_SESSION["type"] !=1){
+                    
+                        echo 'display:none;'; 
+                  }
+                 ?>" type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#filtermodal" style="display:inline;"><i class='fas fa-filter'></i>Filter</button>
       <br>
     </div>
     <div class="col-md-4">

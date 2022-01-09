@@ -1,4 +1,5 @@
 <div class='col-md-6 col-xl-4 mb-4'>
+<<<<<<< HEAD
   <div class='card'>
     <div class='card-body'>
       <div class='mb-3' style='min-height: 150px; background-color: grey;display: flex;justify-content: center;'>
@@ -15,6 +16,85 @@
                                         if ($user == $current) {
                                           echo '(Me)';
                                         }
+=======
+              <div class='card'>
+                <div class='card-body'>
+                  <div class='mb-3' style='min-height: 150px; background-color: grey;display: flex;justify-content: center;'>
+                    <img style="object-fit:cover;height:200px;border: solid 1px #CCC" src="<?php
+                                                                                                      echo $current->get_profile();
+                                                                                                      ?>" alt="Provider" class="center col-12">
+                  </div>
+                  <div class='row justify-content-between mb-1'>
+                    <h3 class='col-10 card-title'><?php
+
+                                                  echo $current->get_name();
+
+                                                  if($_SESSION["type"] ==2){
+                                                    if($user==$current){
+                                                      echo '(Me)';
+                                                    }
+                                                }
+                                                  ?>
+                                                  
+                                                </h3>
+
+                    <i style="<?php
+                    if($_SESSION["type"] ==1){
+                      if($user==$current){
+                        echo 'display:none;';
+                      }
+                  }
+                  else{
+                    echo 'display:none;';
+                  }
+                  ?>" class='<?php 
+                    if($_SESSION["type"] ==1){
+                      if (in_array($row["ProviderId"], $user->get_staredProvider())) {
+                                  echo "fas";
+                      } else {
+                        echo "far";
+                      } 
+                    }
+                              ?> fa-star col fa-lg ms-3 providerStar' name='providerStar' id=<?php echo $current->get_id() ?> onclick="starProviderUser(this)"></i>
+                  
+                </div>
+
+                  <p class='ms-2' style='font-size: 13px; margin-bottom:-5px; '><i class='fas fa-map-marker-alt'></i>&nbsp;
+                    <?php echo $current->get_address(); ?></p>
+                  <p class='m-2' style='font-size: 13px;'><i class='fas fa-phone'></i> &nbsp;<?php echo $current->get_phoneno(); ?></p>
+
+                  <p style='margin-bottom: -25px; margin-top: 2px;'>Bed</p> <br />
+                  <div class='row justify-content-start ms-1'>
+                    <div class='col-6'>
+                      <p class="<?php
+
+                                if ($current->get_bed()->check_normal()) {
+                                  echo 'available';
+                                } else {
+                                  echo 'shortage';
+                                }
+                                ?>">Normal Bed</p>
+                    </div>
+                    <div class='col-6'>
+                      <p class="<?php
+
+                                if ($current->get_bed()->check_icu()) {
+                                  echo 'available';
+                                } else {
+                                  echo 'shortage';
+                                }
+                                ?>">ICU Bed </p>
+                    </div>
+                  </div>
+                  <p style='margin-bottom:  -25px; margin-top: 2px;'>Oxygen Cylinder </p><br />
+                  <div class='row justify-content-start ms-1'>
+                    <div class="col-3 <?php
+
+                                      if ($current->get_ceylinder()->check_small()) {
+                                        echo 'available';
+                                      } else {
+                                        echo 'shortage';
+>>>>>>> 2990fc85d1ccf0befbad77620151c56003007181
                                       }
                                       ?>
 

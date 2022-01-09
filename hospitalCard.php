@@ -1,4 +1,5 @@
 <div class='col-md-6 col-xl-4 mb-4'>
+<<<<<<< HEAD
   <div class='card'>
     <div class='card-body'>
       <div class='mb-3' style='min-height: 150px; background-color: grey;display: flex;justify-content: center;'>
@@ -22,6 +23,24 @@
                   if ($_SESSION["type"] == 2 || $_SESSION["type"] == 1) {
                     if ($user == $current) {
                       echo 'display:none;';
+=======
+              <div class='card'>
+                <div class='card-body'>
+                  <div class='mb-3' style='min-height: 150px; background-color: grey;display: flex;justify-content: center;'>
+                    <img style="object-fit:cover;height:200px;border: solid 1px #CCC" src="<?php
+                                                                                                      echo $current->get_profile();
+                                                                                                      ?>" alt="Hospital" class="center col-12">
+                  </div>
+                  <div class='row justify-content-between mb-1'>
+                    <h3 class='col-9 card-title'>
+                      <?php
+                      echo $current->get_name();
+
+                      if($_SESSION["type"] ==1){
+                        if($user==$current){
+                          echo '(Me)';
+                        }
+>>>>>>> 2990fc85d1ccf0befbad77620151c56003007181
                     }
                   } else {
                     echo 'display:none;';

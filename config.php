@@ -35,7 +35,7 @@ CREATE TABLE Hospital (
   Name varchar(255), 
   TelephoneNo varchar(25), 
   Address varchar(255), 
-  Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultDp.png' ,
+  Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultH.jpg' ,
   Website varchar(100),
   BankName varchar(20) NOT NULL, 
   AccountNumber varchar(20) NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE Provider (
   Name varchar(255), 
   TelephoneNo varchar(25), 
   Address varchar(255), 
-  Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultDp.png',
+  Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultP.jpg',
   Website varchar(100),
   BankName varchar(20) NOT NULL, 
   AccountNumber varchar(20) NOT NULL,
@@ -167,5 +167,4 @@ CREATE TABLE VaccineDetail (
 
 ";
 
-if (QueryExecutor::multi_query($createTb)) {
-}
+

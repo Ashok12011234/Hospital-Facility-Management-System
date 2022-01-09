@@ -4,18 +4,18 @@ session_start();
 $error = "";
 $success = "";
 
-if (array_key_exists("acID", $_SESSION)) {
-    //header("Location: hospitalDashoard.php");
+if (array_key_exists("acID", $_SESSION) && array_key_exists("type", $_SESSION)) {
+    header("Location: hospitalDashoard.php");
 }
 
 if (array_key_exists("next", $_POST)) {
     if (array_key_exists("forgot", $_GET)) {
-        $status = Member::forgotPassword($_POST["username"]);
+        $status = Member::forgotPassword(QueryExecutor::real_escape_string($_POST["username"]));
         if ($status == ForgotPassword::SUCCESS) {$success = $status;}
         else {$error = $status;}
     }
     else {
-        $error = Member::login($_POST["username"], $_POST["password"]);
+        $error = Member::login(QueryExecutor::real_escape_string($_POST["username"]), QueryExecutor::real_escape_string($_POST["password"]));
     }
 }
 ?>

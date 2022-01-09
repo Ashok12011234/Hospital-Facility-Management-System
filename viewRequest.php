@@ -1,6 +1,6 @@
 <?php
 include("navbar.php");
-include("request.php");
+include("classes/probDomCls/request.php");
 
 if (array_key_exists("id", $_GET) && array_key_exists("type", $_GET)) {
     if ($_GET["type"] == RequestType::HH_REQUEST) {

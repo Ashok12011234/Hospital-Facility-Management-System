@@ -1,5 +1,6 @@
 <?php
 include 'MailSender.php';
+
 class Admin
 {
   private static $instance;
@@ -11,7 +12,7 @@ class Admin
     $servername = "localhost";
     $username = "root";
     $password = "";
-    $database = "hfms";
+    $database = "hfms1";
     $connection = new mysqli($servername, $username, $password, $database);
     // Check connection
     if ($connection->connect_error) {
@@ -30,7 +31,15 @@ class Admin
     return self::$instance;
   }
 
-
+  public function log_in($username, $pw){
+    if($username=='admin' && $pw=='ad@nike76'){
+     return TRUE;
+      
+  }
+  else{
+    return FALSE;
+  }
+  }
 
   public function log_out()
   {
@@ -56,7 +65,6 @@ class Admin
 
   public function ask_more_docs($id, $name, $mail, $content)
   {
-
     $sql = "UPDATE newaccount SET Status='PENDING',Doc_Status='False' WHERE NewAccountID='$id'";
 
     if ($this->connection->query($sql) === TRUE) {
@@ -64,11 +72,12 @@ class Admin
     } else {
       echo "Error updating record: " . $this->connection->error;
     }
-
+    
     $status = MailSender::sendMail($name, $mail, "Your Document Details are incomplete", $content);
     if ($status) {
       header('Location:../mail_sent.php');
     }
+    
   }
 
   public function ask_more_bank_docs($id, $name, $mail, $content)
@@ -92,7 +101,7 @@ class Admin
 
   public function approve_account($id, $name, $mail)
   {
-    $sql = "UPDATE newaccount SET Status='APPROVED',Doc_Status='Correct' WHERE NewAccountID='$id'";
+    $sql = "UPDATE newaccount SET Status='APPROVED',Doc_Status='Correct',Bank_Status='Correct' WHERE NewAccountID='$id'";
 
     if ($this->connection->query($sql) === TRUE) {
       echo "Record updated successfully";

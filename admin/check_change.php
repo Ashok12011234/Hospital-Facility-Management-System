@@ -6,7 +6,7 @@
     <div class="row">
 
         <?php
-        $sql = "SELECT NewAccountID,UserName,AccountType,Email,Doc_Status, Bank_Status  FROM newaccount WHERE STATUS='PENDING' AND (Doc_Status='Not Vertified' OR Bank_Status='Not Vertified');";
+        $sql = "SELECT NewAccountID,UserName,AccountType,Email,Doc_Status, Bank_Status  FROM newaccount WHERE STATUS='PENDING' ;";
         $result = QueryExecutor::query($sql);
 
         if ($result->num_rows > 0) {

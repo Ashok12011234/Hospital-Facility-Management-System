@@ -1,6 +1,6 @@
 <?php include 'header.php'; ?>
 <?php include '../config.php';
-include '../classes/NewAccount.php';
+include '../classes/probDomCls/NewAccount.php';
 
 if (!isset($_POST['id'])) {
 ?>

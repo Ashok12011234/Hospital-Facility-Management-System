@@ -1,6 +1,7 @@
 <?php
 class NewAccount
 {
+    private  $id;
     private String $emailAddress;
     private String $username;
     private String $password;
@@ -15,6 +16,17 @@ class NewAccount
         
     }
 
+
+    public function setID(String $id)
+    {
+        $this->id = $id;
+    }
+    public function getID()
+    {
+        return $this->id;
+    }
+
+    
     public function setEmailAddress(String $emailAddress)
     {
         $this->emailAddress = $emailAddress;

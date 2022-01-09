@@ -4,6 +4,7 @@ session_start();
 if (array_key_exists("logout", $_GET)) {
   session_unset();
   header("Location: login.php");
+  exit;
 }
 
 include("member.php");
@@ -21,14 +22,10 @@ if (array_key_exists("type", $_SESSION)) {
 } else {
   $_SESSION["type"] = MemberType::GUEST;
 }
-
 ?>
 
 <!--Navbar Start-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-success" style="background-color: #e3f2fd;">
-  <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light"> -->
-
-
   <a class="navbar-brand ms-3" href="#" style="font-size: x-large;  font-size: 1.5em; font-family: Monospace; font-weight: bold;">Life Share</a>
 
 

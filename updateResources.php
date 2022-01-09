@@ -132,14 +132,12 @@ if ((isset($_POST['updateResources']))) {
             <div class="row ms-1 me-2">
                 <?php
                 if ($_SESSION["type"] == 1) {
-
-                    $sql = "SELECT * FROM `providercylinderdetail`  WHERE HospitalId=$UserID;";
+                    $sql = "SELECT * FROM `hospitalcylinderdetail`  WHERE HospitalId=$UserID;";
                 } elseif ($_SESSION["type"] == 2) {
                     $sql = "SELECT * FROM `providercylinderdetail`  WHERE ProviderId=$UserID;";
                 }
                 $result = QueryExecutor::query($sql);
                 $row = $result->fetch_assoc();
-                //print_r($row);
                 ?>
                 <div class="col-4 fw-light"><label for="oxCylinderSmall">Small Cylinder</label><input class="form-check-input float-end text-end me-2" type="checkbox" name="cylinder[]" id="oxCylinderSmall" value="oxCylinderSmall" <?php
                                                                                                                                                                                                                                         if ($row['SmallAvailability'] == "YES") {

@@ -2,7 +2,7 @@
 // Start the session
 
 session_start();
-include '../classes/Admin.php';
+include '../classes/probDomCls/Admin.php';
 if (!isset($_SESSION['admin'])) {
     header('Location: login.php');
 }

@@ -802,7 +802,7 @@ class Provider extends Member
 
   public function get_staredHospital()
   {
-    $sql = "SELECT staredHospital FROM `Hospital` WHERE ProviderId = $this->id;";
+    $sql = "SELECT staredHospital FROM `Provider` WHERE ProviderId = $this->id;";
     //$result = $this->connection->query($sql);
     //$row = $result->fetch_assoc();
     $result = QueryExecutor::query($sql);
@@ -820,7 +820,7 @@ class Provider extends Member
     } else {
       array_push($temp, $userId);
       $data = serialize($temp);
-      $sql = "UPDATE `hospital` SET `staredHospital`= '$data' WHERE `hospital`.`HospitalId` =  $this->id;";
+      $sql = "UPDATE `provider` SET `staredHospital`= '$data' WHERE `hospital`.`HospitalId` =  $this->id;";
       //$this->connection->query($sql);
       QueryExecutor::query($sql);
     }

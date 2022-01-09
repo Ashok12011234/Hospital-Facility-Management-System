@@ -7,7 +7,6 @@ if (isset($_POST['updateDetails'])) {
     if ($_POST['password-confirm'] == $user->get_password()) {
         //$hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);
         $hospitalName = trim($_POST['hospitalName'], "\n\r\t\v\0");
-
         $email =  QueryExecutor::real_escape_string($_POST['email']);
         $phoneNo =  QueryExecutor::real_escape_string($_POST['phoneNo']);
         $accountNumber =  QueryExecutor::real_escape_string($_POST['accountNumber']);
@@ -49,9 +48,6 @@ if (isset($_POST['updateDetails'])) {
 
 <body>
 
-    <!--?php
-include("navbar.php");
-?-->
     <!-- Body -->
     <div class="rounded bg-white m-4 pt-3 pe-3 ps-3 body-contentx">
         <form action="" method="POST" enctype="multipart/form-data">

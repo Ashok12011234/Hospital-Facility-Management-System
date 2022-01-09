@@ -7,6 +7,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
   $_SESSION["options"] = "";
 }
 
+
 ?>
 
 <!DOCTYPE html>
@@ -328,7 +329,6 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
 
 
       if ($result = QueryExecutor::query($sql)) {
-
         $rows = $result->fetch_all(MYSQLI_ASSOC);
         if ($_SESSION["type"] == 1) {
           $current = $user;
@@ -338,6 +338,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
         }
         if ($_SESSION["type"] == 2) {
         }
+
 
         foreach ($rows as $row) {
           $current = Hospital::getInstance($row["HospitalId"]);
@@ -384,7 +385,6 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
         foreach ($rows as $row) {
           $current = Provider::getInstance($row["ProviderId"]);
           if ($current->filter($_SESSION["prodashboard"]) && $_SESSION["type"] == 1) {
-
             include 'providerCard.php';
           }
         }

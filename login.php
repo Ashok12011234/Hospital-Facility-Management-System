@@ -1,5 +1,5 @@
 <?php
-include("member.php");
+include("classes/probDomCls/member.php");
 session_start();
 $error = "";
 $success = "";

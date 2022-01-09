@@ -1,5 +1,5 @@
 <?php
-include('connection.php');
+include('classes/sysLvlCls/connection.php');
 
 // Create database
 $conn = new mysqli(Database::HOST,Database::USERNAME,Database::PASSWORD);

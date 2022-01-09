@@ -7,7 +7,7 @@ if (array_key_exists("logout", $_GET)) {
   exit;
 }
 
-include("member.php");
+include("classes/probDomCls/member.php");
 
 if (array_key_exists("type", $_SESSION)) {
   switch ($_SESSION["type"]) {

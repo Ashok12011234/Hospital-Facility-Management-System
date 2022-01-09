@@ -63,8 +63,8 @@ include("navbar.php");
                             <input type="file" class="form-control" id="inputGroupFile02" name="profile_picture">
                             <label class="input-group-text" for="inputGroupFile02">Update</label>
                         </div>
-                        <span class="font-weight-bold">Username</span>
-                        <span class="text-black-50">Hospital Name</span>
+                        <span class="font-weight-bold"><?php echo $user->get_username() ?></span>
+                        <span class="text-black-50"><?php echo $user->get_name() ?></span>
                         <span> </span>
                     </div>
                 </div>

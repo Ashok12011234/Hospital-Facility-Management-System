@@ -1017,13 +1017,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
           }
         }
       }
-
-
       ?>
-
-
-
-
 
       <!--Footer-->
       <!-- Footer -->

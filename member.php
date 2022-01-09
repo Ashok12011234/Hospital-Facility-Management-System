@@ -188,7 +188,7 @@ class Hospital extends Member
     $this->accountNo = $row['AccountNumber'];
     $this->bankName = $row['BankName'];
     $this->password = Password::decrypt($row['Password']);
-    $this->state = $row['State'];
+    $this->state = $row['Status'];
   }
 
   public static function getInstance($id): Hospital|null

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../classes/Admin.php';
+include '../../classes/probDomCls/Admin.php';
 
     if(isset($_GET['yes'])){
         $admin_temp = Admin::getInstance();

@@ -1,16 +1,23 @@
 <?php
-include '../classes/Admin.php';
+include '../classes/probDomCls/Admin.php';
 if(isset($_POST['username'])){
+    $admin_temp = Admin::getInstance();
     session_start();
-    include '../config.php';
-    if($_POST['username']=='admin' && $_POST['password']=='ad@nike76'){
-        $admin_temp = Admin::getInstance();
+    if($admin_temp->log_in(secure_encrypt($_POST['username']),secure_encrypt($_POST['password']))){
         $_SESSION['admin'] = $admin_temp;
         header('Location: index.php');
-        
     }
     else{
-        header('Location:login.php?msg=failed');
+       header('Location:login.php?msg=failed');
     }
+      
+    
 }
+
+function secure_encrypt($input) {
+    $trim = trim($input);
+    $slashesremoved = stripslashes($input);
+    return $input;
+  }
+
 ?>

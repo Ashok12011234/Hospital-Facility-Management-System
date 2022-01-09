@@ -48,11 +48,20 @@ if (array_key_exists("type", $_SESSION)) {
                   ?>" class="nav-item ms-2">
         <a class="nav-link" href="login.php">Login</a>
       </li>
-
+      
       <li style="<?php
-                  if ($_SESSION["type"] == 0 || $_SESSION["type"] == 2) {
+                  if ($_SESSION["type"] != 0) {
 
                     echo 'display:none;';
+                  }
+                  ?>" class="nav-item ms-2">
+        <a class="nav-link" href="signup.php">Signup</a>
+      </li>
+
+      <li style="<?php
+                    if($_SESSION["type"] ==0){
+                    
+                        echo 'display:none;'; 
                   }
                   ?>" class="nav-item ms-2">
         <a class="nav-link" href="stared.php">Stared</a>
@@ -123,7 +132,13 @@ if (array_key_exists("type", $_SESSION)) {
     <div id="hospitalDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
 
 
-      <img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size: 40px; border-radius: 30px;" class="ms-2">
+      <img src="
+      <?php 
+        if($_SESSION["type"] !=0){
+          echo $user->get_profile(); 
+        }
+      ?>
+      " alt="usericon" style="width: 40px;height: 40px; border-radius: 50%;" class="ms-2">
 
       <span class="user-name me-4 ms-1" id="hospitalDropdownButton"><?php
                                                                     if ($_SESSION["type"] != 0) {

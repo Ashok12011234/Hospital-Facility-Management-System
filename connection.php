@@ -76,6 +76,7 @@ interface IConnection
     public function query(String $query): mysqli_result|bool;
     public function multi_query(String $query): mysqli_result|bool;
     public function real_escape_string(String $string): String;
+    public function prepare(String $query): mysqli_stmt|false;
 }
 
 class Connection implements IConnection
@@ -118,6 +119,11 @@ class Connection implements IConnection
     public function real_escape_string(String $string): String
     {
         return $this->connection->real_escape_string($string);
+    }
+
+    public function prepare(String $query): mysqli_stmt|false
+    {
+        return $this->connection->prepare($query);
     }
 }
 
@@ -179,8 +185,9 @@ class QueryExecutor
     private const QUERY = 0;
     private const MULTI_QUERY = 1;
     private const REAL_ESCAPE_STRING = 2;
+    private const PREPARE = 3;
 
-    private static function exe(String $query, int $type): mysqli_result|bool|String
+    private static function exe(String $query, int $type): mysqli_result|bool|String|mysqli_stmt
     {
         $connectionPool = ConnectionPool::getInstance();
         $connection = $connectionPool->getConnection();
@@ -193,6 +200,9 @@ class QueryExecutor
                 break;
             case self::REAL_ESCAPE_STRING:
                 $result = $connection->real_escape_string($query);
+                break;
+            case self::PREPARE:
+                $result = $connection->prepare($query);
                 break;
         }
         $connectionPool->releaseConnection($connection);
@@ -212,5 +222,10 @@ class QueryExecutor
     public static function real_escape_string(String $string): String
     {
         return self::exe($string, self::REAL_ESCAPE_STRING);
+    }
+
+    public static function prepare(String $query): mysqli_stmt|false
+    {
+        return self::exe($query, self::PREPARE);
     }
 }

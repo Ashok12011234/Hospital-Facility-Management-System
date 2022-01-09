@@ -1,9 +1,9 @@
 <?php
-require("classes/probDomCls/Mail.php");
-require("classes/probDomCls/NewAccount.php");
-require("classes/sysLvlCls/Password.php");
-require("./config.php");
-include("classes/File.php");
+include("classes/probDomCls/Mail.php");
+include("classes/probDomCls/NewAccount.php");
+include("classes/sysLvlCls/Password.php");
+include("config.php");
+include("classes/sysLvlCls/File.php");
 
 class Signupper
 {
@@ -68,6 +68,22 @@ class Signupper
 
     public function insertInToNewAc(): bool
     {
+        $query = "INSERT INTO `NewAccount` (`UserName`,`Email`,`AccountType`,`BankName`,
+        `AccountNumber`,`BankEvidence`,`InstituteEvidence`,`Password`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = QueryExecutor::prepare($query);
+        $stmt->bind_param("ssssisss", $username, $email, $acType, $bankName, $bankAcNumber, $bankEvidence, $instituteEvidence, $password);
+
+        $username = $this->newAC->getUsername();
+        $email = $this->newAC->getEmailAddress();
+        $acType = $this->newAC->getAcType();
+        $bankName = ($this->newAC->getBankName() != "") ? $this->newAC->getBankName(): null;
+        $bankAcNumber = ($this->newAC->getBankAcNumber() != "") ? $this->newAC->getBankAcNumber(): null;
+        $bankEvidence = ($this->newAC->getBankEvidence() != "") ? $this->newAC->getBankEvidence(): null;
+        $instituteEvidence = $this->newAC->getInstituteEvidence();
+        $password = Password::encrypt($this->newAC->getPassword());
+
+        return $stmt->execute();
+/*
         if ($this->newAC->getAcType() == "PROVIDER") {
             $query = "INSERT INTO `NewAccount` (`UserName`,`Email`,`AccountType`,
                 `InstituteEvidence`,`Password`) VALUES ('".
@@ -93,6 +109,7 @@ class Signupper
         }
 
         return QueryExecutor::query($query);
+*/
     }
 
     public function signup(array $signupData)
@@ -104,7 +121,7 @@ class Signupper
         $files = $signupData["files"];
 
         if (array_key_exists("emailAddress", $data)) {
-            $this->newAC->setEmailAddress($data["emailAddress"]);
+            $this->newAC->setEmailAddress(QueryExecutor::real_escape_string($data["emailAddress"]));
             if(!$this->sendOTP()) {
                 $error = "We couldn't send an OTP";
                 $next = "one-sendOTP";
@@ -123,19 +140,19 @@ class Signupper
             }
         }
         else if (array_key_exists("username", $data)) {
-            if(!$this->isAvailableUsername($data["username"])) {
+            if(!$this->isAvailableUsername(QueryExecutor::real_escape_string($data["username"]))) {
                 $error = "Username already exists";
                 $next = "three-username";
             }
             else {
-                $this->newAC->setUsername($data["username"]);
+                $this->newAC->setUsername(QueryExecutor::real_escape_string($data["username"]));
             }
         }
         else if (array_key_exists("password", $data)) {
-            $this->newAC->setPassword($data["password"]);
+            $this->newAC->setPassword(QueryExecutor::real_escape_string($data["password"]));
         }
         else if (array_key_exists("cPassword", $data)) {
-            if(!$this->confirmPassword($data["cPassword"])) {
+            if(!$this->confirmPassword(QueryExecutor::real_escape_string($data["cPassword"]))) {
                 $error = "Passwords didn't match";
                 $next = "four-password";
             }
@@ -143,7 +160,7 @@ class Signupper
             }
         }
         else if (array_key_exists("acType", $data)) {
-            $this->newAC->setAcType($data["acType"]);
+            $this->newAC->setAcType(QueryExecutor::real_escape_string($data["acType"]));
             if($data["acType"] == "PROVIDER") {
                 $next = "eight-evidence";
             }
@@ -158,9 +175,9 @@ class Signupper
                 $next = "seven-bankAC";
             }
             else{
-                $this->newAC->setBankName($data["bankType"]);
-                $this->newAC->setBankAcNumber($data["acNo"]);
-                $this->newAC->setBankEvidence($result["fileName"]);
+                $this->newAC->setBankName(QueryExecutor::real_escape_string($data["bankType"]));
+                $this->newAC->setBankAcNumber(QueryExecutor::real_escape_string($data["acNo"]));
+                $this->newAC->setBankEvidence(QueryExecutor::real_escape_string($result["fileName"]));
             }
         }
         else if (array_key_exists("instituteEvidence", $files)) {
@@ -171,8 +188,9 @@ class Signupper
                 $next = "eight-evidence";
             }
             else{
-                $this->newAC->setInstituteEvidence($result["fileName"]);
+                $this->newAC->setInstituteEvidence(QueryExecutor::real_escape_string($result["fileName"]));
                 if(!$this->insertInToNewAc()) {
+                    $next = "one-sendOTP";
                 }
                 else {
                 }

@@ -19,7 +19,7 @@
                       ?>
                     </h3>
                     <i  style="<?php
-                    if($_SESSION["type"] ==1){
+                    if($_SESSION["type"] ==1 || $_SESSION["type"] ==2){
                       if($user==$current){
                         echo 'display:none;';
                       }

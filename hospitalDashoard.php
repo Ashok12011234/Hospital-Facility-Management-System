@@ -218,58 +218,58 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
     });
   }
 
-function donate(){
-  var name=document.getElementById("name").value;
-  var email=document.getElementById("email").value;
-  var amount=document.getElementById("amount").value;
+  function donate() {
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var amount = document.getElementById("amount").value;
 
-   
+
 
     $.ajax({
-        url:'donate.php',
-        type:'POST',
-        data:{
-          name:name,
-          email:email,
-          amount:amount
-        },
-        success:function(result){
-          //console.log(result);
-
-          
-      
+      url: 'donate.php',
+      type: 'POST',
+      data: {
+        name: name,
+        email: email,
+        amount: amount
+      },
+      success: function(result) {
+        //console.log(result);
 
 
-            if(result.data=='0'){
-                var typeModal = new bootstrap.Modal(document.getElementById("donationresult"+result), {
-                keyboard: false
-            });
-            }
-            else{
-                var typeModal = new bootstrap.Modal(document.getElementById("donationresult"+result), {
-                keyboard: false
-            });
-            }
-            typeModal.show();
-           
+
+
+
+        if (result.data == '0') {
+          var typeModal = new bootstrap.Modal(document.getElementById("donationresult" + result), {
+            keyboard: false
+          });
+        } else {
+          var typeModal = new bootstrap.Modal(document.getElementById("donationresult" + result), {
+            keyboard: false
+          });
         }
+        typeModal.show();
+
+      }
     });
- ///
+    ///
 
-}
+  }
 
 
-function donateID(elem){
-  $.ajax({
+  function donateID(elem) {
+    $.ajax({
       url: 'donateID.php',
       type: 'POST',
-      data: {id:elem.value},
+      data: {
+        id: elem.value
+      },
       success: function(result) {
         //window.location.reload();
       }
     });
-}
-
+  }
 </script>
 
 
@@ -292,14 +292,13 @@ function donateID(elem){
 
   <div class="row justify-content-between mt-5 ms-2 me-2">
     <div class="col-md-8 ">
-      
+
       <button style="<?php
                     if($_SESSION["type"] !=1){
                     
                         echo 'display:none;'; 
                   }
                  ?>" type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#filtermodal" style="display:inline;"><i class='fas fa-filter'></i>Filter</button>
-
       <br>
     </div>
     <div class="col-md-4">
@@ -307,14 +306,12 @@ function donateID(elem){
 
 
         <input type="text" class="form-control" name="searchBox" id="searchBox" placeholder="Search for Hospital or Provider" aria-label="Recipient's username" aria-describedby="basic-addon2">
-        <div class="input-group-append">
-          <button class="btn btn-lg btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
-        </div>
+
       </div>
     </div>
   </div>
   <!-- Headings and title end-->
-  <h2 class="mt-3 ms-5 me-2" >Hospitals</h2>
+  <h2 class="mt-3 ms-5 me-2">Hospitals</h2>
   <!--Content-->
   <div class="container mt-5 mb-4">
     <div class="row">
@@ -326,49 +323,46 @@ function donateID(elem){
         $content = $_POST['SearchContent'];
         $sql = "SELECT * FROM Hospital WHERE UserName LIKE '%$content%' OR Name LIKE '%$content%' OR Website LIKE '%$content%' OR Address LIKE '%$content%';";;
       } else {
-        $sql = "SELECT * FROM Hospital"; // WHERE UserName LIKE  '%1234%' ";
+        $sql = "SELECT * FROM Hospital";
       }
 
 
       if ($result = QueryExecutor::query($sql)) {
 
         $rows = $result->fetch_all(MYSQLI_ASSOC);
-        if($_SESSION["type"] ==1){
-          $current=$user;
+        if ($_SESSION["type"] == 1) {
+          $current = $user;
           if ($current->filter($_SESSION["hosdashboard"])) {
             include 'hospitalCard.php';
           }
         }
-        if($_SESSION["type"] ==2){
-          
+        if ($_SESSION["type"] == 2) {
         }
 
         foreach ($rows as $row) {
           $current = Hospital::getInstance($row["HospitalId"]);
           if ($current->filter($_SESSION["hosdashboard"])) {
-            if($_SESSION["type"] ==1){
-              if($current==$user){
+            if ($_SESSION["type"] == 1) {
+              if ($current == $user) {
                 continue;
               }
             }
-            
-            include 'hospitalCard.php';
-            
 
-       }
+            include 'hospitalCard.php';
+          }
         }
       }
       ?>
+    </div>
   </div>
-            </div>
-      <!-- Provider-->
-      <h2 class="mt-3 ms-5 me-2" style="<?php
-                    if($_SESSION["type"] ==0){
-                    
-                        echo 'display:none;'; 
-                  }
-                 ?>">Providers</h2>
-      <div class="container mt-5 mb-4">
+  <!-- Provider-->
+  <h2 class="mt-3 ms-5 me-2" style="<?php
+                                    if ($_SESSION["type"] == 0) {
+
+                                      echo 'display:none;';
+                                    }
+                                    ?>">Providers</h2>
+  <div class="container mt-5 mb-4">
     <div class="row">
       <?php
       if (isset($_POST['SearchContent'])) {
@@ -382,375 +376,372 @@ function donateID(elem){
       if ($result = QueryExecutor::query($sql)) {
         $rows = $result->fetch_all(MYSQLI_ASSOC);
 
-        if($_SESSION["type"] ==2){
-          $current=$user;
+        if ($_SESSION["type"] == 2) {
+          $current = $user;
           include 'providerCard.php';
         }
 
         foreach ($rows as $row) {
           $current = Provider::getInstance($row["ProviderId"]);
-          if ($current->filter($_SESSION["prodashboard"]) && $_SESSION["type"] ==1) {
-            
+          if ($current->filter($_SESSION["prodashboard"]) && $_SESSION["type"] == 1) {
+
             include 'providerCard.php';
-
-            
-
-        }
+          }
         }
       }
       ?>
+    </div>
   </div>
-            </div>
 
 
 
 
-      <!--Footer-->
-      <!-- Footer -->
-      <footer class="text-center text-lg-start bg-light text-muted">
-        <!-- Section: Social media -->
-        <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
-          <!-- Left -->
-          <div class="me-5 d-none d-lg-block">
-            <span>Get connected with us on social networks:</span>
+  <!--Footer-->
+  <!-- Footer -->
+  <footer class="text-center text-lg-start bg-light text-muted">
+    <!-- Section: Social media -->
+    <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+      <!-- Left -->
+      <div class="me-5 d-none d-lg-block">
+        <span>Get connected with us on social networks:</span>
+      </div>
+      <!-- Left -->
+
+      <!-- Right -->
+      <div>
+        <a href="https://www.facebook.com/hpbsrilanka/" target="_blank" class="me-4 text-reset">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://twitter.com/hpbsrilanka" target="_blank" class="me-4 text-reset">
+          <i class="fab fa-twitter"></i>
+        </a>
+
+
+        <a href="https://www.youtube.com/channel/UC6XsnLgVVzNkjTCpRVJ6u3w" target="_blank" class="me-4 text-reset">
+
+
+          <i class="fab fa-youtube"></i>
+        </a>
+        <a href="https://www.instagram.com/hpbsrilanka" target="_blank" class="me-4 text-reset">
+          <i class="fab fa-instagram"></i>
+        </a>
+
+      </div>
+      <!-- Right -->
+    </section>
+    <!-- Section: Social media -->
+
+    <!-- Section: Links  -->
+    <section class="">
+      <div class="container text-center text-md-start mt-5">
+        <!-- Grid row -->
+        <div class="row mt-3">
+          <!-- Grid column -->
+          <div class="col-sm-6 col-lg-3 mx-auto mb-md-0 mb-4">
+            <!-- Links -->
+            <h6 class="text-uppercase fw-bold mb-4">
+              Contact
+            </h6>
+
+            <p>
+
+
+
+              <a class="link-success" href="mailto: healthpromo@sltnet.lk"><i class="fas fa-envelope me-3"></i> healthpromo@sltnet.lk</a>
+
+            </p>
+            <p><a class="link-success" href="tel:+94 11 2696 606"><i class="fas fa-phone me-3"></i> +94 11
+                2696 606</a></p>
+            <p> <a class="link-success" href="fax:+94 11 2692 613"><i class="fas fa-print me-3"></i> +94 11
+                2692 613</a>
+            </p>
           </div>
-          <!-- Left -->
+          <!-- Grid column -->
 
-          <!-- Right -->
-          <div>
-            <a href="https://www.facebook.com/hpbsrilanka/" target="_blank" class="me-4 text-reset">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="https://twitter.com/hpbsrilanka" target="_blank" class="me-4 text-reset">
-              <i class="fab fa-twitter"></i>
-            </a>
+          <!-- Grid column -->
+          <div class="col-sm-6 col-lg-3  mx-auto mb-4">
+            <!-- Links -->
+            <h6 class="text-uppercase fw-bold mb-4">
+              <i class="fa fa-map-marker" aria-hidden="true"></i> &nbsp;&nbsp; Our Address
 
-
-            <a href="https://www.youtube.com/channel/UC6XsnLgVVzNkjTCpRVJ6u3w" target="_blank" class="me-4 text-reset">
-
-
-              <i class="fab fa-youtube"></i>
-            </a>
-            <a href="https://www.instagram.com/hpbsrilanka" target="_blank" class="me-4 text-reset">
-              <i class="fab fa-instagram"></i>
-            </a>
+            </h6>
+            <p>
+              <b> Health Promotion Bureau </b> <br>
+              No.2, Kynsey Road, <br>
+              Colombo 08, <br>
+              Sri Lanka.
+            </p>
 
           </div>
-          <!-- Right -->
-        </section>
-        <!-- Section: Social media -->
+          <!-- Grid column -->
 
-        <!-- Section: Links  -->
-        <section class="">
-          <div class="container text-center text-md-start mt-5">
-            <!-- Grid row -->
-            <div class="row mt-3">
-              <!-- Grid column -->
-              <div class="col-sm-6 col-lg-3 mx-auto mb-md-0 mb-4">
-                <!-- Links -->
-                <h6 class="text-uppercase fw-bold mb-4">
-                  Contact
-                </h6>
+          <!-- Grid column -->
+          <div class="col-sm-3 col-md-6 col-lg-2  mx-auto mb-4">
+            <!-- Links -->
+            <h6 class="text-uppercase fw-bold mb-4">
+              Links
+            </h6>
+            <p>
 
-                <p>
+              <a class="link-success" href="https://hpb.health.gov.lk/en" target="_blank" class="text-reset">Ministry Home</a>
+            </p>
+            <p>
+              <a class="link-success" href="https://hpb.health.gov.lk/en/covid-19" target="_blank" class="text-reset">Covid Info</a>
+            </p>
 
+            <p>
+              <a class="link-success" href="https://hpb.health.gov.lk/en/technical-units" target="_blank" class="text-reset">Technical Units</a>
 
+            </p>
 
-                  <a class="link-success" href="mailto: healthpromo@sltnet.lk"><i class="fas fa-envelope me-3"></i> healthpromo@sltnet.lk</a>
-
-                </p>
-                <p><a class="link-success" href="tel:+94 11 2696 606"><i class="fas fa-phone me-3"></i> +94 11
-                    2696 606</a></p>
-                <p> <a class="link-success" href="fax:+94 11 2692 613"><i class="fas fa-print me-3"></i> +94 11
-                    2692 613</a>
-                </p>
-              </div>
-              <!-- Grid column -->
-
-              <!-- Grid column -->
-              <div class="col-sm-6 col-lg-3  mx-auto mb-4">
-                <!-- Links -->
-                <h6 class="text-uppercase fw-bold mb-4">
-                  <i class="fa fa-map-marker" aria-hidden="true"></i> &nbsp;&nbsp; Our Address
-
-                </h6>
-                <p>
-                  <b> Health Promotion Bureau </b> <br>
-                  No.2, Kynsey Road, <br>
-                  Colombo 08, <br>
-                  Sri Lanka.
-                </p>
-
-              </div>
-              <!-- Grid column -->
-
-              <!-- Grid column -->
-              <div class="col-sm-3 col-md-6 col-lg-2  mx-auto mb-4">
-                <!-- Links -->
-                <h6 class="text-uppercase fw-bold mb-4">
-                  Links
-                </h6>
-                <p>
-
-                  <a class="link-success" href="https://hpb.health.gov.lk/en" target="_blank" class="text-reset">Ministry Home</a>
-                </p>
-                <p>
-                  <a class="link-success" href="https://hpb.health.gov.lk/en/covid-19" target="_blank" class="text-reset">Covid Info</a>
-                </p>
-
-                <p>
-                  <a class="link-success" href="https://hpb.health.gov.lk/en/technical-units" target="_blank" class="text-reset">Technical Units</a>
-
-                </p>
-
-              </div>
-              <!-- Grid column -->
-
-              <!-- Grid column -->
-              <div class="col-sm-9  col-md-6 col-lg-4  mx-auto mb-4">
-                <!-- Content -->
-                <h6 class="text-uppercase fw-bold mb-4">
-                  &nbsp;&nbsp; Important Contacts
-                </h6>
-                <p>
-                <ul class="footer-menu">
-
-                  <li style="text-align: left;"><b>Suwasariya Hotline:</b>&nbsp;&nbsp;&nbsp;<a class="link-success" href="tel:1999">1999</a></li>
-                  <li style="text-align: left;"><b>Epidemiology Unit:</b>&nbsp;&nbsp;&nbsp;<a class="link-success" href="tel:+940112695112">+94 011 269 5112</a></li>
-                  <li style="text-align: left;"><b>Quarantine Unit:</b>&nbsp;&nbsp;&nbsp;<a class="link-success" href="tel:+940112112705">+94 011 211 2705</a></li>
-                  <li style="text-align: left;"><b>Disaster Management Unit:</b>&nbsp;&nbsp;&nbsp;<a class="link-success" href="tel:+940113071073">+94 011 307 1073</a></li>
-
-
-
-                </ul>
-                </p>
-
-              </div>
-              <!-- Grid column -->
-
-
-            </div>
-            <!-- Grid row -->
           </div>
-        </section>
-        <!-- Section: Links  -->
+          <!-- Grid column -->
 
-        <!-- Copyright -->
-        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-          © 2021 Copyright:
-          <a class="text-reset fw-bold" href="#">Hospital Management System</a>
+          <!-- Grid column -->
+          <div class="col-sm-9  col-md-6 col-lg-4  mx-auto mb-4">
+            <!-- Content -->
+            <h6 class="text-uppercase fw-bold mb-4">
+              &nbsp;&nbsp; Important Contacts
+            </h6>
+            <p>
+            <ul class="footer-menu">
+
+              <li style="text-align: left;"><b>Suwasariya Hotline:</b>&nbsp;&nbsp;&nbsp;<a class="link-success" href="tel:1999">1999</a></li>
+              <li style="text-align: left;"><b>Epidemiology Unit:</b>&nbsp;&nbsp;&nbsp;<a class="link-success" href="tel:+940112695112">+94 011 269 5112</a></li>
+              <li style="text-align: left;"><b>Quarantine Unit:</b>&nbsp;&nbsp;&nbsp;<a class="link-success" href="tel:+940112112705">+94 011 211 2705</a></li>
+              <li style="text-align: left;"><b>Disaster Management Unit:</b>&nbsp;&nbsp;&nbsp;<a class="link-success" href="tel:+940113071073">+94 011 307 1073</a></li>
+
+
+
+            </ul>
+            </p>
+
+          </div>
+          <!-- Grid column -->
+
+
         </div>
-        <!-- Copyright -->
-      </footer>
-      <!-- Footer -->
+        <!-- Grid row -->
+      </div>
+    </section>
+    <!-- Section: Links  -->
+
+    <!-- Copyright -->
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+      © 2021 Copyright:
+      <a class="text-reset fw-bold" href="#">Hospital Management System</a>
+    </div>
+    <!-- Copyright -->
+  </footer>
+  <!-- Footer -->
 
 
 
 
-      <!-- Filter Modal -->
-      <div class="modal fade" id="filtermodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Filter</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <select id="filtertype" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                <option selected value="1">Hospital</option>
-                <option value="2">Provider</option>
-                <option value="3">All</option>
-              </select>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterByType()">Ok</button>
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" onclick="next1()" data-bs-dismiss="modal">Next</button>
-            </div>
-          </div>
+  <!-- Filter Modal -->
+  <div class="modal fade" id="filtermodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Filter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <select id="filtertype" class="form-select form-select-sm" aria-label=".form-select-sm example">
+            <option selected value="1">Hospital</option>
+            <option value="2">Provider</option>
+            <option value="3">All</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterByType()">Ok</button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" onclick="next1()" data-bs-dismiss="modal">Next</button>
         </div>
       </div>
-      <!-- Filter Modal  i hos-->
+    </div>
+  </div>
+  <!-- Filter Modal  i hos-->
 
-      <div class="modal fade" id="filtermodali1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <select id="filtereqiptype1" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                <option selected value="1">Bed</option>
-                <option value="2">Cylinder</option>
-                <option value="3">Blood</option>
-                <option value="4">Vaccine</option>
+  <div class="modal fade" id="filtermodali1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <select id="filtereqiptype1" class="form-select form-select-sm" aria-label=".form-select-sm example">
+            <option selected value="1">Bed</option>
+            <option value="2">Cylinder</option>
+            <option value="3">Blood</option>
+            <option value="4">Vaccine</option>
 
-              </select>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterByEquipment()">Ok</button>
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal" onclick="loadFilterOptions()">Next</button>
-            </div>
-          </div>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterByEquipment()">Ok</button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal" onclick="loadFilterOptions()">Next</button>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Filter Modal  i prov-->
+  <!-- Filter Modal  i prov-->
 
-      <div class="modal fade" id="filtermodali2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <select id="filtereqiptype2" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                <option selected value="1">Bed</option>
-                <option value="2">Cylinder</option>
+  <div class="modal fade" id="filtermodali2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <select id="filtereqiptype2" class="form-select form-select-sm" aria-label=".form-select-sm example">
+            <option selected value="1">Bed</option>
+            <option value="2">Cylinder</option>
 
-              </select>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterByEquipment()">Ok</button>
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal" onclick="loadFilterOptions()">Next</button>
-            </div>
-          </div>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterByEquipment()">Ok</button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal" onclick="loadFilterOptions()">Next</button>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Filter Modal  ii bed-->
+  <!-- Filter Modal  ii bed-->
 
-      <div class="modal fade" id="filtermodalii1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <select class="form-select form-select-sm" id="filterspecifictype1" aria-label=".form-select-sm example">
-                <option selected value="1">Normal</option>
-                <option value="2">ICU</option>
+  <div class="modal fade" id="filtermodalii1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <select class="form-select form-select-sm" id="filterspecifictype1" aria-label=".form-select-sm example">
+            <option selected value="1">Normal</option>
+            <option value="2">ICU</option>
 
-              </select>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
 
 
-            </div>
-          </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Filter Modal  ii ceylinder-->
+  <!-- Filter Modal  ii ceylinder-->
 
-      <div class="modal fade" id="filtermodalii2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <select class="form-select form-select-sm" id="filterspecifictype2" aria-label=".form-select-sm example">
-                <option selected value="1">Small</option>
-                <option value="2">Medium</option>
-                <option value="3">Large</option>
+  <div class="modal fade" id="filtermodalii2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <select class="form-select form-select-sm" id="filterspecifictype2" aria-label=".form-select-sm example">
+            <option selected value="1">Small</option>
+            <option value="2">Medium</option>
+            <option value="3">Large</option>
 
-              </select>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
 
 
-            </div>
-          </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Filter Modal  ii blood-->
+  <!-- Filter Modal  ii blood-->
 
-      <div class="modal fade" id="filtermodalii3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <select class="form-select form-select-sm" id="filterspecifictype3" aria-label=".form-select-sm example">
-                <option selected value="1">A+</option>
-                <option value="3">B+</option>
-                <option value="5">O+</option>
-                <option value="7">AB+</option>
-                <option value="2">A-</option>
-                <option value="4">B-</option>
-                <option value="6">O-</option>
-                <option value="8">AB-</option>
+  <div class="modal fade" id="filtermodalii3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <select class="form-select form-select-sm" id="filterspecifictype3" aria-label=".form-select-sm example">
+            <option selected value="1">A+</option>
+            <option value="3">B+</option>
+            <option value="5">O+</option>
+            <option value="7">AB+</option>
+            <option value="2">A-</option>
+            <option value="4">B-</option>
+            <option value="6">O-</option>
+            <option value="8">AB-</option>
 
-              </select>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
 
 
-            </div>
-          </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Filter Modal  ii vaccine-->
+  <!-- Filter Modal  ii vaccine-->
 
-      <div class="modal fade" id="filtermodalii4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <select class="form-select form-select-sm" id="filterspecifictype4" aria-label=".form-select-sm example">
-                <option selected value="1">Oxford Astrasenica</option>
-                <option value="2">Phizer</option>
-                <option value="3">Moderna</option>
-                <option value="4">Sinopharm</option>
-                <option value="5">Sputnik</option>
+  <div class="modal fade" id="filtermodalii4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel2">Filter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <select class="form-select form-select-sm" id="filterspecifictype4" aria-label=".form-select-sm example">
+            <option selected value="1">Oxford Astrasenica</option>
+            <option value="2">Phizer</option>
+            <option value="3">Moderna</option>
+            <option value="4">Sinopharm</option>
+            <option value="5">Sputnik</option>
 
-              </select>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="filterBySpecific()">Ok</button>
 
 
-            </div>
-          </div>
         </div>
       </div>
+    </div>
+  </div>
 
 
-      <?php
-      if (isset($_POST['starHospitalId']) && ($_POST['star'] == "unStarHos")) {
-        $user->add_staredHospital($_POST['starHospitalId']);
-        //print_r($current->get_staredHospital());
-      } else if (isset($_POST['starHospitalId']) && $_POST['star'] == "starHos") {
-        $user->remove_staredHospital($_POST['starHospitalId']);
-        //Redirect_to("google.com");
-        //print_r($current->get_staredHospital());
-        //Redirect_to("google.com"); 
-      }
-      if (isset($_POST['starProviderId']) && ($_POST['star'] == "unStarProv")) {
-        $user->add_staredProvider($_POST['starProviderId']);
-        //print_r($current->get_staredHospital());
-      } else if (isset($_POST['starProviderId']) && $_POST['star'] == "starProv") {
-        $user->remove_staredProvider($_POST['starProviderId']);
-        //Redirect_to("google.com");
-        //print_r($current->get_staredHospital());
-        //Redirect_to("google.com"); 
-      }
+  <?php
+  if (isset($_POST['starHospitalId']) && ($_POST['star'] == "unStarHos")) {
+    $user->add_staredHospital($_POST['starHospitalId']);
+    //print_r($current->get_staredHospital());
+  } else if (isset($_POST['starHospitalId']) && $_POST['star'] == "starHos") {
+    $user->remove_staredHospital($_POST['starHospitalId']);
+    //Redirect_to("google.com");
+    //print_r($current->get_staredHospital());
+    //Redirect_to("google.com"); 
+  }
+  if (isset($_POST['starProviderId']) && ($_POST['star'] == "unStarProv")) {
+    $user->add_staredProvider($_POST['starProviderId']);
+    //print_r($current->get_staredHospital());
+  } else if (isset($_POST['starProviderId']) && $_POST['star'] == "starProv") {
+    $user->remove_staredProvider($_POST['starProviderId']);
+    //Redirect_to("google.com");
+    //print_r($current->get_staredHospital());
+    //Redirect_to("google.com"); 
+  }
 
-      ?>
+  ?>
 
 </body>
 
@@ -827,7 +818,7 @@ function donateID(elem){
 
   }
   $(document).ready(function() {
-    $('#searchBox').keyup(function() {
+    $('#searchBox').keyup(function(e) {
       var SearchContent = $('#searchBox').val();
       if (SearchContent != '') {
         $.ajax({
@@ -846,6 +837,7 @@ function donateID(elem){
             //alert(SearchContent);
             //fetchUser();
             $('.container').html(success);
+            // $('.row').html("");
           }
         });
       }
@@ -854,52 +846,51 @@ function donateID(elem){
 
   $(function() {
 
-$("#newModalForm").validate({
-  rules: {
-    cardnum: {
-      required: true,
-      creditcard: true
-    },
-    name: "required",
-    email: {
-      required: true,
-      email: true
-    },
-    cardcvv: {
-      required: true,
-      digits: true,
-      minlength: 3,
-      maxlength: 3
-    },
-    amount: {
-      required: true,
-      digits: true
-    },
-    expiry_month: {
-      required: true
-    },
-    expiry_year: {
-      required: true
-    }
-  },
-  messages: {
-    cardnum: {
-      required: "Please enter card number",
-      minlength: "Your card number must be 16 characters"
-    },
-    cardcvv: {
-      required: "Please enter cardcvv",
-      minlength: "Your card number must be 3 characters"
-    },
-    name: "Please provide card name"
-  },
-		submitHandler: function(form) {
-      $("#donationmodal").modal("hide");
-           donate();
-          }
-});
-});
-
+    $("#newModalForm").validate({
+      rules: {
+        cardnum: {
+          required: true,
+          creditcard: true
+        },
+        name: "required",
+        email: {
+          required: true,
+          email: true
+        },
+        cardcvv: {
+          required: true,
+          digits: true,
+          minlength: 3,
+          maxlength: 3
+        },
+        amount: {
+          required: true,
+          digits: true
+        },
+        expiry_month: {
+          required: true
+        },
+        expiry_year: {
+          required: true
+        }
+      },
+      messages: {
+        cardnum: {
+          required: "Please enter card number",
+          minlength: "Your card number must be 16 characters"
+        },
+        cardcvv: {
+          required: "Please enter cardcvv",
+          minlength: "Your card number must be 3 characters"
+        },
+        name: "Please provide card name"
+      },
+      submitHandler: function(form) {
+        $("#donationmodal").modal("hide");
+        donate();
+      }
+    });
+  });
 </script>
 
 </html>

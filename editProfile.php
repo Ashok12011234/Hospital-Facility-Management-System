@@ -1,6 +1,7 @@
 <?php
 include("common.php");
 include("navbar.php");
+include("classes/sysLvlCls/File.php");
 
 if (isset($_POST['updateDetails'])) {
     if ($_POST['password-confirm'] == $user->get_password()) {
@@ -20,12 +21,19 @@ if (isset($_POST['updateDetails'])) {
         $user->set_website($website);
         $user->set_address($address);
 
-        $image = basename($_FILES["profile_picture"]["name"]);
+        $id = $user->get_id();
+        $target = "assets/documents/DatabaseFiles/Hospital/Profile/$id";
+        $result = File::upload($_FILES["profile_picture"], FileType::IMAGE, $target);
+        /*$image = basename($_FILES["profile_picture"]["name"]);
         if ($image != "") {
             $target = "assets/pictures/profile/" . $image;
             move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target);
             unlink($user->get_profile());
             $user->set_profile($target);
+        }
+        */
+        if (isset($result["fileName"])) {
+            $user->set_profile(QueryExecutor::real_escape_string($result["fileName"]));
         }
     }
 }

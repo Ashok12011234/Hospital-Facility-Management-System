@@ -7,13 +7,12 @@ if (isset($_POST['updateDetails'])) {
     if ($_POST['password-confirm'] == $user->get_password()) {
         //$hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);
         $hospitalName = trim($_POST['hospitalName'], "\n\r\t\v\0");
-
-        $email =  $_POST['email'];
-        $phoneNo =  $_POST['phoneNo'];
-        $accountNumber =  $_POST['accountNumber'];
-        $bankName =  $_POST['bankName'];
-        $website =  $_POST['website'];
-        $address =  $_POST['address'];
+        $email =  QueryExecutor::real_escape_string($_POST['email']);
+        $phoneNo =  QueryExecutor::real_escape_string($_POST['phoneNo']);
+        $accountNumber =  QueryExecutor::real_escape_string($_POST['accountNumber']);
+        $bankName =  QueryExecutor::real_escape_string($_POST['bankName']);
+        $website =  QueryExecutor::real_escape_string($_POST['website']);
+        $address =  QueryExecutor::real_escape_string($_POST['address']);
         $user->set_name($hospitalName);
         $user->set_email($email);
         $user->set_phoneno($phoneNo);
@@ -49,9 +48,6 @@ if (isset($_POST['updateDetails'])) {
 
 <body>
 
-    <!--?php
-include("navbar.php");
-?-->
     <!-- Body -->
     <div class="rounded bg-white m-4 pt-3 pe-3 ps-3 body-contentx">
         <form action="" method="POST" enctype="multipart/form-data">
@@ -63,8 +59,8 @@ include("navbar.php");
                             <input type="file" class="form-control" id="inputGroupFile02" name="profile_picture">
                             <label class="input-group-text" for="inputGroupFile02">Update</label>
                         </div>
-                        <span class="font-weight-bold">Username</span>
-                        <span class="text-black-50">Hospital Name</span>
+                        <span class="font-weight-bold"><?php echo $user->get_username() ?></span>
+                        <span class="text-black-50"><?php echo $user->get_name() ?></span>
                         <span> </span>
                     </div>
                 </div>
@@ -118,7 +114,7 @@ include("navbar.php");
     </div>
 
 </body>
-script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" />
 < script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">

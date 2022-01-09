@@ -3,7 +3,7 @@ require("classes/probDomCls/Mail.php");
 require("classes/probDomCls/NewAccount.php");
 require("classes/sysLvlCls/Password.php");
 require("./config.php");
-include("../File.php");
+include("classes/File.php");
 
 class Signupper
 {
@@ -14,10 +14,6 @@ class Signupper
     public function __construct()
     {
         $this->newAC = new NewAccount();
-        //$result = $this->connection->query("SELECT MAX(`NewAccountID`) FROM `NewAccount`");
-        //$row = $result -> fetch_assoc();
-        //$id = $row["NewAccountID"] + 1;
-        $this->usernameSuffix = "@001";
     }
 
     public function getNewAccount(): NewAccount
@@ -99,11 +95,13 @@ class Signupper
         return QueryExecutor::query($query);
     }
 
-    public function signup(array $data)
+    public function signup(array $signupData)
     {
         $error = "";
         $next = "";
         $result = array();
+        $data = $signupData["post"];
+        $files = $signupData["files"];
 
         if (array_key_exists("emailAddress", $data)) {
             $this->newAC->setEmailAddress($data["emailAddress"]);
@@ -153,18 +151,33 @@ class Signupper
             }
         }
         else if (array_key_exists("bankType", $data)) {
-            $this->newAC->setBankName($data["bankType"]);
-            $this->newAC->setBankAcNumber($data["acNo"]);
-            //$newAC->setBankEvidence($_POST["bankEvidence"]);
-            $this->newAC->setBankEvidence("dummyEg");
+            $username = $this->newAC->getUsername();
+            $result = File::upload($files["bankEvidence"], FileType::VIEW_PRINT, "assets/documents/DatabaseFiles/NewAccount/BankEvidence/$username");
+            if (!empty($result["errorUploadFile"])) {
+                $error = $result["errorUploadFile"];
+                $next = "seven-bankAC";
+            }
+            else{
+                $this->newAC->setBankName($data["bankType"]);
+                $this->newAC->setBankAcNumber($data["acNo"]);
+                $this->newAC->setBankEvidence($result["fileName"]);
+            }
         }
-        else if (array_key_exists("instituteEvidence", $data)) {
-            $this->newAC->setInstituteEvidence("dummyEg");
-            if(!$this->insertInToNewAc()) {
-                echo 1;
+        else if (array_key_exists("instituteEvidence", $files)) {
+            $username = $this->newAC->getUsername();
+            $result = File::upload($files["instituteEvidence"], FileType::VIEW_PRINT, "assets/documents/DatabaseFiles/NewAccount/InstituteEvidence/$username");
+            if (!empty($result["errorUploadFile"])) {
+                $error = $result["errorUploadFile"];
+                $next = "eight-evidence";
             }
-            else {
+            else{
+                $this->newAC->setInstituteEvidence($result["fileName"]);
+                if(!$this->insertInToNewAc()) {
+                }
+                else {
+                }
             }
+            
         }
 
         $result["error"] = $error;

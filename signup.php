@@ -12,7 +12,11 @@ $error = "";
 $success = "";
 
 if (array_key_exists("next", $_POST)) {
-    $result = $signupper->signup($_POST);
+    $signupData["post"] = $_POST;
+    if (isset($_FILES)) {
+        $signupData["files"] = $_FILES;
+    }
+    $result = $signupper->signup($signupData);
     $error = $result["error"];
     if (!empty($result["next"])) {
         $_POST["next"] = $result["next"];
@@ -98,7 +102,11 @@ function displayDev(String $devId): void
                         ?>
                         <div class="float-clear"></div>
                     </div>
-                    <a class="forgot" href="#">Resend</a>
+                    <?php
+                        if (!empty($error)) {
+                            echo '<a class="forgot" href="signup.php">Resend</a>';
+                        }
+                    ?>
                     <button id="verify" class="btn btn-primary btn-block" type="submit" name="next" value="three-username" style="background: var(--green);">Verify</button>
                 </form>
             </div>
@@ -114,9 +122,9 @@ function displayDev(String $devId): void
                     <label for="username" class="form-label">New username</label>
                     <div class="input-group mb-2">
                         <span class="input-group-text"><i class="fa fa-user" style="font-size:15px;"></i></span>
-                        <input type="text" class="form-control" id="username" name="username" 
-                            aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-                        <!--span class="input-group-text" id="basic-addon2">@007</span-->
+                        <input type="email" class="form-control" id="username" name="username" 
+                            aria-label="Recipient's username" aria-describedby="basic-addon2" required
+                            pattern="^.{8-12}$" oninvalid="this.setCustomValidity('Enter a username that looks like email patterns with the length 8-12.')">
                     </div>
                     <button id="username-next" class="btn btn-primary btn-block" type="submit" name="next" value="four-password" style="background: var(--green);">Next</button>
                 </form>
@@ -131,7 +139,9 @@ function displayDev(String $devId): void
                     <label for="password" class="form-label">New password</label>
                     <div class="form-group input-group mb-3">
                         <span class="input-group-text"><i class="fa fa-lock" style="font-size:15px;"></i></span>
-                        <input id="npassword" class="form-control" type="password" name="password" required>
+                        <input id="npassword" class="form-control" type="password" name="password" required
+                        pattern="^(?=.*[A-Z]{1,9})(?=.*[!@#$&*]{1,9})(?=.*[0-9]{1,9})(?=.*[a-z]{1,9}).{8,12}$"
+                        oninvalid="this.setCustomValidity('Enter a strong password with the length 8-12.')">
                         <span class="input-group-text eye" id="addon-wrapping">
                             <i id="eye-icon-open-np" class="fa fa-eye eye-icon-np"></i>
                             <i class="fa fa-eye-slash eye-icon-np"></i>
@@ -182,7 +192,7 @@ function displayDev(String $devId): void
                 displayDev("seven-bankAC");
                 ?>
             ;">
-                <form action="" method="POST">
+                <form action="" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="bankType" class="form-label">Select bank</label>
                         <select class="form-select" id="bankType" name="bankType" aria-label="Default select example">
@@ -200,9 +210,9 @@ function displayDev(String $devId): void
                     </div>
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Upload any evidence to verify your bank account</label>
-                        <input class="form-control" type="file" id="formFile" name="bankEvidence" style="padding: 0px;">
+                        <input class="form-control" type="file" id="formFile" name="bankEvidence" style="padding: 0px;" required>
                     </div>
-                    <a class="forgot" href="./assets/files/PageDocuments/Signup/BankEvidence.pdf" target="blank">FAQ</a>
+                    <a class="forgot" href="./assets/documents/PageDocuments/Signup/BankEvidence.pdf" target="blank">FAQ</a>
                     <button id="bankAC-next" class="btn btn-primary btn-block" type="submit" name="next" value="eight-evidence" style="background: var(--green);">Next</button>
                 </form>
             </div>
@@ -212,10 +222,10 @@ function displayDev(String $devId): void
                 displayDev("eight-evidence");
                 ?>
             ;">
-                <form action="" method="POST">
+                <form action="" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Upload any evidence to verify your Institution</label>
-                        <input class="form-control" type="file" id="formFile" name="instituteEvidence" style="padding: 0px;">
+                        <input class="form-control" type="file" id="formFile" name="instituteEvidence" style="padding: 0px;" required>
                     </div>
                     <a class="forgot" href="#" target="blank">FAQ</a>
                     <button id="evidence-submit" class="btn btn-primary btn-block" type="submit" name="next" value="nine-success" style="background: var(--green);">Submit</button>
@@ -277,7 +287,7 @@ function displayDev(String $devId): void
         });
 
         $("#sendOTP").click(function() {
-            if ($("#emailAddress").val() != "") {
+            if ($("#emailAddress").val() != "" && $("#emailAddress").is(':valid')) {
                 $("#mail-sending").css("display", "block");
                 $("section").css("display", "none");
             }

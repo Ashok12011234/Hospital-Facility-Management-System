@@ -232,7 +232,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
   <div class="row justify-content-between mt-5 ms-2 me-2">
     <div class="col-md-8 ">
       <h2 style="display:inline;">All Hospitals & Providers</h2>
-      <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#filtermodal" style="display:inline;"><i class='fas fa-filter'></i>Filter</button>
+      <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#filtermodal" style="display:inline;"><i class='fas fa-filter'></i>Filter</button>
 
       <br>
     </div>

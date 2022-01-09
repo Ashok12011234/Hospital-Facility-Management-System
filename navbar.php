@@ -153,7 +153,11 @@ if (array_key_exists("type", $_SESSION)) {
         <h2><?php
             if ($_SESSION["type"] != 0) {
               echo $user->get_name();
-            } ?><img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size:55px; border-radius: 30px; float: right;" class="ms-2"></h2>
+            } ?><img src="<?php 
+                            if($_SESSION["type"] !=0){
+                              echo $user->get_profile(); 
+                            }
+                          ?>" alt="usericon" style="width: 50px;height: 50px;  border-radius: 50%; float: right;" class="ms-2"></h2>
       </a>
       <p class="ms-2" style="font-size: 15px; margin-bottom:-5px; "><i class="fas fa-map-marker-alt"></i>&nbsp;
 

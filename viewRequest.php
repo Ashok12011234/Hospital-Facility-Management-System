@@ -4,9 +4,9 @@ include("request.php");
 
 if (array_key_exists("id", $_GET) && array_key_exists("type", $_GET)) {
     if ($_GET["type"] == RequestType::HH_REQUEST) {
-        $request = new HHRequest($_GET["id"]);
+        $request = new HHRequest(QueryExecutor::real_escape_string($_GET["id"]));
     } else {
-        $request = new HPRequest($_GET["id"]);
+        $request = new HPRequest(QueryExecutor::real_escape_string($_GET["id"]));
     }
     
     $request->assignAll();

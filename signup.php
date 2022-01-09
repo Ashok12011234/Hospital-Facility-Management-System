@@ -124,7 +124,7 @@ function displayDev(String $devId): void
                         <span class="input-group-text"><i class="fa fa-user" style="font-size:15px;"></i></span>
                         <input type="email" class="form-control" id="username" name="username" 
                             aria-label="Recipient's username" aria-describedby="basic-addon2" required
-                            pattern="^.{8-12}$" oninvalid="this.setCustomValidity('Enter a username that looks like email patterns with the length 8-12.')">
+                            pattern="^{8,12}$" oninvalid="this.setCustomValidity('Enter a username that looks like email patterns with the length 8-12.')">
                     </div>
                     <button id="username-next" class="btn btn-primary btn-block" type="submit" name="next" value="four-password" style="background: var(--green);">Next</button>
                 </form>

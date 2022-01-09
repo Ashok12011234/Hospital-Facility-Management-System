@@ -28,7 +28,7 @@
                     echo 'display:none;';
                   }
                   ?>" class='<?php 
-                  if($_SESSION["type"] ==1){
+                  if($_SESSION["type"] ==1 || $_SESSION["type"] ==2){
                     if (in_array($row["HospitalId"], $user->get_staredHospital()) ) {
                                   echo "fas";
                       } else {

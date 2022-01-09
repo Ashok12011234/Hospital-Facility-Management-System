@@ -636,6 +636,16 @@ class Hospital extends Member
 
   public static function fetchByUserName(String $username): Hospital|null
   {
+    $stmt = QueryExecutor::prepare("SELECT `HospitalId` FROM `Hospital` WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    if($stmt->execute() && ($result = $stmt->get_result())) {
+      if ($result->num_rows == 1) {
+        $row = $result->fetch_assoc();
+        return Hospital::getInstance($row["HospitalId"]);
+      }
+    }
+    return null;
+    /*
     $sql = "SELECT `HospitalId` FROM `Hospital` WHERE username = '$username'";
     if ($result = QueryExecutor::query($sql)) {
       if ($result->num_rows == 1) {
@@ -643,7 +653,7 @@ class Hospital extends Member
         return Hospital::getInstance($row["HospitalId"]);
       }
     }
-    return null;
+    return null;*/
   }
 
   public static function authorise(String $username, String $password): Hospital|String

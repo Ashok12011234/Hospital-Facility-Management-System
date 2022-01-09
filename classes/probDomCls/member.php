@@ -1,8 +1,8 @@
 <?php
 
 include("config.php");
-include("./classes/sysLvlCls/Password.php");
-include("./classes/probDomCls/Mail.php");
+include("classes/sysLvlCls/Password.php");
+include("classes/probDomCls/Mail.php");
 
 class MemberType
 {

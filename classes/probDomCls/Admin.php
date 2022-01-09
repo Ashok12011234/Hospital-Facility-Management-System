@@ -1,5 +1,5 @@
 <?php
-include 'MailSender.php';
+include("classes/sysLvlCls/MailSender.php");
 
 class Admin
 {

@@ -11,7 +11,7 @@ if (array_key_exists("id", $_GET) && array_key_exists("type", $_GET)) {
     
     $request->assignAll();
 
-    if (array_key_exists("send", $_POST)) {
+    if (array_key_exists("send", $_POST) && array_key_exists("msg", $_POST)) {
         $request->sendMsg($user, QueryExecutor::real_escape_string($_POST["msg"]));
         
     }
@@ -347,7 +347,7 @@ $(function () {
                         </div>
                         <form action="" method="post">
                             <div class="input-group">
-                                <textarea id="chat-textarea" class="form-control" aria-label="With textarea" name="msg"></textarea>
+                                <textarea id="chat-textarea" class="form-control" aria-label="With textarea" name="msg" required></textarea>
                                 <button type="submit" name="send" class="input-group-text btn btn-link chat-btn"><i class="far fa-paper-plane"></i></button>
                             </div>
                         </form>

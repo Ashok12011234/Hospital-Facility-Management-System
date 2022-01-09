@@ -169,7 +169,7 @@ if (array_key_exists("type", $_SESSION)) {
       </ul>
     </div>
   </div>
-  </div>
+
 
 
   <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

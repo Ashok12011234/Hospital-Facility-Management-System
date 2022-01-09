@@ -59,7 +59,7 @@ abstract class Member
   public $website;
   public $password;
   public $staredUser;
-  protected $state;
+  public $state;
 
   public abstract function request();
   public abstract function filter($type);
@@ -119,12 +119,7 @@ abstract class Member
   {
     return $this->accountNo;
   }
-  public function set_state($state)
-  {
-    $sql = "UPDATE `hospital` SET `State`= '$state' WHERE `hospital`.`HospitalId` =  $this->id";
-    QueryExecutor::query($sql);
-    $this->state = $state;
-  }
+
 
   public function get_state()
   {
@@ -193,7 +188,7 @@ class Hospital extends Member
     $this->accountNo = $row['AccountNumber'];
     $this->bankName = $row['BankName'];
     $this->password = Password::decrypt($row['Password']);
-    $this->staredUser = "";
+    $this->state = $row['State'];
   }
 
   public static function getInstance($id): Hospital|null
@@ -211,6 +206,12 @@ class Hospital extends Member
 
   public function request()
   {
+  }
+  public function set_state($state)
+  {
+    $sql = "UPDATE `hospital` SET `State`= '$state' WHERE `hospital`.`HospitalId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->state = $state;
   }
   public function set_name($name)
   {
@@ -662,7 +663,14 @@ class Hospital extends Member
     if (($hospital = self::authorise($username, $password)) instanceof Hospital) {
       $_SESSION["acID"] = $hospital->get_id();
       $_SESSION["type"] = MemberType::HOSPITAL;
-      header("Location: hospitalDashoard.php");
+      $state = $hospital->get_state();
+      if ($state == "NEW") {
+        header('Location:updateResources.php');
+        exit;
+      } else {
+        header("Location: hospitalDashoard.php");
+        exit;
+      }
     } else {
       return $hospital;
     }
@@ -690,7 +698,7 @@ class Provider extends Member
     $this->accountNo = $row['AccountNumber'];
     $this->bankName = $row['BankName'];
     $this->password = Password::decrypt($row['Password']);
-    $this->staredUser = "";
+    $this->state = $row['State'];
   }
 
   public static function getInstance($id): Provider|null
@@ -709,7 +717,12 @@ class Provider extends Member
   public function request()
   {
   }
-
+  public function set_state($state)
+  {
+    $sql = "UPDATE `provider` SET `State`= '$state' WHERE `Provider`.`ProviderId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->state = $state;
+  }
   public function set_name($name)
   {
     $sql = "UPDATE `Provider` SET `Name`= '$name' WHERE `Provider`.`ProviderId` =  $this->id";
@@ -1016,7 +1029,15 @@ class Provider extends Member
     if (($provider = self::authorise($username, $password)) instanceof Provider) {
       $_SESSION["acID"] = $provider->get_id();
       $_SESSION["type"] = MemberType::PROVIDER;
-      header("Location: hospitalDashoard.php");
+      $state = $provider->get_state();
+      if ($state == "NEW") {
+        header('Location:updateResources.php');
+        exit;
+      } else {
+        header('Location: ' . $state . '.php');
+        exit;
+      }
+      exit;
     } else {
       return $provider;
     }

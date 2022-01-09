@@ -2,7 +2,6 @@
 include("common.php");
 include("navbar.php");
 
-
 if (isset($_POST['updateDetails'])) {
     if ($_POST['password-confirm'] == $user->get_password()) {
         //$hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);

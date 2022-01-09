@@ -7,6 +7,7 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
   $_SESSION["options"] = "";
 }
 
+
 ?>
 
 <!DOCTYPE html>

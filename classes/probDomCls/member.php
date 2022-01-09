@@ -126,6 +126,11 @@ abstract class Member
     return $this->state;
   }
 
+  public function set_state($state)
+  {
+    $this->state = $state;
+  }
+
   public static function fetchByUserName(String $username): Member|null
   {
     if (!is_null($hospital = Hospital::fetchByUserName($username))) {

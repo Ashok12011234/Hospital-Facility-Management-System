@@ -5,7 +5,7 @@ if(isset($_POST['Status'])){
 }
 
 include("navbar.php");
-include("request.php");
+include("classes/probDomCls/request.php");
 
 if (array_key_exists("id", $_POST)) {
     if ($_POST["type"] == RequestType::HH_REQUEST) {

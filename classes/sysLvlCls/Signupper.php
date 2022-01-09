@@ -1,8 +1,9 @@
 <?php
+include("config.php");
+
 include("classes/probDomCls/Mail.php");
 include("classes/probDomCls/NewAccount.php");
 include("classes/sysLvlCls/Password.php");
-include("config.php");
 include("classes/sysLvlCls/File.php");
 
 class Signupper

@@ -1,4 +1,6 @@
 <?php
+
+include("classes/probDomCls/Mail.php");
 class NewAccount
 {
     private  $id;
@@ -105,6 +107,11 @@ class NewAccount
     public function getInstituteEvidence(): String
     {
         return $this->instituteEvidence;
+    }
+
+    public function receiveMail()
+    {
+        # code...
     }
     
     

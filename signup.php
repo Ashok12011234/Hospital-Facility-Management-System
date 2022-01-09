@@ -1,5 +1,5 @@
 <?php
-require("classes/sysLvlCls/Signupper.php");
+include("classes/sysLvlCls/Signupper.php");
 
 session_start();
 if (!array_key_exists("signupper", $_SESSION)) {

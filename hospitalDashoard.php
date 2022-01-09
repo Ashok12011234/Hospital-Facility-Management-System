@@ -298,7 +298,7 @@ function donateID(elem){
                     
                         echo 'display:none;'; 
                   }
-                 ?>" type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#filtermodal" style="display:inline;"><i class='fas fa-filter'></i>Filter</button>
+                 ?>" type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#filtermodal" style="display:inline;"><i class='fas fa-filter'></i>Filter</button>
 
       <br>
     </div>

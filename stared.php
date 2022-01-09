@@ -280,9 +280,9 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
               <div class='card'>
                 <div class='card-body'>
                   <div class='mb-3' style='min-height: 150px; background-color: grey;display: flex;justify-content: center;'>
-                    <img style="object-fit:fill;width:300px;height:400px;border: solid 1px #CCC" src="<?php
+                    <img style="object-fit:cover;height:200px;border: solid 1px #CCC" src="<?php
                                                                                                       echo $current->get_profile();
-                                                                                                      ?>" alt="Hodpital" class="center">
+                                                                                                      ?>" alt="Hodpital" class="center col-12">
                   </div>
                   <div class='row justify-content-between mb-1'>
                     <h3 class='col-9 card-title'>
@@ -807,9 +807,9 @@ if (array_key_exists("hosdashboard", $_SESSION) || array_key_exists("prodashboar
               <div class='card'>
                 <div class='card-body'>
                   <div class='mb-3' style='min-height: 150px; background-color: grey;display: flex;justify-content: center;'>
-                    <img style="object-fit:fill;width:300px;height:400px;border: solid 1px #CCC" src="<?php
+                    <img style="object-fit:cover;height:200px;border: solid 1px #CCC" src="<?php
                                                                                                       echo $current->get_profile();
-                                                                                                      ?>" alt="Provider" class="center">
+                                                                                                      ?>" alt="Provider" class="center col-12">
                   </div>
                   <div class='row justify-content-between mb-1'>
                     <h3 class='col-10 card-title'><?php

@@ -145,7 +145,7 @@ class HHRequest extends Request
                 $providerID=$row["ProviderId"];
                 $this->equipment=$row["Equipment"];
                 $this->quantity=$row["Quantity"];
-                $state = $row["State"];            
+                $state = $row["Status"];            
                 if($state =="ACCEPTED"){
                     $this->state = new Accepted(); 
                 }
@@ -207,7 +207,7 @@ class HPRequest extends Request
             $providerID=$row["ProviderId"];
             $this->equipment=$row["Equipment"];
             $this->quantity=$row["Quantity"];
-            $state = $row["State"];            
+            $state = $row["Status"];            
             if($state =="ACCEPTED"){
                 $this->state = new Accepted(); 
             }

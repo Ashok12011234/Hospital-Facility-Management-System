@@ -50,7 +50,7 @@ if (array_key_exists("type", $_SESSION)) {
       </li>
 
       <li style="<?php
-                  if ($_SESSION["type"] == 0 || $_SESSION["type"] == 2) {
+                  if ($_SESSION["type"] == 0) {
 
                     echo 'display:none;';
                   }

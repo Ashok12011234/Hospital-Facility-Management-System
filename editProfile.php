@@ -72,7 +72,13 @@ if (isset($_POST['updateDetails'])) {
                         <div class="row mt-3">
                             <?php
                             echo "<div class='col-md-12'><label class='labels fw-bold'>Username</label><input type='text' name='username' class='form-control' placeholder='' value=" . $user->get_username() . " disabled ></div>
-                                <div class='col-md-12'><label class='labels fw-bold'>Hospital Name</label><input type='text' name='hospitalName' class='form-control' placeholder='' value=" . $user->get_name() . "></div>
+                                <div class='col-md-12'><label class='labels fw-bold'>";
+                            if ($_SESSION["type"] == 1) {
+                                echo "Hospital";
+                            } else if ($_SESSION["type"] == 2) {
+                                echo "Company";
+                            }
+                            echo " Name</label><input type='text' name='hospitalName' class='form-control' placeholder='' value=" . $user->get_name() . "></div>
                                 <div class='col-md-12'><label class='labels fw-bold'>Email ID</label><input type='text' name='email' class='form-control' placeholder='' value=" . $user->get_email() . "></div>
                                 <div class='col-md-12'><label class='labels fw-bold'>Phone</label><input type='text' name='phoneNo' class='form-control' placeholder='' value=" . $user->get_phoneno() . "></div>
                                 <div class='row'><div class='col-6'><label class='labels fw-bold'>Account Number</label><input type='text' name='accountNumber' class='form-control' placeholder='' value=" . $user->get_accountNo() . "></div><div class='col-6'><label class='labels fw-bold'>Bank Name</label><input type='text' class='form-control' name='bankName' placeholder='' value=" . $user->get_bankName() . "></div></div>

@@ -1,5 +1,5 @@
 <?php
-
+include("classes/sysLvlCls/MailSender.php");
 class Mail
 {
     private static String $headers = "From: assignmentoneoop@gmail.com";
@@ -23,6 +23,8 @@ class Mail
             return false;
             //echo "Email sending failed...";
         }
+        
+        //return MailSender::sendMail("clinet", $this->to, $this->subject, $this->body);
     }
 
     public static function isValidEmailAddress(String $emailAddress): bool

@@ -27,15 +27,12 @@ if($rand==0){
     '$amount');
     "; 
 
-    
 if ($result = QueryExecutor::query($sql)) {
-
-    //code to send email
-    //email template
-    //subject - HFMS Donation Receipt
-    //to-$email
-    //body- Dear $name , You have donated $amount Rs. to Hospital::getInstance($id)->get_name() .Thank you:)
-
+    $subject = "HFMS Donation Receipt";
+    $toname = Hospital::getInstance($id)->get_name();
+    $body = "Dear $name , You have donated $amount Rs. to $toname. Thank you:)";
+    $mail = new Mail($email, $subject, $body);
+    $mail->send();
     echo '0';
   } else {
    
@@ -43,13 +40,10 @@ if ($result = QueryExecutor::query($sql)) {
 
 }
 else{
-     //code to send email
-    //email template
-    //subject - HFMS Donation Failed
-    //to-$email
-    //body- Dear $name , You have donation is failed due to "  " issue .Thank you:)
-
-
+    $subject = "HFMS Donation Failed";
+    $body = "Dear $name , Your donation is failed.Thank you:)";
+    $mail = new Mail($email, $subject, $body);
+    $mail->send();
     echo '1';
 }
 

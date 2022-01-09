@@ -2,7 +2,7 @@
 include('connection.php');
 
 // Create database
-$conn = new mysqli("localhost","root","");
+$conn = new mysqli(Database::HOST,Database::USERNAME,Database::PASSWORD);
 $createDB = "CREATE DATABASE IF NOT EXISTS `".Database::NAME."`";
 $conn->query($createDB);
 $conn->close();
@@ -35,7 +35,7 @@ CREATE TABLE Hospital (
   Name varchar(255), 
   TelephoneNo varchar(25), 
   Address varchar(255), 
-  Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultDp.png' ,
+  Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultH.jpg' ,
   Website varchar(100),
   BankName varchar(20) NOT NULL, 
   AccountNumber varchar(20) NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE Provider (
   Name varchar(255), 
   TelephoneNo varchar(25), 
   Address varchar(255), 
-  Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultDp.png',
+  Profile varchar(256) NOT NULL DEFAULT 'assets\\pictures\\profile\\defaultP.jpg',
   Website varchar(100),
   BankName varchar(20) NOT NULL, 
   AccountNumber varchar(20) NOT NULL,
@@ -139,6 +139,7 @@ CREATE TABLE Message (
   MessageId int NOT NULL AUTO_INCREMENT,
   RequestType enum('HH', 'HP') NOT NULL,
   RequestId int NOT NULL,
+  SenderType enum('HOSPITAL', 'PROVIDER') NOT NULL,
   SenderId int NOT NULL,
   ReceiverId int NOT NULL,
   Message varchar(255) NOT NULL,

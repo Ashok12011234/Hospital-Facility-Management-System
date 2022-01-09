@@ -97,6 +97,33 @@ abstract class Request
         $this->state->transport($this);
     }
 
+    public function sendMsg(Member $sender, String $msg)
+    {
+        $senderId = $sender->get_id();
+        if ($senderId == $this->getTo()->get_id()) {
+            $receiverId = $this->getFrom()->get_id();
+        }
+        else{
+            $receiverId = $this->getTo()->get_id();
+        }
+        if ($sender instanceof Hospital) {
+            $senderType = 'HOSPITAL';
+        }
+        else {
+            $senderType = 'PROVIDER';
+        }
+        $query = "INSERT INTO `Message` (`RequestType`,`RequestId`,`SenderType`,`SenderId`,`ReceiverId`,
+                `Message`) VALUES ('".
+            $this->getType()."','".
+            $this->getId()."','".
+            $senderType."','".
+            $senderId."','".
+            $receiverId."','".
+            $msg."'".
+            ")";
+        QueryExecutor::query($query);
+    }
+
 }
 
 class HHRequest extends Request
@@ -465,6 +492,7 @@ class Message
     private int $id;
     private int $requestId;
     private String $requestType;
+    private String $senderType;
     private int $senderId;
     private int $receiverId;
     private String $msg;
@@ -472,48 +500,55 @@ class Message
 
     public function __construct(array $data)
     {
-        $this->id = $data["id"];
-        $this->requestId = $data["requestId"];
-        $this->requestType = $data["requestType"];
-        $this->senderId = $data["senderId"];
-        $this->receiverId = $data["receiverId"];
-        $this->msg = $data["msg"];
-        $this->time = $data["time"];
+        //var_dump($data);
+        $this->id = $data["MessageId"];
+        $this->requestId = $data["RequestId"];
+        $this->requestType = $data["RequestType"];
+        $this->senderType = $data["SenderType"];
+        $this->senderId = $data["SenderId"];
+        $this->receiverId = $data["ReceiverId"];
+        $this->msg = $data["Message"];
+        $this->time = strtotime($data["Time"]);
     }
 
     public function getId()
     {
-        $this->id;
+        return $this->id;
     }
 
     public function getRequestId()
     {
-        $this->requestId;
+        return $this->requestId;
     }
 
     public function getRequestType()
     {
-        $this->requestType;
+        return $this->requestType;
+    }
+
+    public function getSenderType()
+    {
+        return $this->senderType;
     }
 
     public function getSenderId()
     {
-        $this->senderId;
+        return $this->senderId;
     }
 
     public function getReceiverId()
     {
-        $this->receiverId;
+        return $this->receiverId;
     }
 
     public function getMsg()
     {
-        $this->msg;
+        return $this->msg;
     }
 
     public function getTime()
     {
-        $this->time;
+        return $this->time;
     }
 
 }

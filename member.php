@@ -38,7 +38,9 @@ class NewMember extends MemberState
 
 class InitiatedMember extends MemberState
 {
-  public function initiate(Member $member){}
+  public function initiate(Member $member)
+  {
+  }
 }
 
 abstract class Member
@@ -71,44 +73,23 @@ abstract class Member
 
     return $this->name;
   }
-  public function set_name($name)
-  {
-    $sql = "UPDATE `hospital` SET `Name`= '$name' WHERE `hospital`.`HospitalId` =  $this->id";
-    QueryExecutor::query($sql);
-    $this->name = $name;
-  }
+
 
   public function get_address()
   {
     return $this->address;
-  }
-  public function set_address($address)
-  {
-    $sql = "UPDATE `hospital` SET `Address` = '$address' WHERE `hospital`.`HospitalId` = $this->id";
-    QueryExecutor::query($sql);
-    $this->address = $address;
   }
 
   public function get_phoneno()
   {
     return $this->phoneNo;
   }
-  public function set_phoneno($phoneNo)
-  {
-    $sql = "UPDATE `hospital` SET `TelephoneNo`= '$phoneNo' WHERE `hospital`.`HospitalId` =  $this->id";
-    QueryExecutor::query($sql);
-    $this->phoneNo = $phoneNo;
-  }
+
   public function get_website()
   {
     return $this->website;
   }
-  public function set_website($website)
-  {
-    $sql = "UPDATE `hospital` SET `Website`= '$website' WHERE `hospital`.`HospitalId` =  $this->id";
-    QueryExecutor::query($sql);
-    $this->website = $website;
-  }
+
   public function get_id()
   {
     return $this->id;
@@ -117,13 +98,7 @@ abstract class Member
   {
     return $this->profile;
   }
-  public function set_profile($profile)
-  {
 
-    $sql = "UPDATE `hospital` SET `profile` =  '$profile' WHERE `hospital`.`HospitalId` =  $this->id";
-    QueryExecutor::query($sql);
-    $this->profile = $profile;
-  }
   public function get_username()
   {
     return $this->username;
@@ -133,44 +108,27 @@ abstract class Member
 
     return $this->email;
   }
-  public function set_email($email)
-  {
-    $sql = "UPDATE `hospital` SET `Email`= '$email' WHERE `hospital`.`HospitalId` =  $this->id";
-    QueryExecutor::query($sql);
-    $this->email = $email;
-  }
+
   public function get_bankName()
   {
 
     return $this->bankName;
   }
-  public function set_bankName($bankName)
-  {
-    $sql = "UPDATE `hospital` SET `BankName`= '$bankName' WHERE `hospital`.`HospitalId` =  $this->id";
-    QueryExecutor::query($sql);
-    $this->bankName = $bankName;
-  }
+
   public function get_accountNo()
   {
     return $this->accountNo;
   }
-  public function set_accountNo($accountNo)
-  {
-    $sql = "UPDATE `hospital` SET `AccountNumber`= '$accountNo' WHERE `hospital`.`HospitalId` =  $this->id";
-    QueryExecutor::query($sql);
-    $this->accountNo = $accountNo;
-  }
-
-  public function get_state()
-  {
-    return $this->state;
-  }
-
   public function set_state($state)
   {
     $sql = "UPDATE `hospital` SET `State`= '$state' WHERE `hospital`.`HospitalId` =  $this->id";
     QueryExecutor::query($sql);
     $this->state = $state;
+  }
+
+  public function get_state()
+  {
+    return $this->state;
   }
 
   public static function fetchByUserName(String $username): Member|null
@@ -191,9 +149,8 @@ abstract class Member
       if (Mail::isValidEmailAddress($emailAddress)) {
         $passwordMail = new Mail($emailAddress, "Password from Life Share", $member->get_password());
         if ($passwordMail->send()) {
-            return ForgotPassword::SUCCESS;
-        }
-        else {
+          return ForgotPassword::SUCCESS;
+        } else {
           return ForgotPassword::FAIL;
         }
       }
@@ -204,13 +161,12 @@ abstract class Member
 
   public static function login(String $username, String $password): String
   {
-    if(($error = Hospital::login($username, $password)) == LoginFail::PASSWORD) {
+    if (($error = Hospital::login($username, $password)) == LoginFail::PASSWORD) {
       return $error;
     }
     $error = Provider::login($username, $password);
     return $error;
   }
-
 }
 
 class Hospital extends Member
@@ -256,16 +212,67 @@ class Hospital extends Member
   public function request()
   {
   }
+  public function set_name($name)
+  {
+    $sql = "UPDATE `hospital` SET `Name`= '$name' WHERE `hospital`.`HospitalId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->name = $name;
+  }
+  public function set_address($address)
+  {
+    $sql = "UPDATE `hospital` SET `Address` = '$address' WHERE `hospital`.`HospitalId` = $this->id";
+    QueryExecutor::query($sql);
+    $this->address = $address;
+  }
+  public function set_phoneno($phoneNo)
+  {
+    $sql = "UPDATE `hospital` SET `TelephoneNo`= '$phoneNo' WHERE `hospital`.`HospitalId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->phoneNo = $phoneNo;
+  }
+  public function set_website($website)
+  {
+    $sql = "UPDATE `hospital` SET `Website`= '$website' WHERE `hospital`.`HospitalId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->website = $website;
+  }
+  public function set_profile($profile)
+  {
 
+    $sql = "UPDATE `hospital` SET `profile` =  '$profile' WHERE `hospital`.`HospitalId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->profile = $profile;
+  }
+  public function set_email($email)
+  {
+    $sql = "UPDATE `hospital` SET `Email`= '$email' WHERE `hospital`.`HospitalId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->email = $email;
+  }
+
+  public function set_accountNo($accountNo)
+  {
+    $sql = "UPDATE `hospital` SET `AccountNumber`= '$accountNo' WHERE `hospital`.`HospitalId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->accountNo = $accountNo;
+  }
+  public function set_bankName($bankName)
+  {
+    $sql = "UPDATE `hospital` SET `BankName`= '$bankName' WHERE `hospital`.`HospitalId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->bankName = $bankName;
+  }
   public function get_bed()
   {
     if (is_null($this->bedAval)) {
       $sql = "SELECT  NormalAvailability, ICUAvailability FROM hospitalbeddetail WHERE HospitalId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-      //if($row){
+      if ($row != null) {
         $this->bedAval = new Bed($row["NormalAvailability"], $row["ICUAvailability"]);
-     // }
+      } else {
+        $this->bedAval = new Bed("NO", "NO");
+      }
     }
     return $this->bedAval;
   }
@@ -295,9 +302,11 @@ class Hospital extends Member
       $sql = "SELECT  SmallAvailability,MediumAvailability, LargeAvailability FROM HospitalCylinderDetail WHERE HospitalId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-      //if($row!=null){
+      if ($row != null) {
         $this->ceylinderAval = new Ceylinder($row["SmallAvailability"], $row["MediumAvailability"], $row["LargeAvailability"]);
-      //}
+      } else {
+        $this->ceylinderAval = new Ceylinder("NO", "NO", "NO");
+      }
     }
     return $this->ceylinderAval;
   }
@@ -327,8 +336,11 @@ class Hospital extends Member
       $sql = "SELECT  AplusAvailability,AminusAvailability, BplusAvailability ,BminusAvailability, OplusAvailability, OminusAvailability, ABplusAvailability ,ABminusAvailability  FROM BloodDetail WHERE HospitalId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-
-      $this->bloodAval = new Blood($row["AplusAvailability"], $row["AminusAvailability"], $row["BplusAvailability"], $row["BminusAvailability"], $row["OplusAvailability"], $row["OminusAvailability"], $row["ABplusAvailability"], $row["ABminusAvailability"]);
+      if ($row != null) {
+        $this->bloodAval = new Blood($row["AplusAvailability"], $row["AminusAvailability"], $row["BplusAvailability"], $row["BminusAvailability"], $row["OplusAvailability"], $row["OminusAvailability"], $row["ABplusAvailability"], $row["ABminusAvailability"]);
+      } else {
+        $this->bloodAval = new Blood("NO", "NO", "NO", "NO", "NO", "NO", "NO", "NO");
+      }
     }
     return $this->bloodAval;
   }
@@ -357,7 +369,11 @@ class Hospital extends Member
       $sql = "SELECT  OxfordAvailability,PfizerAvailability, ModernalAvailability ,SinopharmAvailability, SputnikAvailability  FROM VaccineDetail WHERE HospitalId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-      $this->vaccineAval = new Vaccine($row["OxfordAvailability"], $row["PfizerAvailability"], $row["ModernalAvailability"], $row["SinopharmAvailability"], $row["SputnikAvailability"]);
+      if ($row != null) {
+        $this->vaccineAval = new Vaccine($row["OxfordAvailability"], $row["PfizerAvailability"], $row["ModernalAvailability"], $row["SinopharmAvailability"], $row["SputnikAvailability"]);
+      } else {
+        $this->vaccineAval = new Vaccine("NO", "NO", "NO", "NO", "NO");
+      }
     }
     return $this->vaccineAval;
   }
@@ -381,7 +397,7 @@ class Hospital extends Member
   }
   public function get_staredHospital()
   {
-    $sql = "SELECT staredHospital FROM `Hospital` WHERE HospitalId = '1'";
+    $sql = "SELECT staredHospital FROM `Hospital` WHERE HospitalId = $this->id;";
     //$result = $this->connection->query($sql);
     //$row = $result->fetch_assoc();
     $result = QueryExecutor::query($sql);
@@ -399,7 +415,7 @@ class Hospital extends Member
     } else {
       array_push($temp, $userId);
       $data = serialize($temp);
-      $sql = "UPDATE `hospital` SET `staredHospital`= '$data' WHERE `hospital`.`HospitalId` =  '1'";
+      $sql = "UPDATE `hospital` SET `staredHospital`= '$data' WHERE `hospital`.`HospitalId` =  $this->id;";
       //$this->connection->query($sql);
       QueryExecutor::query($sql);
     }
@@ -423,7 +439,7 @@ class Hospital extends Member
   }
   public function get_staredProvider()
   {
-    $sql = "SELECT staredProvider FROM `Hospital` WHERE HospitalId = '1'";
+    $sql = "SELECT staredProvider FROM `Hospital` WHERE HospitalId = $this->id;";
     // $result = $this->connection->query($sql);
     // $row = $result->fetch_assoc();
     $result = QueryExecutor::query($sql);
@@ -443,7 +459,7 @@ class Hospital extends Member
     } else {
       array_push($temp, $userId);
       $data = serialize($temp);
-      $sql = "UPDATE `hospital` SET `staredProvider`= '$data' WHERE `hospital`.`HospitalId` =  '1'";
+      $sql = "UPDATE `hospital` SET `staredProvider`= '$data' WHERE `hospital`.`HospitalId` =  $this->id;";
       //$this->connection->query($sql);
       QueryExecutor::query($sql);
     }
@@ -477,136 +493,136 @@ class Hospital extends Member
         break;
       case '11':
         $this->get_bed();
-        if($this->bedAval!=null){
+        if ($this->bedAval != null) {
           $out = $this->bedAval->providable();
         }
         break;
       case '12':
-        
+
         $this->get_ceylinder();
-        if($this->ceylinderAval!=null){
+        if ($this->ceylinderAval != null) {
           $out = $this->ceylinderAval->providable();
         }
         break;
       case '13':
         $this->get_blood();
-        if($this->bloodAval!=null){
-        $out = $this->bloodAval->providable();
+        if ($this->bloodAval != null) {
+          $out = $this->bloodAval->providable();
         }
         break;
       case '14':
         $this->get_vaccine();
-        if($this->vaccineAval!=null){
-        $out = $this->vaccineAval->providable();
+        if ($this->vaccineAval != null) {
+          $out = $this->vaccineAval->providable();
         }
         break;
 
       case '111':
         $this->get_bed();
-        if($this->bedAval!=null){
+        if ($this->bedAval != null) {
           $out = $this->bedAval->check_normal();
         }
         break;
       case '112':
         $this->get_bed();
-        if($this->bedAval!=null){
+        if ($this->bedAval != null) {
           $out = $this->bedAval->check_icu();
         }
         break;
       case '121':
         $this->get_ceylinder();
-        if($this->ceylinderAval!=null){
-        $out = $this->ceylinderAval->check_small();
+        if ($this->ceylinderAval != null) {
+          $out = $this->ceylinderAval->check_small();
         }
         break;
       case '122':
         $this->get_ceylinder();
-        if($this->ceylinderAval!=null){
-        $out = $this->ceylinderAval->check_large();
+        if ($this->ceylinderAval != null) {
+          $out = $this->ceylinderAval->check_medium();
         }
         break;
       case '123':
         $this->get_ceylinder();
-        if($this->ceylinderAval!=null){
-        $out = $this->ceylinderAval->check_medium();
+        if ($this->ceylinderAval != null) {
+          $out = $this->ceylinderAval->check_large();
         }
         break;
       case '131':
         $this->get_blood();
-        if($this->bloodAval!=null){
-        $out = $this->bloodAval->check_aplus();
+        if ($this->bloodAval != null) {
+          $out = $this->bloodAval->check_aplus();
         }
         break;
       case '132':
         $this->get_blood();
-        if($this->bloodAval!=null){
-        $out = $this->bloodAval->check_aminus();
+        if ($this->bloodAval != null) {
+          $out = $this->bloodAval->check_aminus();
         }
         break;
       case '133':
         $this->get_blood();
-        if($this->bloodAval!=null){
-        $out = $this->bloodAval->check_bplus();
+        if ($this->bloodAval != null) {
+          $out = $this->bloodAval->check_bplus();
         }
         break;
       case '134':
         $this->get_blood();
-        if($this->bloodAval!=null){
-        $out = $this->bloodAval->check_bminus();
+        if ($this->bloodAval != null) {
+          $out = $this->bloodAval->check_bminus();
         }
         break;
       case '135':
         $this->get_blood();
-        if($this->bloodAval!=null){
-        $out = $this->bloodAval->check_oplus();
+        if ($this->bloodAval != null) {
+          $out = $this->bloodAval->check_oplus();
         }
         break;
       case '136':
         $this->get_blood();
-        if($this->bloodAval!=null){
-        $out = $this->bloodAval->check_ominus();
+        if ($this->bloodAval != null) {
+          $out = $this->bloodAval->check_ominus();
         }
         break;
       case '137':
         $this->get_blood();
-        if($this->bloodAval!=null){
-        $out = $this->bloodAval->check_abplus();
+        if ($this->bloodAval != null) {
+          $out = $this->bloodAval->check_abplus();
         }
         break;
       case '138':
         $this->get_blood();
-        if($this->bloodAval!=null){
-        $out = $this->bloodAval->check_abminus();
+        if ($this->bloodAval != null) {
+          $out = $this->bloodAval->check_abminus();
         }
         break;
       case '141':
         $this->get_vaccine();
-        if($this->vaccineAval!=null){
-        $out = $this->vaccineAval->check_oxford();
+        if ($this->vaccineAval != null) {
+          $out = $this->vaccineAval->check_oxford();
         }
         break;
       case '142':
         $this->get_vaccine();
-        if($this->vaccineAval!=null){
-        $out = $this->vaccineAval->check_pfizer();
+        if ($this->vaccineAval != null) {
+          $out = $this->vaccineAval->check_pfizer();
         }
         break;
       case '143':
         $this->get_vaccine();
-        if($this->vaccineAval!=null){
-        $out = $this->vaccineAval->check_moderna();
+        if ($this->vaccineAval != null) {
+          $out = $this->vaccineAval->check_moderna();
         }
         break;
       case '144':
         $this->get_vaccine();
-        if($this->vaccineAval!=null){
-        $out = $this->vaccineAval->check_sinopharm();
+        if ($this->vaccineAval != null) {
+          $out = $this->vaccineAval->check_sinopharm();
         }
         break;
       case '145':
         $this->get_vaccine();
-        if($this->vaccineAval!=null){
-        $out = $this->vaccineAval->check_sputnik();
+        if ($this->vaccineAval != null) {
+          $out = $this->vaccineAval->check_sputnik();
         }
         break;
 
@@ -620,8 +636,8 @@ class Hospital extends Member
 
   public static function fetchByUserName(String $username): Hospital|null
   {
-    $sql="SELECT `HospitalId` FROM `Hospital` WHERE username = '$username'";
-    if($result = QueryExecutor::query($sql)) {
+    $sql = "SELECT `HospitalId` FROM `Hospital` WHERE username = '$username'";
+    if ($result = QueryExecutor::query($sql)) {
       if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
         return Hospital::getInstance($row["HospitalId"]);
@@ -644,11 +660,10 @@ class Hospital extends Member
   public static function login(String $username, String $password): String
   {
     if (($hospital = self::authorise($username, $password)) instanceof Hospital) {
-      $_SESSION["acID"] = $hospital->get_id() ;
+      $_SESSION["acID"] = $hospital->get_id();
       $_SESSION["type"] = MemberType::HOSPITAL;
       header("Location: hospitalDashoard.php");
-    }
-    else {
+    } else {
       return $hospital;
     }
   }
@@ -694,13 +709,194 @@ class Provider extends Member
   public function request()
   {
   }
+
+  public function set_name($name)
+  {
+    $sql = "UPDATE `Provider` SET `Name`= '$name' WHERE `Provider`.`ProviderId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->name = $name;
+  }
+  public function set_address($address)
+  {
+    $sql = "UPDATE `Provider` SET `Address` = '$address' WHERE `Provider`.`ProviderId` = $this->id";
+    QueryExecutor::query($sql);
+    $this->address = $address;
+  }
+  public function set_phoneno($phoneNo)
+  {
+    $sql = "UPDATE `Provider` SET `TelephoneNo`= '$phoneNo' WHERE `Provider`.`ProviderId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->phoneNo = $phoneNo;
+  }
+  public function set_website($website)
+  {
+    $sql = "UPDATE `Provider` SET `Website`= '$website' WHERE `Provider`.`ProviderId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->website = $website;
+  }
+  public function set_profile($profile)
+  {
+
+    $sql = "UPDATE `Provider` SET `profile` =  '$profile' WHERE `Provider`.`ProviderId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->profile = $profile;
+  }
+  public function set_email($email)
+  {
+    $sql = "UPDATE `Provider` SET `Email`= '$email' WHERE `Provider`.`ProviderId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->email = $email;
+  }
+
+  public function set_accountNo($accountNo)
+  {
+    $sql = "UPDATE `Provider` SET `AccountNumber`= '$accountNo' WHERE `Provider`.`ProviderId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->accountNo = $accountNo;
+  }
+  public function set_bankName($bankName)
+  {
+    $sql = "UPDATE `Provider` SET `BankName`= '$bankName' WHERE `Provider`.`ProviderId` =  $this->id";
+    QueryExecutor::query($sql);
+    $this->bankName = $bankName;
+  }
+
+  public function set_bed()
+  {
+    if (isset($_POST['bed'])) {
+      $resources = array('NormalAvailability' => 'normalBed', 'ICUAvailability' => 'icuBed');
+      foreach ($resources as $resource => $field) {
+        if (in_array($field, $_POST['bed'])) {
+          $sql = "UPDATE `providerbeddetail` SET `$resource`='YES'  WHERE ProviderId=$this->id;";
+          QueryExecutor::query($sql);
+        } else {
+          $sql = "UPDATE `providerbeddetail` SET `$resource`='NO'  WHERE ProviderId=$this->id;";
+          QueryExecutor::query($sql);
+        }
+      }
+    } else {
+      $sql = "UPDATE `providerbeddetail` SET `NormalAvailability`='NO',`ICUAvailability`='NO'  WHERE ProviderId=$this->id;";
+      QueryExecutor::query($sql);
+    }
+  }
+
+  public function set_ceylinder()
+  {
+    if (isset($_POST['cylinder'])) {
+      $resources = array('SmallAvailability' => 'oxCylinderSmall', 'MediumAvailability' => 'oxCylinderMedium', 'LargeAvailability' => 'oxCylinderLarge');
+      foreach ($resources as $resource => $field) {
+        if (in_array($field, $_POST['cylinder'])) {
+          $sql = "UPDATE `providercylinderdetail` SET `$resource`='YES'  WHERE ProviderId=$this->id;";
+          QueryExecutor::query($sql);
+        } else {
+          $sql = "UPDATE `providercylinderdetail` SET `$resource`='NO'  WHERE ProviderId=$this->id;";
+          QueryExecutor::query($sql);
+        }
+      }
+    } else {
+      $sql = "UPDATE `providercylinderdetail` SET `SmallAvailability`='NO',`MediumAvailability`='NO',`LargeAvailability`='NO'  WHERE ProviderId=$this->id;";
+      QueryExecutor::query($sql);
+    }
+  }
+
+
+  public function get_staredHospital()
+  {
+    $sql = "SELECT staredHospital FROM `Provider` WHERE ProviderId = $this->id;";
+    //$result = $this->connection->query($sql);
+    //$row = $result->fetch_assoc();
+    $result = QueryExecutor::query($sql);
+    $row = $result->fetch_assoc();
+    // print_r($row);
+    $serialized = $row['staredHospital'];
+    $array = unserialize($serialized);
+    return $array;
+  }
+  public function add_staredHospital($userId)
+  {
+    $temp = $this->get_staredHospital();
+    // print_r($temp);
+    if (in_array($userId, $temp)) {
+    } else {
+      array_push($temp, $userId);
+      $data = serialize($temp);
+      $sql = "UPDATE `provider` SET `staredHospital`= '$data' WHERE `hospital`.`HospitalId` =  $this->id;";
+      //$this->connection->query($sql);
+      QueryExecutor::query($sql);
+    }
+  }
+  public function remove_staredHospital($userId)
+  {
+    $temp = $this->get_staredHospital();
+    $key = array_search($userId, $temp);
+    if (false !== $key) {
+      unset($temp[$key]);
+    }
+    //unset($temp[$userId]);
+    if (empty($temp)) {
+      $sql = "UPDATE `hospital` SET `staredHospital`= 'a:0:{}' WHERE `hospital`.`HospitalId` =  $this->id";
+    } else {
+      $data = serialize($temp);
+      $sql = "UPDATE `hospital` SET `staredHospital`= '$data' WHERE `hospital`.`HospitalId` =  $this->id";
+    }
+    //$this->connection->query($sql);
+    QueryExecutor::query($sql);
+  }
+  public function get_staredProvider()
+  {
+    $sql = "SELECT staredProvider FROM `Hospital` WHERE HospitalId = $this->id;";
+    // $result = $this->connection->query($sql);
+    // $row = $result->fetch_assoc();
+    $result = QueryExecutor::query($sql);
+    $row = $result->fetch_assoc();
+    // print_r($row);
+    $serialized = $row['staredProvider'];
+    $array = unserialize($serialized);
+    // print_r($array);
+    //echo $array;
+    return $array;
+  }
+  public function add_staredProvider($userId)
+  {
+    $temp = $this->get_staredProvider();
+    // print_r($temp);
+    if (in_array($userId, $temp)) {
+    } else {
+      array_push($temp, $userId);
+      $data = serialize($temp);
+      $sql = "UPDATE `hospital` SET `staredProvider`= '$data' WHERE `hospital`.`HospitalId` =  $this->id;";
+      //$this->connection->query($sql);
+      QueryExecutor::query($sql);
+    }
+  }
+  public function remove_staredProvider($userId)
+  {
+    $temp = $this->get_staredProvider();
+    $key = array_search($userId, $temp);
+    if (false !== $key) {
+      unset($temp[$key]);
+    }
+    //unset($temp[$userId]);
+    if (empty($temp)) {
+      $sql = "UPDATE `hospital` SET `staredProvider`= 'a:0:{}' WHERE `hospital`.`HospitalId` =  $this->id";
+    } else {
+      $data = serialize($temp);
+      $sql = "UPDATE `hospital` SET `staredProvider`= '$data' WHERE `hospital`.`HospitalId` =  $this->id";
+    }
+    //$this->connection->query($sql);
+    QueryExecutor::query($sql);
+  }
   public function get_bed()
   {
     if (is_null($this->bedAval)) {
-      $sql = "SELECT  NormalAvailability, ICUAvailability FROM ProviderBedDetail WHERE ProviderId=$this->id";
+      $sql = "SELECT  NormalAvailability, ICUAvailability FROM providerbeddetail WHERE ProviderId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-      $this->bedAval = new Bed($row["NormalAvailability"], $row["ICUAvailability"]);
+      if ($row != null) {
+        $this->bedAval = new Bed($row["NormalAvailability"], $row["ICUAvailability"]);
+      } else {
+        $this->bedAval = new Bed("NO", "NO");
+      }
     }
     return $this->bedAval;
   }
@@ -709,10 +905,14 @@ class Provider extends Member
   public function get_ceylinder()
   {
     if (is_null($this->ceylinderAval)) {
-      $sql = "SELECT  SmallAvailability,MediumAvailability, LargeAvailability FROM ProviderCylinderDetail WHERE ProviderId=$this->id";
+      $sql = "SELECT  SmallAvailability,MediumAvailability, LargeAvailability FROM providercylinderdetail WHERE ProviderId=$this->id";
       $result = QueryExecutor::query($sql);
       $row = mysqli_fetch_assoc($result);
-      $this->ceylinderAval = new Ceylinder($row["SmallAvailability"], $row["MediumAvailability"], $row["LargeAvailability"]);
+      if ($row != null) {
+        $this->ceylinderAval = new Ceylinder($row["SmallAvailability"], $row["MediumAvailability"], $row["LargeAvailability"]);
+      } else {
+        $this->ceylinderAval = new Ceylinder("NO", "NO", "NO");
+      }
     }
     return $this->ceylinderAval;
   }
@@ -727,56 +927,56 @@ class Provider extends Member
         break;
       case '21':
         $this->get_bed();
-        if($this->bedAval!=null){
-        $out = $this->bedAval->providable();
+        if ($this->bedAval != null) {
+          $out = $this->bedAval->providable();
         }
         break;
       case '22':
         $this->get_ceylinder();
-        if($this->ceylinderAval!=null){
-        $out = $this->ceylinderAval->providable();
+        if ($this->ceylinderAval != null) {
+          $out = $this->ceylinderAval->providable();
         }
         break;
       case '21':
         $this->get_bed();
-        if($this->bedAval!=null){
-        $out = $this->bedAval->providable();
+        if ($this->bedAval != null) {
+          $out = $this->bedAval->providable();
         }
         break;
       case '22':
         $this->get_ceylinder();
-        if($this->ceylinderAval!=null){
-        $out = $this->ceylinderAval->providable();
+        if ($this->ceylinderAval != null) {
+          $out = $this->ceylinderAval->providable();
         }
         break;
       case '211':
         $this->get_bed();
-        if($this->bedAval!=null){
-        $out = $this->bedAval->check_normal();
+        if ($this->bedAval != null) {
+          $out = $this->bedAval->check_normal();
         }
         break;
       case '212':
         $this->get_bed();
-        if($this->bedAval!=null){
-        $out = $this->bedAval->check_icu();
+        if ($this->bedAval != null) {
+          $out = $this->bedAval->check_icu();
         }
         break;
       case '221':
         $this->get_ceylinder();
-        if($this->ceylinderAval!=null){
-        $out = $this->ceylinderAval->check_small();
+        if ($this->ceylinderAval != null) {
+          $out = $this->ceylinderAval->check_small();
         }
         break;
       case '222':
         $this->get_ceylinder();
-        if($this->ceylinderAval!=null){
-        $out = $this->ceylinderAval->check_medium();
+        if ($this->ceylinderAval != null) {
+          $out = $this->ceylinderAval->check_medium();
         }
         break;
       case '223':
         $this->get_ceylinder();
-        if($this->ceylinderAval!=null){
-        $out = $this->ceylinderAval->check_large();
+        if ($this->ceylinderAval != null) {
+          $out = $this->ceylinderAval->check_large();
         }
         break;
 
@@ -789,11 +989,11 @@ class Provider extends Member
 
   public static function fetchByUserName(String $username): Provider|null
   {
-    $sql="SELECT `ProviderId` FROM `Provider` WHERE username = '$username'";
-    if($result = QueryExecutor::query($sql)) {
-      if ($result -> num_rows == 1) {
+    $sql = "SELECT `ProviderId` FROM `Provider` WHERE username = '$username'";
+    if ($result = QueryExecutor::query($sql)) {
+      if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
-        
+
         return Provider::getInstance($row["ProviderId"]);
       }
     }
@@ -814,11 +1014,10 @@ class Provider extends Member
   public static function login(String $username, String $password): String
   {
     if (($provider = self::authorise($username, $password)) instanceof Provider) {
-      $_SESSION["acID"] = $provider->get_id() ;
+      $_SESSION["acID"] = $provider->get_id();
       $_SESSION["type"] = MemberType::PROVIDER;
       header("Location: hospitalDashoard.php");
-    }
-    else {
+    } else {
       return $provider;
     }
   }

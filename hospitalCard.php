@@ -2,9 +2,9 @@
               <div class='card'>
                 <div class='card-body'>
                   <div class='mb-3' style='min-height: 150px; background-color: grey;display: flex;justify-content: center;'>
-                    <img style="object-fit:fill;width:300px;height:400px;border: solid 1px #CCC" src="<?php
+                    <img style="object-fit:cover;height:200px;border: solid 1px #CCC" src="<?php
                                                                                                       echo $current->get_profile();
-                                                                                                      ?>" alt="Hospital" class="center">
+                                                                                                      ?>" alt="Hospital" class="center col-12">
                   </div>
                   <div class='row justify-content-between mb-1'>
                     <h3 class='col-9 card-title'>

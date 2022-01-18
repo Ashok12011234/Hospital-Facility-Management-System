@@ -124,7 +124,7 @@ function displayDev(String $devId): void
                         <span class="input-group-text"><i class="fa fa-user" style="font-size:15px;"></i></span>
                         <input type="email" class="form-control" id="username" name="username" 
                             aria-label="Recipient's username" aria-describedby="basic-addon2" required
-                            pattern="^{8,12}$" oninvalid="this.setCustomValidity('Enter a username that looks like email patterns with the length 8-12.')">
+                            pattern="^{8,16}$" oninvalid="this.setCustomValidity('Enter a username that looks like email patterns with the length 8-16.')">
                     </div>
                     <button id="username-next" class="btn btn-primary btn-block" type="submit" name="next" value="four-password" style="background: var(--green);">Next</button>
                 </form>
@@ -140,8 +140,8 @@ function displayDev(String $devId): void
                     <div class="form-group input-group mb-3">
                         <span class="input-group-text"><i class="fa fa-lock" style="font-size:15px;"></i></span>
                         <input id="npassword" class="form-control" type="password" name="password" required
-                        pattern="^(?=.*[A-Z]{1,9})(?=.*[!@#$&*]{1,9})(?=.*[0-9]{1,9})(?=.*[a-z]{1,9}).{8,12}$"
-                        oninvalid="this.setCustomValidity('Enter a strong password with the length 8-12.')">
+                        pattern="^(?=.*[A-Z]{1,13})(?=.*[!@#$&*]{1,13})(?=.*[0-9]{1,13})(?=.*[a-z]{1,13}).{8,16}$"
+                        oninvalid="this.setCustomValidity('Enter a strong password with the length 8-16.')">
                         <span class="input-group-text eye" id="addon-wrapping">
                             <i id="eye-icon-open-np" class="fa fa-eye eye-icon-np"></i>
                             <i class="fa fa-eye-slash eye-icon-np"></i>

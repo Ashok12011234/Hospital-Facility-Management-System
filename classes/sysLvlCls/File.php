@@ -33,5 +33,3 @@ class File
         return $statusOfUpload;
     }
 }
-
-?>

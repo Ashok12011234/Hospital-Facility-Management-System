@@ -1,5 +1,4 @@
 <?php
-include("classes/sysLvlCls/MailSender.php");
 class Mail
 {
     private static String $headers = "From: assignmentoneoop@gmail.com";

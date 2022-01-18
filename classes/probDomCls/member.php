@@ -1017,7 +1017,16 @@ class Provider extends Member
 
   public static function fetchByUserName(String $username): Provider|null
   {
-    $sql = "SELECT `ProviderId` FROM `Provider` WHERE username = '$username'";
+    $stmt = QueryExecutor::prepare("SELECT `ProviderId` FROM `Provider` WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    if ($stmt->execute() && ($result = $stmt->get_result())) {
+      if ($result->num_rows == 1) {
+        $row = $result->fetch_assoc();
+        return Provider::getInstance($row["ProviderId"]);
+      }
+    }
+    return null;
+    /* $sql = "SELECT `ProviderId` FROM `Provider` WHERE username = '$username'";
     if ($result = QueryExecutor::query($sql)) {
       if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
@@ -1025,7 +1034,7 @@ class Provider extends Member
         return Provider::getInstance($row["ProviderId"]);
       }
     }
-    return null;
+    return null; */
   }
 
   public static function authorise(String $username, String $password): Provider|String

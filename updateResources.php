@@ -8,16 +8,16 @@ $User = $user;
 if ((isset($_POST['updateResources']))) {
     //print_r($User);
     if ($_POST['password-confirm'] == $User->get_password()) {
+        if ($_SESSION["type"] == 1) {
+            $User->set_bed();
+            $User->set_vaccine();
+            $User->set_blood();
+            $User->set_ceylinder();
+        } else if ($_SESSION["type"] == 2) {
+            $User->set_bed();
+            $User->set_ceylinder();
+        }
         if ($user->get_state() == "NEW") {
-            if ($_SESSION["type"] == 1) {
-                $User->set_bed();
-                $User->set_vaccine();
-                $User->set_blood();
-                $User->set_ceylinder();
-            } else if ($_SESSION["type"] == 2) {
-                $User->set_bed();
-                $User->set_ceylinder();
-            }
             $user->set_state("INITIATED");
         }
     }

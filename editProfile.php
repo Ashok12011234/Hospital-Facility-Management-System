@@ -6,8 +6,9 @@ include("classes/sysLvlCls/File.php");
 
 if (isset($_POST['updateDetails'])) {
     if ($_POST['password-confirm'] == $user->get_password()) {
-        //$hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);
-        $hospitalName = trim($_POST['hospitalName'], "\n\r\t\v\0");
+        // $hospitalName = mysqli_real_escape_string($GLOBALS['connection'], $_POST['hospitalName']);
+        // $hospitalName = trim($_POST['hospitalName'], "\n\r\t\v\0");
+        $hospitalName = QueryExecutor::real_escape_string($_POST['hospitalName']);
         $email =  QueryExecutor::real_escape_string($_POST['email']);
         $phoneNo =  QueryExecutor::real_escape_string($_POST['phoneNo']);
         $accountNumber =  QueryExecutor::real_escape_string($_POST['accountNumber']);
@@ -23,19 +24,24 @@ if (isset($_POST['updateDetails'])) {
         $user->set_address($address);
 
         $id = $user->get_id();
-        $target = "assets/documents/DatabaseFiles/Hospital/Profile/$id";
-        $result = File::upload($_FILES["profile_picture"], FileType::IMAGE, $target);
-        /*$image = basename($_FILES["profile_picture"]["name"]);
+        $now = date("jHis");
+        if ($_SESSION["type"] == 1) {
+            $target = "assets/documents/DatabaseFiles/Hospital/Profile/$now";
+        } else if ($_SESSION["type"] == 2) {
+            $target = "assets/documents/DatabaseFiles/Provider/Profile/$now";
+        }
+        $image = basename($_FILES["profile_picture"]["name"]);
         if ($image != "") {
-            $target = "assets/pictures/profile/" . $image;
-            move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target);
+            $result = File::upload($_FILES["profile_picture"], FileType::IMAGE, $target);
+            // $target = "assets/pictures/profile/" . $image;
+            // move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target);
             unlink($user->get_profile());
-            $user->set_profile($target);
+            $user->set_profile($target . ".jpg");
         }
-        */
-        if (isset($result["fileName"])) {
-            $user->set_profile(QueryExecutor::real_escape_string($result["fileName"]));
-        }
+
+        // if (isset($result["fileName"])) {
+        //     $user->set_profile(QueryExecutor::real_escape_string($result["fileName"]));
+        // }
     }
 }
 ?>
@@ -146,6 +152,7 @@ if (isset($_POST['updateDetails'])) {
             $('#updateProfile').on('click', function(e) {
                 e.preventDefault();
                 $('#confirmPasswordModal').modal('show');
+                $('password-confirm').focus();
             })
             $("#resources-form").on('submit', function(e) {
                 //e.preventDefault();

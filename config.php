@@ -167,4 +167,6 @@ CREATE TABLE VaccineDetail (
 
 ";
 
+if(QueryExecutor::multi_query($createTb));
+
 

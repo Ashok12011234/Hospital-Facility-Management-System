@@ -48,6 +48,15 @@ if (array_key_exists("type", $_SESSION)) {
                   ?>" class="nav-item ms-2">
         <a class="nav-link" href="login.php">Login</a>
       </li>
+      
+      <li style="<?php
+                  if ($_SESSION["type"] != 0) {
+
+                    echo 'display:none;';
+                  }
+                  ?>" class="nav-item ms-2">
+        <a class="nav-link" href="signup.php">Signup</a>
+      </li>
 
       <li style="<?php
                   if ($_SESSION["type"] == 0) {

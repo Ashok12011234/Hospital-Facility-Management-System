@@ -24,24 +24,18 @@ if (isset($_POST['updateDetails'])) {
         $user->set_address($address);
 
         $id = $user->get_id();
-        $now = date("jHis");
         if ($_SESSION["type"] == 1) {
-            $target = "assets/documents/DatabaseFiles/Hospital/Profile/$now";
+            $target = "assets/documents/DatabaseFiles/Hospital/Profile/$id";
         } else if ($_SESSION["type"] == 2) {
-            $target = "assets/documents/DatabaseFiles/Provider/Profile/$now";
+            $target = "assets/documents/DatabaseFiles/Provider/Profile/$id";
         }
         $image = basename($_FILES["profile_picture"]["name"]);
         if ($image != "") {
             $result = File::upload($_FILES["profile_picture"], FileType::IMAGE, $target);
-            // $target = "assets/pictures/profile/" . $image;
-            // move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target);
-            unlink($user->get_profile());
-            $user->set_profile($target . ".jpg");
+            if (isset($result["fileName"])) {
+                $user->set_profile(QueryExecutor::real_escape_string($result["fileName"]));
+            }
         }
-
-        // if (isset($result["fileName"])) {
-        //     $user->set_profile(QueryExecutor::real_escape_string($result["fileName"]));
-        // }
     }
 }
 ?>
@@ -95,7 +89,7 @@ if (isset($_POST['updateDetails'])) {
                             echo " Name</label><input type='text' name='hospitalName' class='form-control' placeholder='' value=" . $user->get_name() . "></div>
                                 <div class='col-md-12'><label class='labels fw-bold'>Email ID</label><input type='text' name='email' class='form-control' placeholder='' value=" . $user->get_email() . "></div>
                                 <div class='col-md-12'><label class='labels fw-bold'>Phone</label><input type='text' name='phoneNo' class='form-control' placeholder='' value=" . $user->get_phoneno() . "></div>
-                                <div class='row'><div class='col-6'><label class='labels fw-bold'>Account Number</label><input type='text' name='accountNumber' class='form-control' placeholder='' value=" . $user->get_accountNo() . "></div><div class='col-6'><label class='labels fw-bold'>Bank Name</label><input type='text' class='form-control' name='bankName' placeholder='' value=" . $user->get_bankName() . "></div></div>
+                                <div class='row'><div class='col-6'><label class='labels fw-bold'>Account Number</label><input type='text' name='accountNumber' class='form-control' placeholder='' value='" . $user->get_accountNo() . "' disabled></div><div class='col-6'><label class='labels fw-bold'>Bank Name</label><input type='text' class='form-control' name='bankName' placeholder='' value='" . $user->get_bankName() . "' disabled></div></div>
                                 <div class='col-md-12'><label class='labels fw-bold'>Website</label><input type='text' name='website' class='form-control' placeholder='' value=" . $user->get_website() . "></div>
                                 <div class='col-md-12'><label class='labels fw-bold'>Address</label><input type='text' name='address' class='form-control' placeholder='' value='" . $user->get_address() . "'></div>";
                             ?>

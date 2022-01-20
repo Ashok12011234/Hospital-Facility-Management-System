@@ -1,5 +1,5 @@
 <?php include 'header.php'; ?>
-<?php include '../config.php';
+<?php //include '../config.php';
 include '../classes/probDomCls/NewAccount.php';
 
 if (!isset($_GET['id'])) {

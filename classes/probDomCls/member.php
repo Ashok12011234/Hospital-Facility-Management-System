@@ -1058,7 +1058,7 @@ class Provider extends Member
         header('Location:updateResources.php');
         exit;
       } else {
-        header('Location: ' . $state . '.php');
+        header('Location: hospitalDashoard.php');
         exit;
       }
       exit;

@@ -1,5 +1,5 @@
 <?php include 'header.php'; ?>
-<?php include '../config.php';
+<?php //include '../config.php';
 ?>
 <div class="container mt-5 mb-4">
     <div class="row">
@@ -16,7 +16,18 @@
                     <div class="card">
                         <div class="card-body">
                             <form action="check_doc.php" method="POST">
-                                <div class="mb-3" style="min-height: 150px; background-color: teal;"></div>
+                                <!--div class="mb-3" style="min-height: 150px; background-color: teal;"></div-->
+                                <div class='mb-3' style='min-height: 150px; background-color: teal;display: flex;justify-content: center;'>
+                                    <img style="object-fit:cover;height:200px;border: solid 1px #CCC" src="
+                                    <?php
+                                    if ($row["AccountType"] == "HOSPITAL") {
+                                        echo "../assets/documents/PageDocuments/admin/HospitalDp.jpg";
+                                    }
+                                    else {
+                                        echo "../assets/documents/PageDocuments/admin/ProviderDp.jpg";
+                                    }
+                                    ?>" alt="NewAc" class="center col-12">
+                                </div>
                                 <div class="row justify-content-between mb-1">
                                     <h3 class="col-9 card-title"><?php echo $row['UserName']; ?></h3>
                                     <input type="hidden" name="id" value="<?php echo $row['NewAccountID']; ?>">

@@ -1,5 +1,5 @@
 <?php include 'header.php'; ?>
-<?php include '../config.php';
+<?php //include '../config.php';
 include '../classes/probDomCls/NewAccount.php';
 
 if (!isset($_POST['id'])) {
@@ -13,7 +13,7 @@ if (!isset($_POST['id'])) {
     $id = $_POST['id'];
     $user_acc = new NewAccount();
     $user_acc->setID($id);
-    $sql = "SELECT UserName,AccountType,Email,InstituteEvidence  FROM newaccount WHERE NewAccountID='$id';";
+    $sql = "SELECT UserName,AccountType,Email,InstituteEvidence,BankEvidence  FROM newaccount WHERE NewAccountID='$id';";
     $result = QueryExecutor::query($sql);
 
     $row = mysqli_fetch_assoc($result);
@@ -24,6 +24,9 @@ if (!isset($_POST['id'])) {
 
 
     $user_acc->setInstituteEvidence($row['InstituteEvidence']);
+    if (!is_null($row['BankEvidence'])) {
+        $user_acc->setBankEvidence($row['BankEvidence']);
+    }
 
     $_SESSION['user'] = $user_acc;
 }

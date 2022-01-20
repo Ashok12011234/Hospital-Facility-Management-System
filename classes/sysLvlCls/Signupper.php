@@ -1,6 +1,7 @@
 <?php
 include("config.php");
 
+include("classes/probDomCls/Mail.php");
 include("classes/probDomCls/NewAccount.php");
 include("classes/sysLvlCls/Password.php");
 include("classes/sysLvlCls/File.php");
@@ -76,9 +77,9 @@ class Signupper
         $username = $this->newAC->getUsername();
         $email = $this->newAC->getEmailAddress();
         $acType = $this->newAC->getAcType();
-        $bankName = ($this->newAC->getBankName() != "") ? $this->newAC->getBankName(): null;
-        $bankAcNumber = ($this->newAC->getBankAcNumber() != "") ? $this->newAC->getBankAcNumber(): null;
-        $bankEvidence = ($this->newAC->getBankEvidence() != "") ? $this->newAC->getBankEvidence(): null;
+        $bankName = ($this->newAC->getAcType() == "HOSPITAL") ? $this->newAC->getBankName(): null;
+        $bankAcNumber = ($this->newAC->getAcType() == "HOSPITAL") ? $this->newAC->getBankAcNumber(): null;
+        $bankEvidence = ($this->newAC->getAcType() == "HOSPITAL") ? $this->newAC->getBankEvidence(): null;
         $instituteEvidence = $this->newAC->getInstituteEvidence();
         $password = Password::encrypt($this->newAC->getPassword());
 

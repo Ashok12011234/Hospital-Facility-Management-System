@@ -14,7 +14,8 @@ class File
         $errors = "";
         $newFileName = "";
 
-        $fileExt = strtolower(end(explode('.',$file['name'])));
+        $nameArray = explode('.',$file['name']);
+        $fileExt = strtolower(end($nameArray));
         if(count($fileType) !=0 && in_array($fileExt, $fileType)=== false){
             $errors .= "This extension isn't allowed.";
         }

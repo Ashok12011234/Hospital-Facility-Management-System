@@ -145,7 +145,7 @@ class HHRequest extends Request
                 $providerID=$row["ProviderId"];
                 $this->equipment=$row["Equipment"];
                 $this->quantity=$row["Quantity"];
-                $state = $row["Status"];            
+                $state = $row["State"];            
                 if($state =="ACCEPTED"){
                     $this->state = new Accepted(); 
                 }
@@ -207,7 +207,7 @@ class HPRequest extends Request
             $providerID=$row["ProviderId"];
             $this->equipment=$row["Equipment"];
             $this->quantity=$row["Quantity"];
-            $state = $row["Status"];            
+            $state = $row["State"];            
             if($state =="ACCEPTED"){
                 $this->state = new Accepted(); 
             }
@@ -274,11 +274,11 @@ class Requested extends RequestState
     {
         $id1 = $request->getId();
         if($request->getType()=="HP"){
-            $sql2 = "UPDATE hprequest  SET Status = 'ACCEPTED', Quantity= '$count' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hprequest  SET State = 'ACCEPTED', Quantity= '$count' WHERE RequestId = '$id1'";
             
         }
         else{
-            $sql2 = "UPDATE hhrequest  SET Status = 'ACCEPTED', Quantity= '$count' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hhrequest  SET State = 'ACCEPTED', Quantity= '$count' WHERE RequestId = '$id1'";
         }
         
 
@@ -292,11 +292,11 @@ class Requested extends RequestState
     {
         $id1 = $request->getId();
         if($request->getType()=="HP"){
-            $sql2 = "UPDATE hprequest  SET Status = 'CANCELLED' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hprequest  SET State = 'CANCELLED' WHERE RequestId = '$id1'";
             
         }
         else{
-            $sql2 = "UPDATE hhrequest  SET Status = 'CANCELLED' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hhrequest  SET State = 'CANCELLED' WHERE RequestId = '$id1'";
         }
         
 
@@ -310,11 +310,11 @@ class Requested extends RequestState
     {
         $id1 = $request->getId();
         if($request->getType()=="HP"){
-            $sql2 = "UPDATE hprequest  SET Status = 'DECLINED' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hprequest  SET State = 'DECLINED' WHERE RequestId = '$id1'";
             
         }
         else{
-            $sql2 = "UPDATE hhrequest  SET Status = 'DECLINED' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hhrequest  SET State = 'DECLINED' WHERE RequestId = '$id1'";
         }
         
 
@@ -337,11 +337,11 @@ class Accepted extends RequestState
     {
         $id1 = $request->getId();
         if($request->getType()=="HP"){
-            $sql2 = "UPDATE hprequest  SET Status = 'TRANSPORTING' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hprequest  SET State = 'TRANSPORTING' WHERE RequestId = '$id1'";
             
         }
         else{
-            $sql2 = "UPDATE hhrequest  SET Status = 'TRANSPORTING' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hhrequest  SET State = 'TRANSPORTING' WHERE RequestId = '$id1'";
         }
         
 
@@ -355,11 +355,11 @@ class Accepted extends RequestState
     {
         $id1 = $request->getId();
         if($request->getType()=="HP"){
-            $sql2 = "UPDATE hprequest  SET Status = 'CANCELLED' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hprequest  SET State = 'CANCELLED' WHERE RequestId = '$id1'";
             
         }
         else{
-            $sql2 = "UPDATE hhrequest  SET Status = 'CANCELLED' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hhrequest  SET State = 'CANCELLED' WHERE RequestId = '$id1'";
         }
         
 
@@ -382,11 +382,11 @@ class Transporting extends RequestState
     {
         $id1 = $request->getId();
         if($request->getType()=="HP"){
-            $sql2 = "UPDATE hprequest  SET Status = 'EXCHANGE_COMPLETED' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hprequest  SET State = 'EXCHANGE_COMPLETED' WHERE RequestId = '$id1'";
             
         }
         else{
-            $sql2 = "UPDATE hhrequest  SET Status = 'EXCHANGE_COMPLETED' WHERE RequestId = '$id1'";
+            $sql2 = "UPDATE hhrequest  SET State = 'EXCHANGE_COMPLETED' WHERE RequestId = '$id1'";
         }
         
 

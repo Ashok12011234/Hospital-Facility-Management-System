@@ -2,10 +2,10 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row justify-content-between mb-1">
-                            <h3 class="col-9 card-title">Request ID - <?php 
+                            <h3 class="col-9 card-title"><?php echo $current->getType().'<br>'; ?>Request ID - <?php 
                             if($_SESSION["request_option"]=="sent"){
-                                echo ' '.$current->getId().'s';
-                                }else echo ' '.$current->getId().'p';?></h3>
+                                echo ' '.$current->getId().'<br>(sent)';
+                                }else echo ' '.$current->getId().'<br>(receive)';?></h3>
                         </div>
                         <div class="row" style="display: <?php
                              if($_SESSION["request_option"]=="sent"){
@@ -55,6 +55,16 @@
                             <div class="col-7">
                                 <p class="btn">
                                     <?php echo $current->getQuantity();?>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: -15px;">
+                            <div class="col-5">
+                                <p style="margin-top: 7px;">Status</p>
+                            </div>
+                            <div class="col-7">
+                                <p class="btn">
+                                    <?php echo $current->getState()->showstate();?>
                                 </p>
                             </div>
                         </div>

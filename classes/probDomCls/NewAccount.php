@@ -1,6 +1,4 @@
 <?php
-
-include("classes/probDomCls/Mail.php");
 class NewAccount
 {
     private  $id;

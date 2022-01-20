@@ -23,7 +23,11 @@ if (array_key_exists("next", $_POST)) {
     }
 }
 
-$_SESSION["signupper"] = $signupper;
+if (array_key_exists("next", $_POST) && $_POST["next"] == "nine-success") {
+    session_unset();
+}else {
+    $_SESSION["signupper"] = $signupper;
+}
 
 function displayDev(String $devId): void
 {

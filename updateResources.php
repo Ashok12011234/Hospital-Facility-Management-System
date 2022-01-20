@@ -4,6 +4,30 @@ include('common.php');
 include('navbar.php');
 
 $User = $user;
+if ($user->get_state() == "NEW") {
+    $id = $User->get_id();
+    $sql = "SELECT * FROM `blooddetail` WHERE 'HospitalId'=$id;";
+    $result = QueryExecutor::query($sql);
+    $row = $result->fetch_all(MYSQLI_ASSOC);
+    if (!$row) {
+        //echo "<script>console.log('$row')</script>";
+        if ($_SESSION["type"] == 1) {
+            $blood = "INSERT INTO `blooddetail`(`HospitalId`, `AplusAvailability`, `AminusAvailability`, `BplusAvailability`, `BminusAvailability`, `OplusAvailability`, `OminusAvailability`, `ABplusAvailability`, `ABminusAvailability`) VALUES ('$id','NO','NO','NO','NO','NO','NO','NO','NO');";
+            QueryExecutor::query($blood);
+            $vaccine = "INSERT INTO `vaccinedetail`(`HospitalId`, `OxfordAvailability`, `PfizerAvailability`, `ModernalAvailability`, `SinopharmAvailability`, `SputnikAvailability`) VALUES ('$id','NO','NO','NO','NO','NO');";
+            QueryExecutor::query($vaccine);
+            $hos_bed = "INSERT INTO `hospitalbeddetail`( `HospitalId`, `NormalAvailability`, `ICUAvailability`) VALUES ('$id','NO','NO');";
+            QueryExecutor::query($hos_bed);
+            $hos_cylinder = "INSERT INTO `hospitalcylinderdetail`(`HospitalId`, `SmallAvailability`, `MediumAvailability`, `LargeAvailability`) VALUES ('$id','NO','NO','NO');";
+            QueryExecutor::query($hos_cylinder);
+        } else if ($_SESSION["type"] == 2) {
+            $pro_bed = "INSERT INTO `providerbeddetail`(`ProviderId`, `NormalAvailability`, `ICUAvailability`) VALUES ('$id','NO','NO');";
+            QueryExecutor::query($pro_bed);
+            $pro_cylinder = "INSERT INTO `providercylinderdetail`(`ProviderId`, `SmallAvailability`, `MediumAvailability`, `LargeAvailability`) VALUES ('$id','NO','NO','NO');";
+            QueryExecutor::query($pro_cylinder);
+        }
+    }
+}
 
 if ((isset($_POST['updateResources']))) {
     //print_r($User);

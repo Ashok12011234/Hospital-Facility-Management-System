@@ -43,7 +43,7 @@ include("navbar.php");
             <h2>All Requests</h2>
             <br>
         </div>
-        <div class="col-md-4">
+        <!--div class="col-md-4">
             <div class="input-group" >
                 <select <?php
                     if($_SESSION["type"] ==2){
@@ -58,7 +58,7 @@ include("navbar.php");
                     <option  selected  value="1" data-show=".received">Receive requests</option>
                 </select>
             </div>
-        </div>
+        </div-->
     </div>
     <!-- Headings and title end-->
     <div class="container mt-5 mb-4" >

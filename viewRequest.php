@@ -334,11 +334,11 @@ $(function () {
                                         $txt = $msg->getMsg();
                                         if (($msg->getSenderType() == strtoupper(get_class($user))) 
                                             && ($msg->getSenderId() == $user->get_id())) {
-                                            echo '<div class="message" style="float: right;background-color: #f2e4fd;">'.$txt.'</div><br>
+                                            echo '<div class="message" style="float: right;background-color: #f2e4fd;font-weight: 500;">'.$txt.'</div><br>
                                                   <div style="clear: both;"></div>';
                                         }
                                         else {
-                                            echo '<div class="message" style="float: left;background-color: #f0fde4;">'.$txt.'</div><br>
+                                            echo '<div class="message" style="float: left;background-color: #f0fde4;font-weight: 500;">'.$txt.'</div><br>
                                                   <div style="clear: both;"></div>';
                                         }
                                     }

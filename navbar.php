@@ -93,11 +93,11 @@ if (array_key_exists("type", $_SESSION)) {
   </div>
 
   <!--Navbar notification panel-->
-  <div style="<?php
-              if ($_SESSION["type"] == 0) {
+  <!--div style="<?php
+              /**if ($_SESSION["type"] == 0) {
 
                 echo 'display:none;';
-              }
+              }**/
               ?>" class="dropdown me-4 ms-auto" style="user-select: none;">
     <i class="fas fa-bell" id="hospitalNotificationBell" data-bs-toggle="dropdown" aria-expanded="false"></i>
     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger badge-pill">
@@ -120,7 +120,7 @@ if (array_key_exists("type", $_SESSION)) {
 
 
     </div>
-  </div>
+  </div-->
 
   <!--Navbar Signout panel-->
   <div style="<?php
@@ -132,7 +132,7 @@ if (array_key_exists("type", $_SESSION)) {
     <div id="hospitalDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
 
 
-      <img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size: 40px; border-radius: 30px;" class="ms-2">
+      <img src="<?php if ($_SESSION["type"] != 0){echo $user->get_profile();} ?>" alt="usericon" style="width: 40px;height: 40px;border-radius: 50%;" class="ms-2">
 
       <span class="user-name me-4 ms-1" id="hospitalDropdownButton"><?php
                                                                     if ($_SESSION["type"] != 0) {
@@ -147,7 +147,7 @@ if (array_key_exists("type", $_SESSION)) {
         <h2><?php
             if ($_SESSION["type"] != 0) {
               echo $user->get_name();
-            } ?><img src="./assets/documents/PageDocuments/Comman/Images/defaultDp.png" alt="usericon" style="inline-size:55px; border-radius: 30px; float: right;" class="ms-2"></h2>
+            } ?><img src="<?php if ($_SESSION["type"] != 0){echo $user->get_profile();} ?>" alt="usericon" style="width: 60px;height: 60px;border-radius: 50%;float: right;" class="ms-2"></h2>
       </a>
       <p class="ms-2" style="font-size: 15px; margin-bottom:-5px; "><i class="fas fa-map-marker-alt"></i>&nbsp;
 

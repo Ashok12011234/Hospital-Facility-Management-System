@@ -1,5 +1,9 @@
 <?php
-include("classes/sysLvlCls/MailSender.php");
+//include("./MailSender.php");
+//include("./connection.php");
+$path = dirname(dirname( dirname(__FILE__) ));
+require $path.'/classes/sysLvlCls/MailSender.php';
+require $path.'/classes/sysLvlCls/connection.php';
 
 class Admin
 {
@@ -9,10 +13,10 @@ class Admin
 
   private function __construct()
   {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $database = "hfms1";
+    $servername = Database::HOST;
+    $username = Database::USERNAME;
+    $password = Database::PASSWORD;
+    $database = Database::NAME;
     $connection = new mysqli($servername, $username, $password, $database);
     // Check connection
     if ($connection->connect_error) {
